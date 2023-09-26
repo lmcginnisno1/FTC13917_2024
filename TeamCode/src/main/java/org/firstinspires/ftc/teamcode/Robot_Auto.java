@@ -16,7 +16,6 @@ public abstract class Robot_Auto extends LinearOpMode {
     public int m_Analysis;
     SequentialCommandGroup tasks;
     Pipeline_Detect3ColorInSamePlace m_detectSignalCone;
-    Pipeline_DetectJunctionCenter m_detectJunctionCenter;
 
     private ElapsedTime m_runTime = new ElapsedTime();
     // GlobalVariables globalVariables = GlobalVariables.getInstance();
@@ -47,7 +46,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         buildTasks(m_Analysis);
 
         // switch pipeline to detect junction center
-        m_robot.frontCamera.setPipeline(m_detectJunctionCenter);
+        m_robot.frontCamera.setPipeline(m_detectSignalCone);
 
         m_runTime.reset();
 
@@ -72,10 +71,8 @@ public abstract class Robot_Auto extends LinearOpMode {
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
         m_detectSignalCone = new Pipeline_Detect3ColorInSamePlace();
-        m_detectJunctionCenter = new Pipeline_DetectJunctionCenter();
 
-//        m_robot.frontCamera.setPipeline(m_detectSignalCone);
-        m_robot.frontCamera.setPipeline(m_detectJunctionCenter);
+        m_robot.frontCamera.setPipeline(m_detectSignalCone);
         m_robot.frontCamera.startStreaming(640,480);
 
     }
