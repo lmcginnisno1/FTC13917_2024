@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.commands.button.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp
+@TeleOp(name = "Robot Teleop", group ="teleop")
 public class Robot_Teleop extends LinearOpMode {
 
     public RobotContainer m_robot;

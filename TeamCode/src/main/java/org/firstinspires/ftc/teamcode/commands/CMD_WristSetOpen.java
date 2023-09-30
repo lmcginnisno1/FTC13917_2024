@@ -11,7 +11,7 @@ public class CMD_WristSetOpen extends CommandBase {
 
      @Override
      public void initialize(){
-          m_wrist.setPosition(0.5);
+          m_wrist.setPosition(0.6);
      }
      @Override
      public boolean isFinished(){
