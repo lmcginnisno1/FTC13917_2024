@@ -4,8 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.ShoulderSetPowerDefault;
-import org.firstinspires.ftc.teamcode.commands.RR_MecanumDriveDefault;
+import org.firstinspires.ftc.teamcode.commands.*;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.GamepadButton;
@@ -86,6 +85,9 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_wrist));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_wrist));
+
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button
