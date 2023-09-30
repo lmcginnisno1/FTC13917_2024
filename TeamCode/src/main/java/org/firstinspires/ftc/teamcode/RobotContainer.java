@@ -15,9 +15,6 @@ public class RobotContainer {
     public SUB_Elbow m_elbow;
     public SUB_Wrist m_wrist;
 
-    public VisionAprilTags m_aprilTags;
-    public VisionPipeline m_visionPipeline;
-
     public SUB_OpenCvCamera frontCamera;
 
     public RobotContainer(OpMode p_opMode) {
@@ -29,8 +26,6 @@ public class RobotContainer {
 
 //        frontCamera = new SUB_OpenCvCamera(p_opMode, "FrontCam");
 
-        m_aprilTags = new VisionAprilTags("frontCam", 0, 0, 0, p_opMode);
-        m_visionPipeline = new VisionPipeline(p_opMode, "frontCam");
     };
 
     public void run() {
