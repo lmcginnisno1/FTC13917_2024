@@ -14,7 +14,14 @@ public class SUB_Shoulder extends SubsystemBase{
      }
 
      public void setPower(double p_power){
+          m_shouldermotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_shouldermotor.setPower(p_power);
+     }
+
+     public void setPosition(int p_position){
+          m_shouldermotor.setTargetPosition(p_position);
+          m_shouldermotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          m_shouldermotor.setPower(0.33);
      }
 
 }

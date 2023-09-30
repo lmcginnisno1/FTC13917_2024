@@ -16,4 +16,10 @@ public class SUB_Elbow extends SubsystemBase{
           m_elbowmotor.setPower(p_power);
      }
 
+     public void setPosition(int p_position){
+          m_elbowmotor.setTargetPosition(p_position);
+          m_elbowmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          m_elbowmotor.setPower(0.33);
+     }
+
 }

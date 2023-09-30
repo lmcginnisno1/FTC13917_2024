@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 
