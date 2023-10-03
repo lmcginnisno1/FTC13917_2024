@@ -80,14 +80,12 @@ public class Robot_Teleop extends LinearOpMode {
         m_robot.drivetrain.setFieldCentric(false);
         m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
-        m_robot.m_shoulder.setDefaultCommand(new ShoulderSetPowerDefault(m_robot.m_shoulder, m_driverOp));
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_wrist));
-
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_arm));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_arm));
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button

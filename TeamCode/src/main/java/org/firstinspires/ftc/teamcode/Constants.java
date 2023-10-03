@@ -1,11 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
 public class Constants {
-     public class ArmConstants{
-          int k_homelevelid = 0;
-          int k_level1id = 1;
-          int k_level2id = 2;
-          int k_level3id = 3;
+     public static final class ArmConstants{
+          enum ArmLevel {
+             HomeLevel
+             ,Level1
+             ,Level2
+             ,Level3
+          }
+
+          static ArmLevel m_armLevel = ArmLevel.HomeLevel;
+
+          public static ArmLevel getArmLevel(){
+               return m_armLevel;
+          }
+
+          public void setArmLevel(ArmLevel p_ArmLevel){
+               m_armLevel = p_ArmLevel;
+          }
+     }
+
+     public static final class WristConstants{
+          public static final double m_openPosition = 0.6;
+          public static final double m_closedPosition = 0.0;
      }
 }
 

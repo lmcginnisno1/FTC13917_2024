@@ -1,17 +1,18 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Arm;
+import org.firstinspires.ftc.teamcode.Constants.WristConstants;
 
 public class CMD_WristSetClosed extends CommandBase {
-     SUB_Wrist m_wrist;
-     public CMD_WristSetClosed(SUB_Wrist p_wrist){
-          m_wrist = p_wrist;
+     SUB_Arm m_arm;
+     public CMD_WristSetClosed(SUB_Arm p_arm){
+          m_arm = p_arm;
      }
 
      @Override
      public void initialize(){
-          m_wrist.setPosition(0);
+          m_arm.setWristPosition(WristConstants.m_closedPosition);
      }
      @Override
      public boolean isFinished(){
