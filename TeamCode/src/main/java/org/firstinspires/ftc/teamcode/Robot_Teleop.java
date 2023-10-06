@@ -84,8 +84,8 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_arm));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_arm));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_wrist));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_wrist));
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button
