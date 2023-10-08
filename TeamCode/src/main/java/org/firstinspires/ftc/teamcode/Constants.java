@@ -22,13 +22,6 @@ public class Constants {
 
      }
      public static final class ShoulderConstants{
-          /**
-           * Temporary storage for magic numbers in code
-           * Home: 0
-           * Intake: 35
-           * Straight Up: 96
-           * Level One: 141
-           */
           public static final double kMaxVelocityDegreesPerSecond = 720;
           public static final double kMaxAccelerationDegreesPerSecond = 240;
           public static final double kOffsetDegrees = 0;
@@ -37,18 +30,18 @@ public class Constants {
           public static final double kI = 0;
           public static final double kD = 0;
           public static final double kF = 0;
-
           // Calculated using a 50.9:1 ratio motor
           public static final double kTicksToDegrees = 3.95861; // PPR / 360
+
+          //Shoulder Positions
+          public static final double kHome = 0;
+          public static final double kReadyIntake = 39;
+          public static final double kDropIntake = 30;
+          public static final double kUp = 90;
+
+          public static final double kLevelOne = 110;
      }
      public static final class ElbowConstants{
-          /**
-           * Temporary storage for magic numbers in code
-           * Home: 0
-           * 2nd Arm Parallel with 1st: -22
-           * Intake: 48
-           * Level One: -75
-           */
           public static final double kMaxVelocityDegreesPerSecond = 720;
           public static final double kMaxAccelerationDegreesPerSecond = 360;
           public static final double kOffsetDegrees = 0;
@@ -57,13 +50,28 @@ public class Constants {
           public static final double kI = 0;
           public static final double kD = 0;
           public static final double kF = 0;
-
           // Calculated using a 50.9:1 ratio motor
           public static final double kTicksToDegrees = 3.95861; // PPR / 360
+
+          //Elbow Positions
+          public static final double kHome = 0;
+          public static final double kParallel = -20;
+          public static final double kReadyIntake = 55;
+          public static final double kDropIntake = 57;
+          public static final double kLevelOne = -55;
      }
      public static final class WristConstants{
-          public static final double m_openPosition = 0.6;
-          public static final double m_closedPosition = 0.0;
+          public static final double kClawAOpen = 0.0;
+          public static final double kClawBOpen = 0.0;
+          public static final double kClawAClose = 0.5;
+          public static final double kClawBClose = 0.38;
+          public static final double kWristOffset = -0.035;
+          public static final double kClawAOffset = 0.1;
+          public static final double kClawBOffset = 0.1;
+          // Wrist Positions
+          public static final double kReadyIntake = 0.5;
+          public static final double kHome = 0.17;
+          public static final double kLevelOne = 0.40;
      }
 }
 

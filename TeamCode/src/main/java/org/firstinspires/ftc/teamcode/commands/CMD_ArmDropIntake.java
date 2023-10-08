@@ -1,0 +1,28 @@
+package org.firstinspires.ftc.teamcode.commands;
+
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
+import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Elbow;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Shoulder;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
+
+/**
+ * Lowers the arm to the ground for intake, from ready intake position
+ */
+public class CMD_ArmDropIntake extends ParallelCommandGroup {
+    public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist){
+//        addRequirements(p_shoulder, p_elbow);
+        addCommands(
+                new SequentialCommandGroup(
+                        new ParallelCommandGroup(
+                                new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),
+                                new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kDropIntake)
+                        ),
+                        new CMD_WristReleaseClaw(p_wrist),
+                        new Sleep(250),
+                        new CMD_WristCloseClaw(p_wrist)
+                )
+        );
+    }
+}
