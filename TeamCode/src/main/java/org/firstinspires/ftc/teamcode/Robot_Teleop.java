@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.*;
 
+import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.GamepadButton;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadEx;
@@ -60,6 +61,12 @@ public class Robot_Teleop extends LinearOpMode {
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
             telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), poseEstimate.getHeading());
+            telemetry.addData("P","%f", m_robot.m_elbow.p);
+
+            // Angles
+            telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());
+            telemetry.addData("Elbow Angle: ", "%f", m_robot.m_elbow.getAngle());
+
             telemetry.update();
         }
 
@@ -84,8 +91,11 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_WristSetOpen(m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_WristSetClosed(m_robot.m_wrist));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.X, new CMD_ArmSetLevelIntake(m_robot.m_shoulder, m_robot.m_elbow));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_UP, new InstantCommand(() -> m_robot.m_elbow.increaseP()));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new InstantCommand(() -> m_robot.m_elbow.decreaseP()));
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button

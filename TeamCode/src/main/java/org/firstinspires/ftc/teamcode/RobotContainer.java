@@ -43,16 +43,16 @@ public class RobotContainer {
     public void reset() {
         m_robot.reset();
     }
-    SelectCommand armLevel = new SelectCommand(
-            // the first parameter is a map of commands
-            new HashMap<Object, Command>() {{
-                put(Constants.ArmConstants.ArmLevel.HomeLevel, new CMD_ArmSetLevelHome(m_shoulder, m_elbow, m_wrist));
-                put(Constants.ArmConstants.ArmLevel.Level1, new CMD_ArmSetLevelOne(m_shoulder, m_elbow, m_wrist));
-                put(Constants.ArmConstants.ArmLevel.Level2, new CMD_ArmSetLevelThree(m_shoulder, m_elbow, m_wrist));
-                put(Constants.ArmConstants.ArmLevel.Level3, new CMD_ArmSetLevelThree(m_shoulder, m_elbow, m_wrist));
-            }},
-            Constants.ArmConstants::getArmLevel
-    );
+//    SelectCommand armLevel = new SelectCommand(
+//            // the first parameter is a map of commands
+//            new HashMap<Object, Command>() {{
+//                put(Constants.ArmConstants.ArmLevel.Home, new CMD_ArmSetLevelHome(m_shoulder, m_elbow, m_wrist));
+//                put(Constants.ArmConstants.ArmLevel.One, new CMD_ArmSetLevelOne(m_shoulder, m_elbow, m_wrist));
+//                put(Constants.ArmConstants.ArmLevel.Two, new CMD_ArmSetLevelThree(m_shoulder, m_elbow, m_wrist));
+//                put(Constants.ArmConstants.ArmLevel.Three, new CMD_ArmSetLevelThree(m_shoulder, m_elbow, m_wrist));
+//            }},
+//            Constants.ArmConstants::getArmLevel
+//    );
 
     public void schedule(Command... commands) {
             m_robot.schedule(commands);
