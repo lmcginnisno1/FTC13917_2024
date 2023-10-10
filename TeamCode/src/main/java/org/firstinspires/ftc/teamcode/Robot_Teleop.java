@@ -72,7 +72,6 @@ public class Robot_Teleop extends LinearOpMode {
             telemetry.update();
         }
 
-        //
         endOfOpMode();
         m_robot.reset();
     }

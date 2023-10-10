@@ -30,7 +30,7 @@ public class RobotContainer {
 
         m_wrist = new SUB_Wrist(p_opMode, "wristservo", "clawa", "clawb");
         m_elbow = new SUB_Elbow(p_opMode, "elbowmotor");
-        m_shoulder = new SUB_Shoulder(p_opMode, "shouldermotor");
+        m_shoulder = new SUB_Shoulder(p_opMode, "rightmotor", "leftmotor");
 
 //        frontCamera = new SUB_OpenCvCamera(p_opMode, "FrontCam");
     };

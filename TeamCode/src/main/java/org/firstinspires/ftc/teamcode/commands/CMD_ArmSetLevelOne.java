@@ -16,9 +16,14 @@ public class CMD_ArmSetLevelOne extends ParallelCommandGroup {
           addCommands(
                new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kLevelOne),
                new SequentialCommandGroup(
-                       new Sleep(1000),
-                       new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kLevelOne),
-                       new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kLevelOne)
+                       new Sleep(500),
+                       new ParallelCommandGroup(
+                               new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kLevelOne),
+                               new SequentialCommandGroup(
+                                       new Sleep(250),
+                                       new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kLevelOne)
+                               )
+                       )
                )
           );
      }

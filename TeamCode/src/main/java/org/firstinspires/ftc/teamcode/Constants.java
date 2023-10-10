@@ -22,20 +22,20 @@ public class Constants {
 
      }
      public static final class ShoulderConstants{
-          public static final double kMaxVelocityDegreesPerSecond = 720;
-          public static final double kMaxAccelerationDegreesPerSecond = 240;
+          public static final double kMaxVelocityDegreesPerSecond = 1500;
+          public static final double kMaxAccelerationDegreesPerSecond = 1500;
           public static final double kOffsetDegrees = 0;
           public static final double kMaxPower = 1;
           public static final double kP = 10;
           public static final double kI = 0;
           public static final double kD = 0;
           public static final double kF = 0;
-          // Calculated using a 50.9:1 ratio motor
-          public static final double kTicksToDegrees = 3.95861; // PPR / 360
+          // Calculated using a 99.5:1 ratio motor
+          public static final double kTicksToDegrees = 7.7394444444444444444444444444444; // PPR / 360
 
           //Shoulder Positions
           public static final double kHome = 0;
-          public static final double kReadyIntake = 39;
+          public static final double kReadyIntake = 43;
           public static final double kDropIntake = 30;
           public static final double kUp = 90;
 
@@ -43,7 +43,7 @@ public class Constants {
      }
      public static final class ElbowConstants{
           public static final double kMaxVelocityDegreesPerSecond = 720;
-          public static final double kMaxAccelerationDegreesPerSecond = 360;
+          public static final double kMaxAccelerationDegreesPerSecond = 720;
           public static final double kOffsetDegrees = 0;
           public static final double kMaxPower = 1;
           public static final double kP = 10;
