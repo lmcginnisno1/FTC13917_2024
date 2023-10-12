@@ -16,6 +16,8 @@ public class CMD_ArmDropIntake extends ParallelCommandGroup {
 //        addRequirements(p_shoulder, p_elbow);
         addCommands(
                 new SequentialCommandGroup(
+                        new CMD_WristReleaseOutsideClaw(p_wrist),
+                        new Sleep(250),
                         new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),
                         new ParallelCommandGroup(
                                 new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kDropIntake),

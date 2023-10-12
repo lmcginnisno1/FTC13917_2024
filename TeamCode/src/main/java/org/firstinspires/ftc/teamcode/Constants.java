@@ -37,8 +37,8 @@ public class Constants {
           public static final double kHome = 0;
           public static final double kReadyIntake = 36.5;
           public static final double kDropIntake = 31;
-          public static final double kUp = 90;
-
+          public static final double kUp = 100;
+          public static final double kClimb = 50;
           public static final double kLevelOne = 110;
      }
      public static final class ElbowConstants{
@@ -69,7 +69,7 @@ public class Constants {
           public static final double kClawAOffset = 0.1;
           public static final double kClawBOffset = 0.1;
           // Wrist Positions
-          public static final double kReadyIntake = 0.65;
+          public static final double kReadyIntake = 0.67;
           public static final double kDropIntake = 0.55;
           public static final double kHome = 0.14;
           public static final double kLevelOne = 0.40;

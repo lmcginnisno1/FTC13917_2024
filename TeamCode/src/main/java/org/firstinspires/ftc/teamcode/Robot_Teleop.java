@@ -107,8 +107,8 @@ public class Robot_Teleop extends LinearOpMode {
                 new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
                 () -> m_robot.m_wrist.getIsClawBOpen()
         ));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_UP, new InstantCommand(() -> m_robot.m_elbow.increaseP()));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new InstantCommand(() -> m_robot.m_elbow.decreaseP()));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new CMD_Climb(m_robot.m_shoulder));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_LEFT, new CMD_PrepareToClimb(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button
