@@ -15,9 +15,9 @@ public class CMD_ArmSetLevelOne extends ParallelCommandGroup {
           Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Score);
           addCommands(
                new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kLevelOne),
+               new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kLevelOne),
                new SequentialCommandGroup(
-                       new Sleep(1000),
-                       new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kLevelOne),
+                       new Sleep(500),
                        new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kLevelOne)
                )
           );

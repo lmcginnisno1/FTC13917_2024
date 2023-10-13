@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Elbow;
@@ -16,12 +17,17 @@ public class CMD_ArmDropIntake extends ParallelCommandGroup {
          Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Intake);
          addCommands(
                 new SequentialCommandGroup(
-                        new ParallelCommandGroup(
-                                new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),
-                                new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kDropIntake)
-                        ),
-                        new CMD_WristReleaseClaw(p_wrist),
+                        new CMD_WristReleaseOutsideClaw(p_wrist),
                         new Sleep(250),
+                        new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),
+                        new ParallelCommandGroup(
+                                new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kDropIntake),
+                                new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kDropIntake)
+                        ),
+                        new CMD_WristCloseClaw(p_wrist),
+                        new Sleep(100),
+                        new CMD_WristReleaseClaw(p_wrist),
+                        new Sleep(100),
                         new CMD_WristCloseClaw(p_wrist)
                 )
         );

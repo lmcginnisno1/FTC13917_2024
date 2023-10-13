@@ -11,18 +11,27 @@ import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
 import org.firstinspires.ftc.teamcode.Constants.ShoulderConstants;
 
 public class SUB_Shoulder extends TrapezoidProfileSubsystem {
-     DcMotorEx m_shouldermotor1;
-     DcMotorEx m_shouldermotor2;
-     public SUB_Shoulder(OpMode p_opMode, final String p_shouldermotor1name, final String p_shouldermotor2name) {
+     DcMotorEx m_rightMotor, m_leftMotor;
+
+     public SUB_Shoulder(OpMode p_opMode, final String p_rightMotorName, final String p_leftMotorName) {
           super(
                   new TrapezoidProfile.Constraints(
                           ShoulderConstants.kMaxVelocityDegreesPerSecond,
                           ShoulderConstants.kMaxAccelerationDegreesPerSecond),
                   ShoulderConstants.kOffsetDegrees
           );
-          m_shouldermotor1 = p_opMode.hardwareMap.get(DcMotorEx.class, p_shouldermotor1name);
-          m_shouldermotor1.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-          m_shouldermotor1.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
+          m_rightMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_rightMotorName);
+          m_leftMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_leftMotorName);
+          m_rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+          m_leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+          m_rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
+                  new PIDFCoefficients(
+                          ShoulderConstants.kP,
+                          ShoulderConstants.kI,
+                          ShoulderConstants.kD,
+                          ShoulderConstants.kF)
+          );
+          m_leftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
                   new PIDFCoefficients(
                           ShoulderConstants.kP,
                           ShoulderConstants.kI,
@@ -30,30 +39,21 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
                           ShoulderConstants.kF)
           );
 
-          m_shouldermotor2 = p_opMode.hardwareMap.get(DcMotorEx.class, p_shouldermotor2name);
-          m_shouldermotor2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-          m_shouldermotor2.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
-                  new PIDFCoefficients(
-                          ShoulderConstants.kP,
-                          ShoulderConstants.kI,
-                          ShoulderConstants.kD,
-                          ShoulderConstants.kF)
-          );
           resetAngle();
-          m_shouldermotor1.setPower(ShoulderConstants.kMaxPower);
-          m_shouldermotor2.setPower(ShoulderConstants.kMaxPower);
+          m_rightMotor.setPower(ShoulderConstants.kMaxPower);
+          m_leftMotor.setPower(ShoulderConstants.kMaxPower);
      }
 
      @Override
      protected void useState(TrapezoidProfile.State setpoint) {
           int tickPosition = (int)(setpoint.position * ShoulderConstants.kTicksToDegrees);
-          m_shouldermotor1.setTargetPosition(tickPosition);
-          m_shouldermotor2.setTargetPosition(tickPosition);
+          m_rightMotor.setTargetPosition(tickPosition);
+          m_leftMotor.setTargetPosition(tickPosition);
      }
 
-     // Return motor's position in degrees
+     // Return the leader motor's position in degrees
      public double getAngle() {
-          return m_shouldermotor1.getCurrentPosition() / ShoulderConstants.kTicksToDegrees;
+          return m_rightMotor.getCurrentPosition() / ShoulderConstants.kTicksToDegrees;
      }
 
      // Set motor's angle
@@ -62,12 +62,11 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
      }
 
      public void resetAngle() {
-          m_shouldermotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-          m_shouldermotor1.setTargetPosition(0);
-          m_shouldermotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-          m_shouldermotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-          m_shouldermotor2.setTargetPosition(0);
-          m_shouldermotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          m_rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+          m_leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+          m_rightMotor.setTargetPosition(0);
+          m_leftMotor.setTargetPosition(0);
+          m_rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          m_leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
      }
 }
