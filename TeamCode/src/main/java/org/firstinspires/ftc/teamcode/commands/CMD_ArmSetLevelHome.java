@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
-import org.firstinspires.ftc.teamcode.ftclib.command.ParallelRaceGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shoulder;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Elbow;
@@ -10,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
 
 public class CMD_ArmSetLevelHome extends SequentialCommandGroup {
      public CMD_ArmSetLevelHome(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist){
-//          addRequirements(p_shoulder, p_elbow);
+          Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Home);
           addCommands(
                new ParallelCommandGroup(
                        new CMD_SetShoulderAngle(p_shoulder, 50),

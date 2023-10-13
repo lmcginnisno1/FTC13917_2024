@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
  */
 public class CMD_ArmSetLevelOne extends ParallelCommandGroup {
      public CMD_ArmSetLevelOne(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist){
-//          addRequirements(p_shoulder, p_elbow);
+          Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Score);
           addCommands(
                new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kLevelOne),
                new SequentialCommandGroup(

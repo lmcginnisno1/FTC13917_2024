@@ -13,7 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
 public class CMD_ArmDropIntake extends ParallelCommandGroup {
     public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist){
 //        addRequirements(p_shoulder, p_elbow);
-        addCommands(
+         Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Intake);
+         addCommands(
                 new SequentialCommandGroup(
                         new ParallelCommandGroup(
                                 new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),

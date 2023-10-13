@@ -97,19 +97,24 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.X, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.Y, new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_WristCloseClaw(m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-                new CMD_WristReleaseClaw(m_robot.m_wrist),
-                new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
-                () -> m_robot.m_wrist.getIsClawBOpen()
-        ));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.X, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.Y, new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_WristCloseClaw(m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
+//                new CMD_WristReleaseClaw(m_robot.m_wrist),
+//                new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
+//                () -> m_robot.m_wrist.getIsClawBOpen()
+//        ));
 //        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_UP, new InstantCommand(() -> m_robot.m_elbow.increaseP()));
 //        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new InstantCommand(() -> m_robot.m_elbow.decreaseP()));
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, m_robot.robotStateForward);
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, m_robot.robotStateBackwards);
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ToggleArmLevelDown(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ToggleArmLevelUp(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button

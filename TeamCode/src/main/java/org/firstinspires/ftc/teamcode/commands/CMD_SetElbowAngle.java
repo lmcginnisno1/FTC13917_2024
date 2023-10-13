@@ -10,7 +10,7 @@ public class CMD_SetElbowAngle extends CommandBase {
     public CMD_SetElbowAngle(SUB_Elbow p_elbow, double p_angle) {
         m_elbow = p_elbow;
         m_angle = p_angle;
-        addRequirements(m_elbow);
+//        addRequirements(m_elbow);
     }
 
     @Override

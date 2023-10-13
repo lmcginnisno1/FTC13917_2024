@@ -11,7 +11,7 @@ public class CMD_SetShoulderAngle extends CommandBase {
     public CMD_SetShoulderAngle(SUB_Shoulder p_shoulder, double p_angle) {
         m_shoulder = p_shoulder;
         m_angle = p_angle;
-        addRequirements(m_shoulder);
+//        addRequirements(m_shoulder);
     }
 
     @Override
