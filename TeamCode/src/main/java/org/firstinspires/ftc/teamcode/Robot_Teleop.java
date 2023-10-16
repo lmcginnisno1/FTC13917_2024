@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.commands.button.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.util.HashMap;
+
 @TeleOp(name = "Robot Teleop", group ="teleop")
 public class Robot_Teleop extends LinearOpMode {
 
@@ -46,6 +48,27 @@ public class Robot_Teleop extends LinearOpMode {
 
     }
 
+    SelectCommand robotStateForward = new SelectCommand(
+            // the first parameter is a map of commands
+            new HashMap<Object, Command>() {{
+                put(GlobalVariables.RobotState.Home, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.ReadyToIntake, new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.Intake, new CMD_ArmSetStow(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.Stow, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.Score, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+            }},
+            m_robot.m_variables::getRobotState
+    );
+
+    SelectCommand robotStateBackwards = new SelectCommand(
+            new HashMap<Object, Command>() {{
+                put(GlobalVariables.RobotState.Stow, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.Intake, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+                put(GlobalVariables.RobotState.Score, new CMD_ArmSetStow(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
+            }},
+            m_robot.m_variables::getRobotState
+    );
+
     @Override
     public void runOpMode() throws InterruptedException {
         initializeSubsystems();
@@ -68,6 +91,9 @@ public class Robot_Teleop extends LinearOpMode {
             // Angles
             telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());
             telemetry.addData("Elbow Angle: ", "%f", m_robot.m_elbow.getAngle());
+
+            // States
+            telemetry.addData("Robot State", m_robot.m_variables.getRobotState().name());
 
             telemetry.update();
         }
@@ -93,27 +119,26 @@ public class Robot_Teleop extends LinearOpMode {
         m_robot.m_wrist.moveWrist(Constants.WristConstants.kHome);
         m_robot.m_wrist.closeClawA();
         m_robot.m_wrist.closeClawB();
+
+        m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);
+
         configureButtonBindings();
     }
 
     public void configureButtonBindings() {
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.X, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.Y, new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_WristCloseClaw(m_robot.m_wrist));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-//                new CMD_WristReleaseClaw(m_robot.m_wrist),
-//                new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
-//                () -> m_robot.m_wrist.getIsClawBOpen()
-//        ));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_UP, new InstantCommand(() -> m_robot.m_elbow.increaseP()));
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new InstantCommand(() -> m_robot.m_elbow.decreaseP()));
 
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, m_robot.robotStateForward);
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, m_robot.robotStateBackwards);
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ToggleArmLevelDown(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ToggleArmLevelUp(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ToggleArmLevelDown(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ToggleArmLevelUp(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
+
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, robotStateForward);
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, robotStateBackwards);
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
+                new CMD_WristReleaseClaw(m_robot.m_wrist),
+                new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
+                () -> m_robot.m_wrist.getIsClawBOpen()
+        ));
 
     }
 

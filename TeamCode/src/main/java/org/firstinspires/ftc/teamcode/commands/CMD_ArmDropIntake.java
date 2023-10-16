@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
@@ -12,9 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
  * Lowers the arm to the ground for intake, from ready intake position
  */
 public class CMD_ArmDropIntake extends ParallelCommandGroup {
-    public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist){
-//        addRequirements(p_shoulder, p_elbow);
-         Constants.robotConstants.setRobotState(Constants.robotConstants.robotState.Intake);
+    public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, GlobalVariables p_variables){
+         p_variables.setRobotState(GlobalVariables.RobotState.Intake);
          addCommands(
                 new SequentialCommandGroup(
                         new CMD_WristReleaseOutsideClaw(p_wrist),
