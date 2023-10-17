@@ -6,7 +6,9 @@ public class GlobalVariables{
           ReadyToIntake,
           Intake,
           Stow,
-          Score
+          Score,
+          Climb,
+          ReadyToLaunch
      }
 
      RobotState m_robotState = RobotState.Home;
@@ -17,5 +19,9 @@ public class GlobalVariables{
 
      public RobotState getRobotState(){
           return m_robotState;
+     }
+
+     public boolean isRobotState(RobotState p_robotState){
+          return p_robotState == m_robotState;
      }
 }

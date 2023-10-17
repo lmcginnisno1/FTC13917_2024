@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.*;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
+import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.SelectCommand;
+import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.GamepadButton;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Trigger;
@@ -47,27 +49,6 @@ public class Robot_Teleop extends LinearOpMode {
         m_runTime.reset();
 
     }
-
-    SelectCommand robotStateForward = new SelectCommand(
-            // the first parameter is a map of commands
-            new HashMap<Object, Command>() {{
-                put(GlobalVariables.RobotState.Home, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.ReadyToIntake, new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.Intake, new CMD_ArmSetStow(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.Stow, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.Score, new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-            }},
-            m_robot.m_variables::getRobotState
-    );
-
-    SelectCommand robotStateBackwards = new SelectCommand(
-            new HashMap<Object, Command>() {{
-                put(GlobalVariables.RobotState.Stow, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.Intake, new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-                put(GlobalVariables.RobotState.Score, new CMD_ArmSetStow(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_variables));
-            }},
-            m_robot.m_variables::getRobotState
-    );
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -114,15 +95,15 @@ public class Robot_Teleop extends LinearOpMode {
 
         m_robot.drivetrain.setFieldCentric(false);
         m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
+//        m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
 
         m_robot.m_wrist.moveWrist(Constants.WristConstants.kHome);
         m_robot.m_wrist.closeClawA();
         m_robot.m_wrist.closeClawB();
 
-        m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);
 
         configureButtonBindings();
+        m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);
     }
 
     public void configureButtonBindings() {
@@ -131,15 +112,71 @@ public class Robot_Teleop extends LinearOpMode {
 //        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ToggleArmLevelUp(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist));
 
 
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, robotStateForward);
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.B, robotStateBackwards);
+        SelectCommand robotStateBackwards = new SelectCommand(
+                new HashMap<Object, Command>() {{
+                    put(GlobalVariables.RobotState.ReadyToIntake, new SequentialCommandGroup(
+                           new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                           new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)));
+                    put(GlobalVariables.RobotState.Stow, new SequentialCommandGroup(
+                            new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)));
+                    put(GlobalVariables.RobotState.Intake, new SequentialCommandGroup(
+                            new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)));
+                    put(GlobalVariables.RobotState.Score, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score));
+                    put(GlobalVariables.RobotState.Home, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home));
+                    put(GlobalVariables.RobotState.Climb, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb));
+                    put(GlobalVariables.RobotState.ReadyToLaunch, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch));
+                }},
+                m_robot.m_variables::getRobotState
+        );
+
+        SelectCommand robotStateForward = new SelectCommand(
+                // the first parameter is a map of commands
+                new HashMap<Object, Command>() {{
+                    put(GlobalVariables.RobotState.Home, new SequentialCommandGroup(
+                            new CMD_ArmSetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)));
+                    put(GlobalVariables.RobotState.ReadyToIntake, new SequentialCommandGroup(
+                            new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Intake)));
+                    put(GlobalVariables.RobotState.Intake, new SequentialCommandGroup(
+                            new CMD_ArmSetStow(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)));
+                    put(GlobalVariables.RobotState.Stow, new SequentialCommandGroup(
+                            new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score)));
+                    put(GlobalVariables.RobotState.Score, new SequentialCommandGroup(
+                            new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)));
+                    put(GlobalVariables.RobotState.Climb, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb));
+                    put(GlobalVariables.RobotState.ReadyToLaunch, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch));
+                }},
+                m_robot.m_variables::getRobotState
+        );
+
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.A, robotStateForward);
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.B, robotStateBackwards);
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.START, new SequentialCommandGroup(
+            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch),
+            new CMD_ReadyToLaunch(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+        ));
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.X,
+                new ConditionalCommand(
+                        new InstantCommand(()-> m_robot.m_droneLauncher.releaseTheDrone()),
+                        new InstantCommand(()-> m_robot.m_blank.doNothing()),
+                        () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToLaunch)
+                )
+        );
 
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
                 new CMD_WristReleaseClaw(m_robot.m_wrist),
                 new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
                 () -> m_robot.m_wrist.getIsClawBOpen()
         ));
-
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button

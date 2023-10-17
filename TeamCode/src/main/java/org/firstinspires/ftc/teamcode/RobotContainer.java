@@ -23,6 +23,8 @@ public class RobotContainer {
     public SUB_Elbow m_elbow;
     public SUB_Shoulder m_shoulder;
     public SUB_Intake m_intake;
+    public SUB_Blank m_blank;
+    public SUB_DroneLauncher m_droneLauncher;
     public SUB_OpenCvCamera frontCamera;
     public GlobalVariables m_variables;
 
@@ -34,6 +36,8 @@ public class RobotContainer {
         m_elbow = new SUB_Elbow(p_opMode, "elbowmotor");
         m_shoulder = new SUB_Shoulder(p_opMode, "rightmotor", "leftmotor");
         m_variables = new GlobalVariables();
+        m_blank = new SUB_Blank();
+        m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
 //        m_intake = new SUB_Intake(p_opMode, "intakemotor");
 //        frontCamera = new SUB_OpenCvCamera(p_opMode, "FrontCam");
     };
