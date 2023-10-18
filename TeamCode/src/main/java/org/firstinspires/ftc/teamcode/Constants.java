@@ -5,20 +5,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import java.util.HashMap;
 
 public class Constants {
-     public static final class ArmConstants{
-          public enum ArmLevel {
-             Home
-             ,One
-          }
-          static ArmLevel m_armLevel = ArmLevel.Home;
-          public static ArmLevel getArmLevel(){
-               return m_armLevel;
-          }
-          public static void setArmLevel(ArmLevel p_ArmLevel){
-               m_armLevel = p_ArmLevel;
-          }
-
-     }
      public static final class ShoulderConstants{
           public static final double kMaxVelocityDegreesPerSecond = 1500;
           public static final double kMaxAccelerationDegreesPerSecond = 1000;
@@ -33,7 +19,7 @@ public class Constants {
 
           //Shoulder Positions
           public static final double kHome = 0;
-          public static final double kReadyIntake = 36;
+          public static final double kReadyIntake = 41;
           public static final double kDropIntake = 29;
           public static final double kUp = 100;
           public static final double kClimb = 50;
@@ -54,9 +40,10 @@ public class Constants {
           public static final double kTicksToDegrees = 5.53777777778; // PPR / 360
 
           //Elbow Positions
+          //Bigger number = farther from robot
           public static final double kHome = 0;
           public static final double kParallel = -20;
-          public static final double kReadyIntake = 45;
+          public static final double kReadyIntake = 44;
           public static final double kDropIntake = 51;
           public static final double kLevelOne = -55;
      }

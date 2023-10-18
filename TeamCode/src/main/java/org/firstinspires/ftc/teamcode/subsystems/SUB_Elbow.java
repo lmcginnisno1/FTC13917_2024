@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.Constants.ElbowConstants;
 
 public class SUB_Elbow extends TrapezoidProfileSubsystem {
      DcMotorEx m_elbowmotor;
-     public double p = 10;
      public SUB_Elbow(OpMode p_opMode, final String p_elbowmotorname) {
           super(
                   new TrapezoidProfile.Constraints(
@@ -23,7 +22,7 @@ public class SUB_Elbow extends TrapezoidProfileSubsystem {
           m_elbowmotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
           m_elbowmotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
                   new PIDFCoefficients(
-                          p,
+                          ElbowConstants.kP,
                           ElbowConstants.kI,
                           ElbowConstants.kD,
                           ElbowConstants.kF)
@@ -36,16 +35,6 @@ public class SUB_Elbow extends TrapezoidProfileSubsystem {
      protected void useState(TrapezoidProfile.State setpoint) {
           int tickPosition = (int)(setpoint.position * ElbowConstants.kTicksToDegrees);
           m_elbowmotor.setTargetPosition(tickPosition);
-     }
-
-     public void increaseP() {
-          p = p + 0.25;
-          m_elbowmotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(p, 0, 0, 0));
-     }
-
-     public void decreaseP() {
-          p = p - 0.25;
-          m_elbowmotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(p, 0, 0, 0));
      }
 
      public double getAngle(){

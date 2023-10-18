@@ -11,6 +11,12 @@ public class GlobalVariables{
           ReadyToLaunch
      }
 
+     public enum ScoringLevel{
+          One,
+          Two,
+          Three,
+     }
+
      RobotState m_robotState = RobotState.Home;
 
      public void setRobotState(RobotState p_robotState){
@@ -23,5 +29,19 @@ public class GlobalVariables{
 
      public boolean isRobotState(RobotState p_robotState){
           return p_robotState == m_robotState;
+     }
+
+     ScoringLevel m_currentScoringLevel = ScoringLevel.One;
+
+     public void setScoringLevel(ScoringLevel p_scoringLevel){
+          m_currentScoringLevel = p_scoringLevel;
+     }
+
+     public ScoringLevel getScoringLevel(){
+          return m_currentScoringLevel;
+     }
+
+     public boolean isScoringLevel(ScoringLevel p_scoringLevel){
+          return m_currentScoringLevel == p_scoringLevel;
      }
 }

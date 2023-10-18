@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.apache.commons.math3.analysis.function.Add;
 import org.firstinspires.ftc.teamcode.commands.*;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
@@ -67,7 +68,6 @@ public class Robot_Teleop extends LinearOpMode {
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
             telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), poseEstimate.getHeading());
-            telemetry.addData("P","%f", m_robot.m_elbow.p);
 
             // Angles
             telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());
@@ -95,7 +95,7 @@ public class Robot_Teleop extends LinearOpMode {
 
         m_robot.drivetrain.setFieldCentric(false);
         m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
+        m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
 
         m_robot.m_wrist.moveWrist(Constants.WristConstants.kHome);
         m_robot.m_wrist.closeClawA();
@@ -126,7 +126,10 @@ public class Robot_Teleop extends LinearOpMode {
                     put(GlobalVariables.RobotState.Score, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score));
                     put(GlobalVariables.RobotState.Home, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home));
                     put(GlobalVariables.RobotState.Climb, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb));
-                    put(GlobalVariables.RobotState.ReadyToLaunch, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch));
+                    put(GlobalVariables.RobotState.ReadyToLaunch, new SequentialCommandGroup(
+                            new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
+                            new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
+                    ));
                 }},
                 m_robot.m_variables::getRobotState
         );
@@ -177,6 +180,16 @@ public class Robot_Teleop extends LinearOpMode {
                 new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
                 () -> m_robot.m_wrist.getIsClawBOpen()
         ));
+
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new SequentialCommandGroup(
+                new CMD_Climb(m_robot.m_shoulder),
+                new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb)
+        ));
+
+//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.Y, new ConditionalCommand(
+//             new
+//        ));
     }
 
     public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button
