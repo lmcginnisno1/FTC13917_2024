@@ -24,6 +24,7 @@ public class Constants {
           public static final double kUp = 100;
           public static final double kClimb = 50;
           public static final double kLevelOne = 110;
+          public static final double kLevelTwo = 110; //TODO: tune this value
           public static final double kDroneLaunch = 50;
 
      }
@@ -46,6 +47,7 @@ public class Constants {
           public static final double kReadyIntake = 44;
           public static final double kDropIntake = 51;
           public static final double kLevelOne = -55;
+          public static final double kLevelTwo = -57; //TODO: tune this value
      }
      public static final class WristConstants{
           public static final double kClawAOpen = 0.0;
@@ -60,6 +62,7 @@ public class Constants {
           public static final double kDropIntake = 0.55;
           public static final double kHome = 0.14;
           public static final double kLevelOne = 0.40;
+          public static final double kLevelTwo = 0.35; //TODO: tune this value
      }
 
      public static final class intakeConstants{
