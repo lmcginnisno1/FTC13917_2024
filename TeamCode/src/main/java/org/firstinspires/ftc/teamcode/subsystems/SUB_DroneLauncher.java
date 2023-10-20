@@ -17,4 +17,8 @@ public class SUB_DroneLauncher extends SubsystemBase {
      public void releaseTheDrone(){
           m_DroneTriggerServo.setPosition(droneLauncherConstants.kOpen);
      }
+
+     public void close(){
+          m_DroneTriggerServo.setPosition(droneLauncherConstants.kClosed);
+     }
 }

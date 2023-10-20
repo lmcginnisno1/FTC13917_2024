@@ -92,7 +92,6 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
 
         boolean movingForwards = true;
         MotionProfile activeProfile = generateProfile(true);

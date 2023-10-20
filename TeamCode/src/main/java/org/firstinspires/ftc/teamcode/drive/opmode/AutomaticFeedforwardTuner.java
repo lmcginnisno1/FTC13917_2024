@@ -56,8 +56,6 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
-
         telemetry.clearAll();
         telemetry.addLine("Would you like to fit kStatic?");
         telemetry.addLine("Press (Y/Δ) for yes, (B/O) for no");

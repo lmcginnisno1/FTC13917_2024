@@ -31,7 +31,6 @@ public class StraightTest extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
 
         drive.followTrajectory(trajectory);
 

@@ -55,7 +55,6 @@ public class MotorDirectionDebugger extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
 
         telemetry.clearAll();
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.HTML);
