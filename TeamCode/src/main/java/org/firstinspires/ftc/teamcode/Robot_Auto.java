@@ -37,16 +37,16 @@ public abstract class Robot_Auto extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             m_robot.run(); // run the scheduler
 
-            telemetry.addData("Analysis: ",m_detectSignalCone.getAnalysis());
+//            telemetry.addData("Analysis: ",m_detectSignalCone.getAnalysis());
             telemetry.update();
         }
 
-        m_Analysis = m_detectSignalCone.getAnalysis();
-//        m_Analysis = 1;
-        buildTasks(m_Analysis);
+//        m_Analysis = m_detectSignalCone.getAnalysis();
+        m_Analysis = 2;
+        buildTasks();
 
         // switch pipeline to detect junction center
-        m_robot.frontCamera.setPipeline(m_detectSignalCone);
+//        m_robot.frontCamera.setPipeline(m_detectSignalCone);
 
         m_runTime.reset();
 
@@ -70,14 +70,14 @@ public abstract class Robot_Auto extends LinearOpMode {
 
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
-        m_detectSignalCone = new Pipeline_Detect3ColorInSamePlace();
+//        m_detectSignalCone = new Pipeline_Detect3ColorInSamePlace();
 
-        m_robot.frontCamera.setPipeline(m_detectSignalCone);
-        m_robot.frontCamera.startStreaming(640,480);
+//        m_robot.frontCamera.setPipeline(m_detectSignalCone);
+//        m_robot.frontCamera.startStreaming(640,480);
 
     }
 
-    public abstract SequentialCommandGroup buildTasks(int p_analysis);
+    public abstract SequentialCommandGroup buildTasks();
     public abstract void prebuildTasks();
 
 }

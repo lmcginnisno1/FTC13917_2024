@@ -27,8 +27,8 @@ public class CMD_ArmSetReadyIntake extends ParallelCommandGroup {
                                    new Sleep(500),
                                    new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kReadyIntake),
                                    new Sleep(750),
-                                   new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kReadyIntake),
-                                   new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kReadyFinal)
+                                   new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kReadyFinal),
+                                   new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kReadyIntake)
                             )
                     )
             )

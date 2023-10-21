@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-public class GlobalVariables{
+import org.firstinspires.ftc.teamcode.subsystems.TriggerSubsystemBase;
+
+public class GlobalVariables extends TriggerSubsystemBase {
      public enum RobotState{
           Home,
           ReadyToIntake,
@@ -43,5 +45,9 @@ public class GlobalVariables{
 
      public boolean isScoringLevel(ScoringLevel p_scoringLevel){
           return m_currentScoringLevel == p_scoringLevel;
+     }
+
+     public boolean getState(RobotState p_state){
+          return m_robotState == p_state;
      }
 }

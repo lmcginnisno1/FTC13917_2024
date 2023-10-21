@@ -38,9 +38,9 @@ public class SUB_FiniteStateMachine extends TriggerSubsystemBase {
         return (m_currentRobotState == p_robotState);
     }
 
-    public boolean getState(String p_robotState) {
-        return (m_currentRobotState.toString().equals(p_robotState));
-    }
+//    public boolean getState(String p_robotState) {
+//        return (m_currentRobotState.toString().equals(p_robotState));
+//    }
 
     public void telemetry() {
         m_opMode.telemetry.addData("State", m_currentRobotState.name());

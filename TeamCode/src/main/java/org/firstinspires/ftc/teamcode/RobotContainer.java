@@ -27,6 +27,7 @@ public class RobotContainer {
     public SUB_DroneLauncher m_droneLauncher;
     public SUB_OpenCvCamera frontCamera;
     public GlobalVariables m_variables;
+    public SUB_sensor_PixelGuide m_pixelGuide;
 
     public RobotContainer(OpMode p_opMode) {
         SampleMecanumDrive drivebase = new SampleMecanumDrive(p_opMode.hardwareMap);
@@ -38,6 +39,7 @@ public class RobotContainer {
         m_variables = new GlobalVariables();
         m_blank = new SUB_Blank();
         m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
+        m_pixelGuide = new SUB_sensor_PixelGuide(p_opMode, "pixelGuideSensor");
 //        m_intake = new SUB_Intake(p_opMode, "intakemotor");
 //        frontCamera = new SUB_OpenCvCamera(p_opMode, "FrontCam");
     };

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -22,13 +23,15 @@ public class AUTO_Red_Left extends Robot_Auto {
      @Override
      public void prebuildTasks() {
           // run these tasks now
+          m_robot.m_wrist.closeClawA();
+          m_robot.m_wrist.closeClawB();
      }
 
      @Override
-     public SequentialCommandGroup buildTasks(int p_Analysis) {
-          m_Analysis = p_Analysis;
+     public SequentialCommandGroup buildTasks() {
+          m_Analysis = 2;
           SequentialCommandGroup completetasks = new SequentialCommandGroup();
-          completetasks.addCommands(placePurplePixel);
+          completetasks.addCommands(placePurplePixel());
 
           m_robot.schedule(completetasks);
           return completetasks;
@@ -36,45 +39,27 @@ public class AUTO_Red_Left extends Robot_Auto {
 
      private SequentialCommandGroup placePurplePixel(){
           SequentialCommandGroup cmds = new SequentialCommandGroup();
-          Pose2d m_initialPose = new Pose2d(-36, -64, Math.toRadians(90));
+          Pose2d m_initialPose = new Pose2d(0, 0, Math.toRadians(0));
 
-          Trajectory LeftSpikeMark = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
-                  .splineTo(new Vector2d(-24, -30), Math.toRadians(90))
+          Trajectory m_test = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
+                  .lineToConstantHeading(new Vector2d(-6, 6))
                   .build();
 
-          Trajectory MiddleSpikeMark = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
-                  .splineTo(new Vector2d(-36, -26), Math.toRadians(90))
-                  .build();
-
-          Trajectory RightSpikeMark = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
-                  .splineTo(new Vector2d(-48, -30), Math.toRadians(90))
-                  .build();
-
-          switch (m_Analysis){
-               case 1: cmds.addCommands(
-                       new RR_TrajectoryFollowerCommand(m_robot.drivetrain, LeftSpikeMark)
-                       ,new Sleep(100)
-//                    ,new CMD_IntakeReverse(m_robot.m_intake)
-//                    ,new Sleep(200)
-//                    ,new CMD_IntakeOff(m_robot.m_intake);
-               );
-
-               case 2: cmds.addCommands(
-                       new RR_TrajectoryFollowerCommand(m_robot.drivetrain, MiddleSpikeMark)
-                       ,new Sleep(100)
-//                    ,new CMD_IntakeReverse(m_robot.m_intake)
-//                    ,new Sleep(200)
-//                    ,new CMD_IntakeOff(m_robot.m_intake);
-               );
-
-               case 3: cmds.addCommands(
-                       new RR_TrajectoryFollowerCommand(m_robot.drivetrain, RightSpikeMark)
-                       ,new Sleep(100)
-//                    ,new CMD_IntakeReverse(m_robot.m_intake)
-//                    ,new Sleep(200)
-//                    ,new CMD_IntakeOff(m_robot.m_intake);
-               );
-          }
+          cmds.addCommands(
+                  new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_test)
+                  ,new Sleep(200)
+                  ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 90)
+                  ,new CMD_SetElbowAngle(m_robot.m_elbow, -90)
+                  ,new ParallelCommandGroup(
+                          new CMD_SetElbowAngle(m_robot.m_elbow, -180)
+                          ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 180)
+                  )
+                  ,new CMD_SetWristPosition(m_robot.m_wrist, .75)
+                  ,new Sleep(1500)
+                  ,new CMD_WristReleaseClaw(m_robot.m_wrist)
+                  ,new Sleep(500)
+                  ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+          );
 
           return cmds;
      }
