@@ -17,7 +17,7 @@ public class CMD_ArmDropIntake extends SequentialCommandGroup {
     public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
          addRequirements(p_blank);
          addCommands(
-              new CMD_WristReleaseOutsideClaw(p_wrist),
+              new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kPreDrop),
               new Sleep(250),
               new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake),
               new ParallelCommandGroup(
@@ -28,7 +28,8 @@ public class CMD_ArmDropIntake extends SequentialCommandGroup {
               new Sleep(100),
               new CMD_WristReleaseClaw(p_wrist),
               new Sleep(100),
-              new CMD_WristCloseClaw(p_wrist)
+              new CMD_WristCloseClaw(p_wrist),
+              new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)
          );
     }
 }

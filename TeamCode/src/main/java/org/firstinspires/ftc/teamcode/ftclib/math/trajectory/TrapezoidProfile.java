@@ -42,8 +42,8 @@ public class TrapezoidProfile {
 
     private final Constraints m_constraints;
     private State m_current;
-    private State m_goal; // TODO: Remove
-    private final boolean m_newAPI; // TODO: Remove
+    private State m_goal;
+    private final boolean m_newAPI;
 
     private double m_endAccel;
     private double m_endFullSpeed;

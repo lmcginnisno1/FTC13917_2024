@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -102,6 +104,10 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
+         Trajectory m_nextSpotLeft = m_robot.drivetrain.trajectoryBuilder(m_robot.drivetrain.getPoseEstimate(), false)
+                 .lineTo(new Vector2d(m_robot.drivetrain.getPoseEstimate().getX(), m_robot.drivetrain.getPoseEstimate().getY() + 2))
+                 .build();
+
          SelectCommand deployArm = new SelectCommand(
                  new HashMap<Object, Command>(){{
                     put(GlobalVariables.ScoringLevel.One, new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
@@ -150,10 +156,8 @@ public class Robot_Teleop extends LinearOpMode {
                               new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)));
                       put(GlobalVariables.RobotState.ReadyToIntake, new SequentialCommandGroup(
                               new CMD_ArmDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
-                              new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Intake)));
-                      put(GlobalVariables.RobotState.Intake, new SequentialCommandGroup(
-                              new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank),
                               new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)));
+                      put(GlobalVariables.RobotState.Intake, new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Intake));
                       put(GlobalVariables.RobotState.Stow, new SequentialCommandGroup(
                               deployArm,
                               new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score)));
@@ -220,6 +224,8 @@ public class Robot_Teleop extends LinearOpMode {
            new CMD_WristReleaseOutsideClaw(m_robot.m_wrist),
            () -> m_robot.m_wrist.getIsClawBOpen()
         ));
+
+        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
 
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new InstantCommand(()->  m_robot.m_droneLauncher.close()));
 
