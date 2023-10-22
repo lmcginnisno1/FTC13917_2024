@@ -57,6 +57,9 @@ public class SUB_Wrist extends SubsystemBase{
      public boolean getIsClawBOpen() {
           return clawbOpen;
      }
+     public void setClawBPosition(double p_pos){
+          m_clawb.setPosition(p_pos);
+     }
      public void setPosition(double p_position){
           m_wristservo.setPosition(p_position);
      }
