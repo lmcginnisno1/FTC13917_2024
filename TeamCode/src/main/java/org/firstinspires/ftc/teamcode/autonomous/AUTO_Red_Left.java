@@ -1,68 +1,103 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
+import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelHome;
+import org.firstinspires.ftc.teamcode.commands.CMD_SetElbowAngle;
+import org.firstinspires.ftc.teamcode.commands.CMD_SetShoulderAngle;
+import org.firstinspires.ftc.teamcode.commands.CMD_SetWristPosition;
+import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseOutsideClaw;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.commands.Sleep;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
-import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.*;
+import org.opencv.core.Mat;
 
-import org.firstinspires.ftc.teamcode.commands.*;
-
-@Autonomous(name = "Auto Red Left", group = "Auto Red",
-        preselectTeleOp = "Robot Teleop")
+@Autonomous(name = "Auto Red Left", group = "Auto Red", preselectTeleOp = "Robot Teleop")
 public class AUTO_Red_Left extends Robot_Auto {
 
      private int m_Analysis;
-     private SequentialCommandGroup placePurplePixel;
-
      @Override
      public void prebuildTasks() {
           // run these tasks now
           m_robot.m_wrist.closeClawA();
           m_robot.m_wrist.closeClawB();
      }
-
      @Override
      public SequentialCommandGroup buildTasks() {
-          m_Analysis = 2;
+          m_Analysis = 1;
+
           SequentialCommandGroup completetasks = new SequentialCommandGroup();
-          completetasks.addCommands(placePurplePixel());
+          completetasks.addCommands(
+               placePurplePixel()
+               ,placeYellowPixel()
+          );
 
           m_robot.schedule(completetasks);
           return completetasks;
      }
 
+
      private SequentialCommandGroup placePurplePixel(){
           SequentialCommandGroup cmds = new SequentialCommandGroup();
           Pose2d m_initialPose = new Pose2d(0, 0, Math.toRadians(0));
 
-          Trajectory m_test = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
-                  .lineToConstantHeading(new Vector2d(-6, 6))
+          Trajectory m_spikeMark1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
+                  .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(-30)))
                   .build();
 
-          cmds.addCommands(
-                  new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_test)
-                  ,new Sleep(200)
-                  ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 90)
-                  ,new CMD_SetElbowAngle(m_robot.m_elbow, -90)
-                  ,new ParallelCommandGroup(
-                          new CMD_SetElbowAngle(m_robot.m_elbow, -180)
-                          ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 180)
-                  )
-                  ,new CMD_SetWristPosition(m_robot.m_wrist, .75)
-                  ,new Sleep(1500)
-                  ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                  ,new Sleep(500)
-                  ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-          );
+          switch (m_Analysis){
+               case 1:
+                    cmds.addCommands(
+                         new ParallelCommandGroup(
+                            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_spikeMark1)
+                            ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 50)
+                         )
+                         ,new ParallelCommandGroup(
+                              new CMD_SetElbowAngle(m_robot.m_elbow, 55)
+                              ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
+                         )
+                         ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
+                         ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                    );
+                    break;
+               case 2:
+
+                    break;
+               case 3:
+
+                    break;
+          }
 
           return cmds;
      }
 
-}
+     //-30, 80
 
+     private SequentialCommandGroup placeYellowPixel(){
+          SequentialCommandGroup cmds = new SequentialCommandGroup();
+          Trajectory dropSpot1 = m_robot.drivetrain.trajectoryBuilder(new Pose2d(-34, -9, Math.toRadians(-30)), true)
+                  .splineTo(new Vector2d(-45, 75), Math.toRadians(90))
+                  .lineToConstantHeading(new Vector2d(-55, 81))
+                  .build();
+
+          switch (m_Analysis){
+               case 1:
+                    cmds.addCommands(
+                         new RR_TrajectoryFollowerCommand(m_robot.drivetrain, dropSpot1)
+                    );
+                    break;
+               case 2:
+
+                    break;
+               case 3:
+
+                    break;
+          }
+          return cmds;
+     }
+}

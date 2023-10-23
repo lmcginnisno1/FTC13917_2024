@@ -19,9 +19,9 @@ public class Constants {
 
           //Shoulder Positions
           public static final double kHome = 0;
-          public static final double kPreReadyIntake = 42;
-          public static final double kReadyIntake = 32;
-          public static final double kPreDropIntake = 35;
+          public static final double kPreReadyIntake = 55;
+          public static final double kReadyIntake = 32.5;
+          public static final double kPreDropIntake = 32.5;
           public static final double kDropIntake = 25;
           public static final double kUp = 100;
           public static final double kClimb = 50;
@@ -58,7 +58,7 @@ public class Constants {
      public static final class WristConstants{
           public static final double kClawAOpen = 0.0;
           public static final double kClawBOpen = 0.05;
-          public static final double kClawBHalfOpen = 0.3;
+          public static final double kClawBHalfOpen = 0.25;
           public static final double kClawAClose = 0.5;
           public static final double kClawBClose = 0.38;
           public static final double kWristOffset = -0.035;
@@ -66,8 +66,8 @@ public class Constants {
           public static final double kClawBOffset = 0.1;
           // Wrist Positions
           public static final double kReadyIntake = 0.725;
-          public static final double kDropIntake1 = .65;
-          public static final double kDropIntake2 = .575;
+          public static final double kDropIntake1 = .60;
+          public static final double kDropIntake2 = .55;
           public static final double kDropIntakeFinal = 0.5;
           public static final double kHome = 0.0;
           public static final double kLevelOne = 0.3;

@@ -24,9 +24,10 @@ public class CMD_ArmDropIntake extends SequentialCommandGroup {
                     new CMD_SetElbowAngle(p_elbow ,Constants.ElbowConstants.kDropIntake),
                     new SequentialCommandGroup(
                          new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kDropIntake1),
-                         new Sleep(250),
+                         new Sleep(330),
                          new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kDropIntake2),
-                         new Sleep(250),
+                         new InstantCommand(()-> p_wrist.setClawBPosition(Constants.WristConstants.kClawBHalfOpen)),
+                         new Sleep(330),
                          new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kDropIntakeFinal)
                     )
               ),
