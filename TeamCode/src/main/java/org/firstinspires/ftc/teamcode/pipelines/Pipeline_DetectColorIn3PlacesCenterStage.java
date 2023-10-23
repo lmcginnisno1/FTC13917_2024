@@ -23,14 +23,18 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
         static final Scalar BLUE = new Scalar(0, 0, 255);
         static final Scalar GREEN = new Scalar(0, 255, 0);
 
+        // Channel constants
+        public static int CHANNEL_BLUE = 1;
+        public static int CHANNEL_RED = 2;
+
         /*
          * The core values which define the location and size of the sample regions
          */
         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(0, 330);
         static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(565, 330);
         static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(1000, 330);
-        static final int REGION_WIDTH = 40;
-        static final int REGION_HEIGHT = 40;
+        static final int REGION_WIDTH = 120;
+        static final int REGION_HEIGHT = 80;
 
         /*
          * Points which actually define the sample region rectangles, derived from above
@@ -39,35 +43,31 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
          * Example of how points A and B work to define a rectangle
          *
          * ------------------------------------
-         * | (0,0) Point A |
-         * | |
-         * | |
-         * | |
-         * | |
-         * | |
-         * | |
+         * | (0,0) Point A   |
+         * |                 |
+         * |                 |
+         * |                 |
+         * |                 |
+         * |                 |
+         * |                 |
          * | Point B (70,50) |
          * ------------------------------------
          *
          */
-        Point region1_pointA = new Point(
-                        REGION1_TOPLEFT_ANCHOR_POINT.x,
-                        REGION1_TOPLEFT_ANCHOR_POINT.y);
+        Point region1_pointA = REGION1_TOPLEFT_ANCHOR_POINT.clone();
         Point region1_pointB = new Point(
-                        REGION1_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH * 3),
-                        REGION1_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT * 2));
-        Point region2_pointA = new Point(
-                        REGION2_TOPLEFT_ANCHOR_POINT.x,
-                        REGION2_TOPLEFT_ANCHOR_POINT.y);
+                        REGION1_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH),
+                        REGION1_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT));
+        
+        Point region2_pointA = REGION2_TOPLEFT_ANCHOR_POINT.clone();
         Point region2_pointB = new Point(
-                        REGION2_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH * 3),
-                        REGION2_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT * 2));
-        Point region3_pointA = new Point(
-                        REGION3_TOPLEFT_ANCHOR_POINT.x,
-                        REGION3_TOPLEFT_ANCHOR_POINT.y);
+                        REGION2_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH),
+                        REGION2_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT));
+        
+        Point region3_pointA = REGION3_TOPLEFT_ANCHOR_POINT.clone();
         Point region3_pointB = new Point(
-                        REGION3_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH * 3),
-                        REGION3_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT * 2));
+                        REGION3_TOPLEFT_ANCHOR_POINT.x + (REGION_WIDTH),
+                        REGION3_TOPLEFT_ANCHOR_POINT.y + (REGION_HEIGHT));
 
         /*
          * Working variables
@@ -80,14 +80,14 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
         // Volatile since accessed by OpMode thread w/o synchronization
         private volatile int position = 3;
 
-        private boolean findred = false;
+        private int channel;
 
         /**
          * Initializes a new instance of the Pipeline_DetectColorIn3PlacesCenterStage class.
          * @param findred True if the red block should be found, otherwise the blue block will be found.
          */
         public Pipeline_DetectColorIn3PlacesCenterStage(boolean findred) {
-                this.findred = findred;
+                channel = findred ? CHANNEL_RED : CHANNEL_BLUE;
         }
 
         /*
@@ -110,7 +110,7 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
                  * buffer would be re-allocated the first time a real frame
                  * was crunched)
                  */
-                inputToCb(firstFrame, 1);
+                inputToCb(firstFrame, channel);
 
                 /*
                  * Submats are a persistent reference to a region of the parent
@@ -162,7 +162,7 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
                 /*
                  * Get the Cb channel of the input frame after conversion to YCrCb
                  */
-                inputToCb(input, 1);
+                inputToCb(input, channel);
 
                 /*
                  * Compute the average pixel value of each submat region. We're
@@ -212,13 +212,8 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
                  * Find the max of the 3 averages
                  */
                 int max;
-                if (findred) {
-                        int maxOneTwo = Math.min(avg1, avg2);
-                        max = Math.min(maxOneTwo, avg3);
-                } else {
-                        int maxOneTwo = Math.max(avg1, avg2);
-                        max = Math.max(maxOneTwo, avg3);
-                }
+                int maxOneTwo = Math.max(avg1, avg2);
+                max = Math.max(maxOneTwo, avg3);                
 
                 /*
                  * Now that we found the max, we actually need to go and
