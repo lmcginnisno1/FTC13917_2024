@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import org.firstinspires.ftc.teamcode.subsystems.TriggerSubsystemBase;
-
-public class GlobalVariables extends TriggerSubsystemBase {
+public class GlobalVariables{
      public enum RobotState{
           Home,
           ReadyToIntake,
-          Intake,
           Stow,
           Score,
           Climb,

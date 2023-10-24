@@ -22,7 +22,7 @@ public class Constants {
           public static final double kPreReadyIntake = 55;
           public static final double kReadyIntake = 32.5;
           public static final double kPreDropIntake = 32.5;
-          public static final double kDropIntake = 25;
+          public static final double kDropIntake = 27.5;
           public static final double kUp = 100;
           public static final double kClimb = 50;
           public static final double kLevelOne = 110;
@@ -48,9 +48,9 @@ public class Constants {
           //Bigger absolute number = farther from robot, - = back  of robot
           public static final double kHome = 0;
           public static final double kParallel = -20;
-          public static final double kReadyFinal = 40;//40.0
+          public static final double kReadyFinal = 42.5;//40.0
           public static final double kReadyIntake = 35;
-          public static final double kDropIntake = 55;
+          public static final double kDropIntake = 57.5;
           public static final double kLevelOne = -40;
           public static final double kLevelTwo = -65;
           public static final double kLevelThree = -75;
@@ -65,10 +65,8 @@ public class Constants {
           public static final double kClawAOffset = 0.1;
           public static final double kClawBOffset = 0.1;
           // Wrist Positions
-          public static final double kReadyIntake = 0.725;
-          public static final double kDropIntake1 = .60;
-          public static final double kDropIntake2 = .55;
-          public static final double kDropIntakeFinal = 0.5;
+          public static final double kReadyIntake = 0.75;
+          public static final double kDropIntake = 0.5;
           public static final double kHome = 0.0;
           public static final double kLevelOne = 0.3;
           public static final double kLevelTwo = 0.40;

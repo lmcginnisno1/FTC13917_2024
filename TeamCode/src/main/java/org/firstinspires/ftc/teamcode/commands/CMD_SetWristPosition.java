@@ -13,7 +13,7 @@ public class CMD_SetWristPosition extends CommandBase {
 
     @Override
     public void initialize() {
-        m_wrist.moveWrist(m_pos);
+        m_wrist.setPosition(m_pos);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.WristConstants;
 import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
+import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
 
 /**
  * The Wrist subsystem comproised of three servos at the end of the arm.
@@ -15,8 +16,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
 public class SUB_Wrist extends SubsystemBase{
      Servo m_wristservo, m_clawa, m_clawb;
      private boolean clawaOpen, clawbOpen;
-     public SUB_Wrist(OpMode p_opMode, final String p_wristservoname, final String p_clawaName,
-                      final String p_clawbName) {
+     public SUB_Wrist(OpMode p_opMode, final String p_wristservoname, final String p_clawaName, final String p_clawbName) {
           m_wristservo = p_opMode.hardwareMap.get(Servo.class, p_wristservoname);
           m_clawa = p_opMode.hardwareMap.get(Servo.class, p_clawaName);
           m_clawb = p_opMode.hardwareMap.get(Servo.class, p_clawbName);
@@ -40,9 +40,6 @@ public class SUB_Wrist extends SubsystemBase{
           clawbOpen = false;
           moveClawB(WristConstants.kClawBClose);
      }
-     public void moveWrist(double pos) {
-          m_wristservo.setPosition(pos + WristConstants.kWristOffset);
-     }
      private void moveClawA(double pos) {
           m_clawa.setPosition(pos + WristConstants.kClawAOffset);
      }
@@ -61,6 +58,6 @@ public class SUB_Wrist extends SubsystemBase{
           m_clawb.setPosition(p_pos);
      }
      public void setPosition(double p_position){
-          m_wristservo.setPosition(p_position);
+          m_wristservo.setPosition(p_position + WristConstants.kWristOffset);
      }
 }

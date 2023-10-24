@@ -33,10 +33,10 @@ public class InstantCommand extends CommandBase {
      * Creates a new InstantCommand with a Runnable that does nothing.  Useful only as a no-arg
      * constructor to call implicitly from subclass constructors.
      */
-    // public InstantCommand() {
-    //     m_toRun = () -> {
-    //     };
-    // }
+     public InstantCommand() {
+         m_toRun = () -> {
+         };
+     }
 
     @Override
     public void initialize() {
