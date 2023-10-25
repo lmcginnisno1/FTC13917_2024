@@ -16,6 +16,13 @@ public class GlobalVariables{
           Three,
      }
 
+     public enum IntakeLevel{
+          Two
+          ,Three
+          ,Four
+          ,Five
+     }
+
      RobotState m_robotState = RobotState.Home;
 
      public void setRobotState(RobotState p_robotState){
@@ -44,7 +51,17 @@ public class GlobalVariables{
           return m_currentScoringLevel == p_scoringLevel;
      }
 
-     public boolean getState(RobotState p_state){
-          return m_robotState == p_state;
+     IntakeLevel m_intakeLevel = IntakeLevel.Two;
+
+     public void setIntakeLevel(IntakeLevel p_intakeLevel){
+          m_intakeLevel = p_intakeLevel;
+     }
+
+     public IntakeLevel getIntakeLevel(){
+          return m_intakeLevel;
+     }
+
+     public boolean isIntakeLevel(IntakeLevel p_intakeLevel){
+          return m_intakeLevel == p_intakeLevel;
      }
 }

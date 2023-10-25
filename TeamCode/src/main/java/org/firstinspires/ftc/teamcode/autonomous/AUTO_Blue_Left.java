@@ -17,6 +17,9 @@ import org.firstinspires.ftc.teamcode.commands.*;
 @Autonomous(name = "Auto Blue Left", group = "Auto Blue",
         preselectTeleOp = "Robot Teleop")
 public class AUTO_Blue_Left extends Robot_Auto {
+     public AUTO_Blue_Left() {
+          super(false);
+     }
 
      private int m_Analysis;
      @Override
@@ -27,8 +30,8 @@ public class AUTO_Blue_Left extends Robot_Auto {
      }
 
      @Override
-     public SequentialCommandGroup buildTasks() {
-          m_Analysis = 3;
+     public SequentialCommandGroup buildTasks(int p_Analysis) {
+          m_Analysis = p_Analysis;
           SequentialCommandGroup completetasks = new SequentialCommandGroup();
           completetasks.addCommands(
                   placePurplePixel(),

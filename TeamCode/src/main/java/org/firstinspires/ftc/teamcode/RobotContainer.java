@@ -42,6 +42,7 @@ public class RobotContainer {
         m_blank = new SUB_Blank();
         m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
         m_pixelGuide = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "pixelGuideSensor"));
+        frontCamera = new SUB_OpenCvCamera(p_opMode, "frontCamera");
     };
 
     public void run() {

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Constants.ShoulderConstants;
 
 public class SUB_Shoulder extends TrapezoidProfileSubsystem {
      DcMotorEx m_rightMotor, m_leftMotor;
+     OpMode m_opMode;
 
      public SUB_Shoulder(OpMode p_opMode, final String p_rightMotorName, final String p_leftMotorName) {
           super(
@@ -20,6 +21,7 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
                           ShoulderConstants.kMaxAccelerationDegreesPerSecond),
                   ShoulderConstants.kOffsetDegrees
           );
+          m_opMode = p_opMode;
           m_rightMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_rightMotorName);
           m_leftMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_leftMotorName);
           m_rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -54,6 +56,14 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
      // Return the leader motor's position in degrees
      public double getAngle() {
           return m_rightMotor.getCurrentPosition() / ShoulderConstants.kTicksToDegrees;
+     }
+
+     public int getLeftMotorTicks(){
+          return m_leftMotor.getCurrentPosition();
+     }
+
+     public int getRightMotorTicks(){
+          return m_rightMotor.getCurrentPosition();
      }
 
      // Set motor's angle

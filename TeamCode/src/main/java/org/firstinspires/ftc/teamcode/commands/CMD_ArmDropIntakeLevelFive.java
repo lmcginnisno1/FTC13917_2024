@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
 /**
  * Lowers the arm to the ground for intake, from ready intake position
  */
-public class CMD_ArmDropIntake extends SequentialCommandGroup {
-    public CMD_ArmDropIntake(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
-         addRequirements(p_blank);
-         addCommands(
-              new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntake)
-              ,new CMD_WristCloseClaw(p_wrist)
-              ,new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)
-         );
-    }
+public class CMD_ArmDropIntakeLevelFive extends SequentialCommandGroup {
+     public CMD_ArmDropIntakeLevelFive(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
+          addRequirements(p_blank);
+          addCommands(
+                  new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntakeLevelFive)
+                  ,new CMD_WristCloseClaw(p_wrist)
+                  ,new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)
+          );
+     }
 }

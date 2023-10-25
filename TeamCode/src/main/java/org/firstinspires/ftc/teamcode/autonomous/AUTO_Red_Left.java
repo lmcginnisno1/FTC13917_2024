@@ -21,6 +21,11 @@ import org.opencv.core.Mat;
 public class AUTO_Red_Left extends Robot_Auto {
 
      private int m_Analysis;
+
+     public AUTO_Red_Left() {
+          super(true);
+     }
+
      @Override
      public void prebuildTasks() {
           // run these tasks now
@@ -28,13 +33,13 @@ public class AUTO_Red_Left extends Robot_Auto {
           m_robot.m_wrist.closeClawB();
      }
      @Override
-     public SequentialCommandGroup buildTasks() {
-          m_Analysis = 1;
+     public SequentialCommandGroup buildTasks(int p_Analysis) {
+          m_Analysis = p_Analysis;
 
           SequentialCommandGroup completetasks = new SequentialCommandGroup();
           completetasks.addCommands(
-               placePurplePixel()
-               ,placeYellowPixel()
+                  placePurplePixel()
+                  ,placeYellowPixel()
           );
 
           m_robot.schedule(completetasks);
@@ -53,16 +58,16 @@ public class AUTO_Red_Left extends Robot_Auto {
           switch (m_Analysis){
                case 1:
                     cmds.addCommands(
-                         new ParallelCommandGroup(
-                            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_spikeMark1)
-                            ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 50)
-                         )
-                         ,new ParallelCommandGroup(
-                              new CMD_SetElbowAngle(m_robot.m_elbow, 55)
-                              ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-                         )
-                         ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                         ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            new ParallelCommandGroup(
+                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_spikeMark1)
+                                    ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 50)
+                            )
+                            ,new ParallelCommandGroup(
+                                    new CMD_SetElbowAngle(m_robot.m_elbow, 55)
+                                    ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
+                            )
+                            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
+                            ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
                     );
                     break;
                case 2:
@@ -88,7 +93,7 @@ public class AUTO_Red_Left extends Robot_Auto {
           switch (m_Analysis){
                case 1:
                     cmds.addCommands(
-                         new RR_TrajectoryFollowerCommand(m_robot.drivetrain, dropSpot1)
+                            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, dropSpot1)
                     );
                     break;
                case 2:

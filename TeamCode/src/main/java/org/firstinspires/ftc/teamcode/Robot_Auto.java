@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
+import org.firstinspires.ftc.teamcode.pipelines.Pipeline_DetectColorIn3PlacesCenterStage;
 import org.firstinspires.ftc.teamcode.pipelines.Pipeline_DetectJunctionCenter;
 import org.firstinspires.ftc.teamcode.pipelines.Pipeline_Detect3ColorInSamePlace;
 
@@ -14,15 +15,17 @@ public abstract class Robot_Auto extends LinearOpMode {
 
     public RobotContainer m_robot;
     public int m_Analysis;
+    private boolean m_findRed;
     SequentialCommandGroup tasks;
-    Pipeline_Detect3ColorInSamePlace m_detectSignalCone;
+    Pipeline_DetectColorIn3PlacesCenterStage m_detectColorIn3PlacesCenterstage;
 
     private ElapsedTime m_runTime = new ElapsedTime();
-    // GlobalVariables globalVariables = GlobalVariables.getInstance();
+
+    public Robot_Auto(boolean m_findRed) {
+        this.m_findRed = m_findRed;
+    }
 
     public void initialize() {
-
-
         telemetry.clearAll();
         telemetry.addData("init complete", "BaseRobot");
     }
@@ -37,16 +40,13 @@ public abstract class Robot_Auto extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             m_robot.run(); // run the scheduler
 
-//            telemetry.addData("Analysis: ",m_detectSignalCone.getAnalysis());
+            telemetry.addData("Analysis: ", m_detectColorIn3PlacesCenterstage.getAnalysis());
             telemetry.update();
         }
 
-//        m_Analysis = m_detectSignalCone.getAnalysis();
+        m_Analysis = m_detectColorIn3PlacesCenterstage.getAnalysis();
         m_Analysis = 2;
-        buildTasks();
-
-        // switch pipeline to detect junction center
-//        m_robot.frontCamera.setPipeline(m_detectSignalCone);
+        buildTasks(m_Analysis);
 
         m_runTime.reset();
 
@@ -70,14 +70,13 @@ public abstract class Robot_Auto extends LinearOpMode {
 
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
-//        m_detectSignalCone = new Pipeline_Detect3ColorInSamePlace();
+        m_detectColorIn3PlacesCenterstage = new Pipeline_DetectColorIn3PlacesCenterStage(m_findRed);
 
-//        m_robot.frontCamera.setPipeline(m_detectSignalCone);
-//        m_robot.frontCamera.startStreaming(640,480);
-
+        m_robot.frontCamera.setPipeline(m_detectColorIn3PlacesCenterstage);
+        m_robot.frontCamera.startStreaming(1280,720);
     }
 
-    public abstract SequentialCommandGroup buildTasks();
+    public abstract SequentialCommandGroup buildTasks(int m_Analysis);
     public abstract void prebuildTasks();
 
 }

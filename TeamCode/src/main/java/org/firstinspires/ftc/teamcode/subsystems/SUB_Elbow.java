@@ -19,6 +19,8 @@ public class SUB_Elbow extends TrapezoidProfileSubsystem {
                   ElbowConstants.kOffsetDegrees
           );
           m_elbowmotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_elbowmotorname);
+          m_elbowmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+          m_elbowmotor.setVelocityPIDFCoefficients(10, 3, 0, 0);
           m_elbowmotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
           m_elbowmotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
                   new PIDFCoefficients(
@@ -49,5 +51,9 @@ public class SUB_Elbow extends TrapezoidProfileSubsystem {
           m_elbowmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
           m_elbowmotor.setTargetPosition(0);
           m_elbowmotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+     }
+
+     public int getElbowTicks(){
+          return m_elbowmotor.getCurrentPosition();
      }
 }
