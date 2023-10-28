@@ -7,9 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelHome;
+import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelOne;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetElbowAngle;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetShoulderAngle;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetWristPosition;
+import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseClaw;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseOutsideClaw;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.Sleep;
@@ -32,6 +34,7 @@ public class AUTO_Red_Left extends Robot_Auto {
           m_robot.m_wrist.closeClawA();
           m_robot.m_wrist.closeClawB();
      }
+
      @Override
      public SequentialCommandGroup buildTasks(int p_Analysis) {
           m_Analysis = p_Analysis;
@@ -52,7 +55,7 @@ public class AUTO_Red_Left extends Robot_Auto {
           Pose2d m_initialPose = new Pose2d(0, 0, Math.toRadians(0));
 
           Trajectory m_spikeMark1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
-                  .lineToLinearHeading(new Pose2d(-34, -9, Math.toRadians(-30)))
+                  .lineToLinearHeading(new Pose2d(-34, -8, Math.toRadians(-30)))
                   .build();
 
           switch (m_Analysis){
@@ -87,13 +90,24 @@ public class AUTO_Red_Left extends Robot_Auto {
           SequentialCommandGroup cmds = new SequentialCommandGroup();
           Trajectory dropSpot1 = m_robot.drivetrain.trajectoryBuilder(new Pose2d(-34, -9, Math.toRadians(-30)), true)
                   .splineTo(new Vector2d(-45, 75), Math.toRadians(90))
-                  .lineToConstantHeading(new Vector2d(-55, 81))
+                  .splineTo(new Vector2d(-33, 84), Math.toRadians(90))
+                  .build();
+
+          Trajectory park1 = m_robot.drivetrain.trajectoryBuilder(dropSpot1.end(), true)
+                  .strafeRight(18)
                   .build();
 
           switch (m_Analysis){
                case 1:
                     cmds.addCommands(
                             new RR_TrajectoryFollowerCommand(m_robot.drivetrain, dropSpot1)
+                            ,new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            ,new Sleep(500)
+                            ,new CMD_WristReleaseClaw(m_robot.m_wrist)
+                            ,new ParallelCommandGroup(
+                               new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                               ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park1)
+                            )
                     );
                     break;
                case 2:

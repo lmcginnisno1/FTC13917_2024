@@ -24,6 +24,8 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
           m_opMode = p_opMode;
           m_rightMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_rightMotorName);
           m_leftMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_leftMotorName);
+          m_rightMotor.setVelocityPIDFCoefficients(12.5, 7.5, 0.0, 13.57);//good but slow
+          m_leftMotor.setVelocityPIDFCoefficients(12.5, 7.5, 0.0, 13.57);//good but slow
           m_rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
           m_leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
           m_rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,

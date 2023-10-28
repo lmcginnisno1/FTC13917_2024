@@ -45,7 +45,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         }
 
         m_Analysis = m_detectColorIn3PlacesCenterstage.getAnalysis();
-        m_Analysis = 2;
+        m_Analysis = 1;
         buildTasks(m_Analysis);
 
         m_runTime.reset();
@@ -73,7 +73,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         m_detectColorIn3PlacesCenterstage = new Pipeline_DetectColorIn3PlacesCenterStage(m_findRed);
 
         m_robot.frontCamera.setPipeline(m_detectColorIn3PlacesCenterstage);
-        m_robot.frontCamera.startStreaming(1280,720);
+        m_robot.frontCamera.startStreaming(640,480);
     }
 
     public abstract SequentialCommandGroup buildTasks(int m_Analysis);

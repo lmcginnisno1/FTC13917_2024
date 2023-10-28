@@ -19,11 +19,10 @@ public class CMD_ArmSetReadyIntake extends SequentialCommandGroup {
         addCommands(
                 new CMD_WristReleaseClaw(p_wrist)
                 ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kReadyIntake)
-                ,new Sleep(200)
                 ,new ParallelCommandGroup(
                         new CMD_SetElbowAngle(p_elbow ,Constants.ElbowConstants.kReadyIntake)
                         ,new InstantCommand(()-> p_wrist.setClawBPosition(Constants.WristConstants.kClawBHalfOpen))
-                        ,new CMD_SetShoulderAngle(p_shoulder, 36)
+                        ,new CMD_SetShoulderAngle(p_shoulder, 40)
                 )
                 ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kReadyIntake)
         );

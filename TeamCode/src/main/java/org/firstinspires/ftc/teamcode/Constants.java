@@ -10,7 +10,7 @@ public class Constants {
           public static final double kMaxAccelerationDegreesPerSecond = 500;
           public static final double kOffsetDegrees = 0;
           public static final double kMaxPower = 1;
-          public static final double kP = 10;
+          public static final double kP = 5;
           public static final double kI = 0;
           public static final double kD = 0;
           public static final double kF = 0;
@@ -19,10 +19,12 @@ public class Constants {
 
           //Shoulder Positions
           public static final double kHome = 0;
-          public static final double kReadyIntake = 30.0;//30.0
+          public static final double kReadyIntake = 32.5;//30.0
           public static final double kReadyIntakeLevelFive = 45;
-          public static final double kDropIntake = 27.5;
-          public static final double kDropIntakeLevelFive = 42.5;
+          public static final double kReadyIntakeLevelFour = 40;
+          public static final double kDropIntake = 27.5;//27.5
+          public static final double kDropIntakeLevelFive = 37.5;
+          public static final double kDropIntakeLevelFour = 27;
           public static final double kUp = 100;
           public static final double kClimb = 50;
           public static final double kLevelOne = 110;
@@ -37,7 +39,7 @@ public class Constants {
           public static final double kMaxAccelerationDegreesPerSecond = 360;
           public static final double kOffsetDegrees = 0;
           public static final double kMaxPower = 1;
-          public static final double kP = 15;
+          public static final double kP = 13.0;//good but slow
           public static final double kI = 0;
           public static final double kD = 0;
           public static final double kF = 0;
@@ -48,8 +50,9 @@ public class Constants {
           //Bigger absolute number = farther from robot, - = back  of robot
           public static final double kHome = 0;
           public static final double kParallel = -20;
-          public static final double kReadyIntake = 50;//52.5
+          public static final double kReadyIntake = 52.5;//52.5
           public static final double kReadyIntakeLevelFive = 50;
+          public static final double kReadyIntakeLevelFour = 50;
           public static final double kLevelOne = -40;
           public static final double kLevelTwo = -65;
           public static final double kLevelThree = -75;
@@ -64,8 +67,9 @@ public class Constants {
           public static final double kClawAOffset = 0.1;
           public static final double kClawBOffset = 0.1;
           // Wrist Positions
-          public static final double kReadyIntake = 0.575;//0.55
-          public static final double kReadyIntakeLevelFive = .55;
+          public static final double kReadyIntake = 0.54;//0.55
+          public static final double kReadyIntakeLevelFive = .525;
+          public static final double kReadyIntakeLevelFour = .525;
           public static final double kHome = 0.0;
           public static final double kLevelOne = 0.3;
           public static final double kLevelTwo = 0.40;

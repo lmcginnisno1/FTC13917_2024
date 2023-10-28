@@ -13,16 +13,14 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
 /**
  * Ready the arm for intake from home position
  */
-public class CMD_ArmSetReadyIntakeLevelFive extends SequentialCommandGroup {
-     public CMD_ArmSetReadyIntakeLevelFive(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
+public class CMD_ArmSetReadyIntakeLevelFour extends SequentialCommandGroup {
+     public CMD_ArmSetReadyIntakeLevelFour(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
           addRequirements(p_blank);
           addCommands(
-                  new CMD_WristCloseClaw(p_wrist)
-                  ,new CMD_WristReleaseOutsideClaw(p_wrist)
-                  ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kReadyIntakeLevelFive)
+                  new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kReadyIntakeLevelFour)
                   ,new Sleep(200)
-                  ,new CMD_SetElbowAngle(p_elbow ,Constants.ElbowConstants.kReadyIntakeLevelFive)
-                  ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kReadyIntakeLevelFive)
+                  ,new CMD_SetElbowAngle(p_elbow ,Constants.ElbowConstants.kReadyIntakeLevelFour)
+                  ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kReadyIntakeLevelFour)
           );
      }
 }
