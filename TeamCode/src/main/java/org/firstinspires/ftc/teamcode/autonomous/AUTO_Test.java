@@ -64,8 +64,25 @@ public class AUTO_Test extends Robot_Auto {
           Trajectory m_purplePixel1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
                   .lineToLinearHeading(new Pose2d(-38, -13, Math.toRadians(15)))
                   .build();
-          Trajectory m_alignToWhiteStack = m_robot.drivetrain.trajectoryBuilder(m_purplePixel1.end(), false)
-                  .lineToLinearHeading(new Pose2d(-50, -13, Math.toRadians(-90)))
+
+          Trajectory m_alignToWhiteStack1 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel1.end(), false)
+                  .lineToLinearHeading(new Pose2d(-49, -13, Math.toRadians(-90)))
+                  .build();
+
+          Trajectory m_driveIntoStack = m_robot.drivetrain.trajectoryBuilder(m_alignToWhiteStack1.end(), false)
+                  .forward(14)
+                  .build();
+
+          Trajectory m_dropSpot1 = m_robot.drivetrain.trajectoryBuilder(m_driveIntoStack.end(), true)
+                  .splineToLinearHeading(new Pose2d(-32, 85, Math.toRadians(-90)), Math.toRadians(70))
+                  .build();
+
+          Trajectory m_getMorePixels = m_robot.drivetrain.trajectoryBuilder(m_dropSpot1.end(), false)
+                  .splineToLinearHeading(new Pose2d(-49, -13, Math.toRadians(-90)), Math.toRadians(-70))
+                  .build();
+
+          Trajectory m_park1 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot1.end(), false)
+                  .strafeRight(24)
                   .build();
 
           cmds.addCommands(
@@ -74,7 +91,7 @@ public class AUTO_Test extends Robot_Auto {
                           new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
                           ,new SequentialCommandGroup(
                                new Sleep(500)
-                               ,new CMD_SetElbowAngle(m_robot.m_elbow, 60)
+                               ,new CMD_SetElbowAngle(m_robot.m_elbow, 65)
                                ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
                           )
                   )
@@ -82,23 +99,37 @@ public class AUTO_Test extends Robot_Auto {
                )
                ,new Sleep(1000)
                ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
-               ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_alignToWhiteStack)
-//                  new ParallelCommandGroup(
-//                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_prePurple1)
-//                     ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-//                     ,new SequentialCommandGroup(
-//                         new Sleep(1500)
-//                         ,new ParallelCommandGroup(
-//                              new CMD_SetElbowAngle(m_robot.m_elbow, 60)
-//                              ,new SequentialCommandGroup(
-//                                   new Sleep(500)
-//                                   ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-//                              )
-//                         )
-//                     )
-//                  )
-//                  ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
-//                  ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
+               ,new ParallelCommandGroup(
+                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_alignToWhiteStack1)
+                    ,new CMD_ArmSetReadyIntakeLevelFive(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+               )
+               ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_driveIntoStack)
+               ,new CMD_ArmDropIntakeLevelFive(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+               ,new ParallelCommandGroup(
+//                        new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
+                        new SequentialCommandGroup(
+                             new Sleep(50)
+                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0)
+                             ,new ParallelCommandGroup(
+                                new CMD_SetElbowAngle(m_robot.m_elbow, 0)
+                                ,new SequentialCommandGroup(
+                                   new Sleep(700),
+                                   new CMD_SetShoulderAngle(m_robot.m_shoulder, 0)
+                                )
+                             )
+                        )
+//                        ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 0)
+                        ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
+               )
+               ,new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+               ,new Sleep(100)
+               ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
+               ,new Sleep(100)
+               ,new CMD_WristReleaseClaw(m_robot.m_wrist)
+               ,new Sleep(100)
+               ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+//                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_getMorePixels)
+//                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_driveIntoStack)
           );
 
           return cmds;

@@ -20,7 +20,7 @@ public class Constants {
           //Shoulder Positions
           public static final double kHome = 0;
           public static final double kReadyIntake = 32.5;//30.0
-          public static final double kReadyIntakeLevelFive = 45;
+          public static final double kReadyIntakeLevelFive = 50;
           public static final double kReadyIntakeLevelFour = 40;
           public static final double kDropIntake = 27.5;//27.5
           public static final double kDropIntakeLevelFive = 37.5;

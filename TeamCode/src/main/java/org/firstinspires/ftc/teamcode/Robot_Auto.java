@@ -73,7 +73,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         m_detectColorIn3PlacesCenterstage = new Pipeline_DetectColorIn3PlacesCenterStage(m_findRed);
 
         m_robot.frontCamera.setPipeline(m_detectColorIn3PlacesCenterstage);
-        m_robot.frontCamera.startStreaming(640,480);
+        m_robot.frontCamera.startStreaming(640,360);
     }
 
     public abstract SequentialCommandGroup buildTasks(int m_Analysis);

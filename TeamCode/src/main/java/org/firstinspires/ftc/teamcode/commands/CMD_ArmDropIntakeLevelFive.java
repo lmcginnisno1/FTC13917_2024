@@ -18,7 +18,7 @@ public class CMD_ArmDropIntakeLevelFive extends SequentialCommandGroup {
      public CMD_ArmDropIntakeLevelFive(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
           addRequirements(p_blank);
           addCommands(
-                  new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntakeLevelFive)
+                  new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kDropIntakeLevelFive).setTolerance(3)
                   ,new CMD_WristCloseClaw(p_wrist)
           );
      }
