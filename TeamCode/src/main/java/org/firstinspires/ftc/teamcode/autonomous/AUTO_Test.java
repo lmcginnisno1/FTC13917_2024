@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.commands.CMD_ArmDropIntakeLevelFive;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmDropIntakeLevelFour;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelHome;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelOne;
+import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelTwo;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetReadyIntakeLevelFive;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetReadyIntakeLevelFour;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetElbowAngle;
@@ -61,24 +62,19 @@ public class AUTO_Test extends Robot_Auto {
           SequentialCommandGroup cmds = new SequentialCommandGroup();
           Pose2d m_initialPose = new Pose2d(0, 0, Math.toRadians(0));
 
-          Trajectory m_purplePixel1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, false)
-                  .lineToLinearHeading(new Pose2d(-38, -13, Math.toRadians(15)))
+          Trajectory m_purplePixel1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
+                  .lineToLinearHeading(new Pose2d(-40, -6, Math.toRadians(-40)))
                   .build();
 
-          Trajectory m_alignToWhiteStack1 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel1.end(), false)
-                  .lineToLinearHeading(new Pose2d(-49, -13, Math.toRadians(-90)))
-                  .build();
-
-          Trajectory m_driveIntoStack = m_robot.drivetrain.trajectoryBuilder(m_alignToWhiteStack1.end(), false)
-                  .forward(14)
-                  .build();
-
-          Trajectory m_dropSpot1 = m_robot.drivetrain.trajectoryBuilder(m_driveIntoStack.end(), true)
-                  .splineToLinearHeading(new Pose2d(-32, 85, Math.toRadians(-90)), Math.toRadians(70))
+          Trajectory m_dropSpot1 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel1.end(), true)
+                  .lineToSplineHeading((new Pose2d(-48, 14, Math.toRadians(-90))))
+//                  .splineToSplineHeading(new Pose2d(-50, 52, Math.toRadians(-90)), Math.toRadians(90))
+                  .splineToSplineHeading(new Pose2d(-35, 82, Math.toRadians(-90)), Math.toRadians(90))
                   .build();
 
           Trajectory m_getMorePixels = m_robot.drivetrain.trajectoryBuilder(m_dropSpot1.end(), false)
-                  .splineToLinearHeading(new Pose2d(-49, -13, Math.toRadians(-90)), Math.toRadians(-70))
+                  .lineToSplineHeading(new Pose2d(-48, 50, Math.toRadians(-90)))//-48,
+                  .splineToLinearHeading(new Pose2d(-48, -8, Math.toRadians(-90)), Math.toRadians(70))
                   .build();
 
           Trajectory m_park1 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot1.end(), false)
@@ -88,7 +84,7 @@ public class AUTO_Test extends Robot_Auto {
           cmds.addCommands(
                new ParallelCommandGroup(
                   new ParallelCommandGroup(
-                          new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
+                          new CMD_SetShoulderAngle(m_robot.m_shoulder, 35)
                           ,new SequentialCommandGroup(
                                new Sleep(500)
                                ,new CMD_SetElbowAngle(m_robot.m_elbow, 65)
@@ -100,36 +96,29 @@ public class AUTO_Test extends Robot_Auto {
                ,new Sleep(1000)
                ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
                ,new ParallelCommandGroup(
-                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_alignToWhiteStack1)
-                    ,new CMD_ArmSetReadyIntakeLevelFive(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-               )
-               ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_driveIntoStack)
-               ,new CMD_ArmDropIntakeLevelFive(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-               ,new ParallelCommandGroup(
-//                        new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-                        new SequentialCommandGroup(
-                             new Sleep(50)
-                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0)
-                             ,new ParallelCommandGroup(
-                                new CMD_SetElbowAngle(m_robot.m_elbow, 0)
-                                ,new SequentialCommandGroup(
-                                   new Sleep(700),
-                                   new CMD_SetShoulderAngle(m_robot.m_shoulder, 0)
-                                )
-                             )
-                        )
-//                        ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 0)
+                     new SequentialCommandGroup(
+                        new Sleep(1500)
                         ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
+                     )
+                     ,new SequentialCommandGroup(
+                          new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
+                          ,new CMD_SetElbowAngle(m_robot.m_elbow, 0)
+                          ,new CMD_SetWristPosition(m_robot.m_wrist, 0.2)
+                          ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 10)
+                     )
                )
-               ,new CMD_ArmSetLevelOne(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+               ,new SequentialCommandGroup(
+                    new CMD_SetShoulderAngle(m_robot.m_shoulder, 110)
+                    ,new CMD_SetElbowAngle(m_robot.m_elbow, -65)
+                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.4)
+               )
                ,new Sleep(100)
                ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                ,new Sleep(100)
                ,new CMD_WristReleaseClaw(m_robot.m_wrist)
                ,new Sleep(100)
                ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-//                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_getMorePixels)
-//                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_driveIntoStack)
+               ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_getMorePixels)
           );
 
           return cmds;
