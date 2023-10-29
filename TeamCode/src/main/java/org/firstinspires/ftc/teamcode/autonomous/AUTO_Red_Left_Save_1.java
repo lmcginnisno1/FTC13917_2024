@@ -4,33 +4,27 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
-import org.firstinspires.ftc.teamcode.commands.CMD_ArmDropIntakeLevelFive;
-import org.firstinspires.ftc.teamcode.commands.CMD_ArmDropIntakeLevelFour;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelHome;
 import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetLevelOne;
-import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetReadyIntakeLevelFive;
-import org.firstinspires.ftc.teamcode.commands.CMD_ArmSetReadyIntakeLevelFour;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetElbowAngle;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetShoulderAngle;
 import org.firstinspires.ftc.teamcode.commands.CMD_SetWristPosition;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseClaw;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseOutsideClaw;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
-import org.firstinspires.ftc.teamcode.commands.RR_TurnCommand;
 import org.firstinspires.ftc.teamcode.commands.Sleep;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
-import org.opencv.core.Mat;
-
-@Autonomous(name = "Auto Red Left Test", group = "Auto Red Test", preselectTeleOp = "Robot Teleop")
-public class AUTO_Red_Left_Test extends Robot_Auto {
+@Disabled
+@Autonomous(name = "1", group = "Auto Red Test", preselectTeleOp = "Robot Teleop")
+public class AUTO_Red_Left_Save_1 extends Robot_Auto {
 
      private int m_Analysis;
 
-     public AUTO_Red_Left_Test() {
+     public AUTO_Red_Left_Save_1() {
           super(true);
      }
 

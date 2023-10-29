@@ -54,7 +54,7 @@ public class Robot_Teleop extends LinearOpMode {
 
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
-            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), poseEstimate.getHeading());
+            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
 
             // Angles
             telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());

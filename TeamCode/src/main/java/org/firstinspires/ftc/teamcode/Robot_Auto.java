@@ -16,6 +16,7 @@ public abstract class Robot_Auto extends LinearOpMode {
     public RobotContainer m_robot;
     public int m_Analysis;
     private boolean m_findRed;
+    private Pose2d m_startingPose = new Pose2d(0, 0, 0);
     SequentialCommandGroup tasks;
     Pipeline_DetectColorIn3PlacesCenterStage m_detectColorIn3PlacesCenterstage;
 
@@ -45,7 +46,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         }
 
         m_Analysis = m_detectColorIn3PlacesCenterstage.getAnalysis();
-        m_Analysis = 1;
+        m_Analysis = 3;
         buildTasks(m_Analysis);
 
         m_runTime.reset();
@@ -55,13 +56,22 @@ public abstract class Robot_Auto extends LinearOpMode {
 
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
-            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), poseEstimate.getHeading());
+            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
             telemetry.update();
         }
 
         //
         endOfOpMode();
         m_robot.reset();
+    }
+
+    public void setStartingPose(Pose2d p_startingPose){
+        m_startingPose = p_startingPose;
+        m_robot.drivetrain.setPoseEstimate(m_startingPose);
+    }
+
+    public Pose2d getStartingPose(){
+        return m_startingPose;
     }
 
     public void endOfOpMode() {
