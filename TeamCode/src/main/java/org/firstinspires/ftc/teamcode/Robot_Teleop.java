@@ -34,7 +34,6 @@ public class Robot_Teleop extends LinearOpMode {
         telemetry.addData("init complete", "BaseRobot");
 
         m_runTime.reset();
-
     }
 
 
@@ -104,39 +103,31 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
-         Trajectory m_nextSpotLeft = m_robot.drivetrain.trajectoryBuilder(m_robot.drivetrain.getPoseEstimate(), false)
-                 .lineTo(new Vector2d(m_robot.drivetrain.getPoseEstimate().getX(), m_robot.drivetrain.getPoseEstimate().getY() + 2))
-                 .build();
-
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new SequentialCommandGroup(
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new SequentialCommandGroup(
            new CMD_PrepareToClimb(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
            ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb)
         ));
 
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.Y, new ConditionalCommand(
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new ConditionalCommand(
           new CMD_Climb(m_robot.m_shoulder),
           new InstantCommand(),
           ()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Climb)
         ));
 
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
            new CMD_WristReleaseClaw(m_robot.m_wrist)
            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
            ,() -> m_robot.m_wrist.getIsClawBOpen()
         ));
 
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_LEFT, new InstantCommand()).whenHeld(new CMD_Drive(m_robot.drivetrain, 0, .1, 0));
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new InstantCommand()).whenHeld(new CMD_Drive(m_robot.drivetrain, 0, -.1, 0));
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
 
-
-         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
-
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new InstantCommand(()->  m_robot.m_droneLauncher.close()));
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new InstantCommand(()->  m_robot.m_droneLauncher.close()));
 
 
          //driver 2
 
-        AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
+        AddButtonCommand(m_toolOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
                 new SequentialCommandGroup(
                         new CMD_DecreaseScoringLevel(m_robot.m_variables)
                         ,new CMD_DeployArm(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
@@ -144,7 +135,8 @@ public class Robot_Teleop extends LinearOpMode {
                 ,new InstantCommand()
                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Score)
         ));
-        AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.RIGHT_BUMPER, new ConditionalCommand(
+
+        AddButtonCommand(m_toolOp, GamepadKeys.Button.RIGHT_BUMPER, new ConditionalCommand(
                 new SequentialCommandGroup(
                         new CMD_IncreaseScoringLevel(m_robot.m_variables)
                         ,new CMD_DeployArm(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)                )
@@ -152,7 +144,7 @@ public class Robot_Teleop extends LinearOpMode {
                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Score)
         ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.A, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.A, new ConditionalCommand(
                new SequentialCommandGroup(
                     new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)
                     ,new CMD_SetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
@@ -161,7 +153,7 @@ public class Robot_Teleop extends LinearOpMode {
                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home) || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.B, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.B, new ConditionalCommand(
                new SequentialCommandGroup(
                     new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
                     ,new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
@@ -171,7 +163,7 @@ public class Robot_Teleop extends LinearOpMode {
                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.X, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.X, new ConditionalCommand(
                  new SequentialCommandGroup(
                     new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score)
                     ,new CMD_DeployArm(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables))
@@ -179,7 +171,7 @@ public class Robot_Teleop extends LinearOpMode {
                  ()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow) || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.Y, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.Y, new ConditionalCommand(
                  new SequentialCommandGroup(
                     new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
                     ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
@@ -188,12 +180,12 @@ public class Robot_Teleop extends LinearOpMode {
                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Score)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.START, new SequentialCommandGroup(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.START, new SequentialCommandGroup(
                  new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch)
                  ,new CMD_ReadyToLaunch(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_LEFT,
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_LEFT,
                  new ConditionalCommand(
                          new InstantCommand(()-> m_robot.m_droneLauncher.releaseTheDrone())
                          ,new InstantCommand()
@@ -201,12 +193,12 @@ public class Robot_Teleop extends LinearOpMode {
                  )
          );
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
             new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
             ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_UP, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_UP, new ConditionalCommand(
             new SequentialCommandGroup(
                     new CMD_IncreaseIntakeLevel(m_robot.m_variables)
                     ,new CMD_SetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
@@ -215,7 +207,7 @@ public class Robot_Teleop extends LinearOpMode {
             ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
          ));
 
-         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
                  new SequentialCommandGroup(
                          new CMD_DecreaseIntakeLevel(m_robot.m_variables)
                          ,new CMD_SetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
@@ -225,15 +217,15 @@ public class Robot_Teleop extends LinearOpMode {
          ));
 
          //trigger
-//         m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
-//                 new SequentialCommandGroup(
-//                       new CMD_SetRobotState(m_robot.m_variables ,GlobalVariables.RobotState.Stow)
-//                       ,new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-//                       ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-//                 )
-//                 ,new InstantCommand()
-//                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
-//         ));
+         m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
+                 new SequentialCommandGroup(
+                       new CMD_SetRobotState(m_robot.m_variables ,GlobalVariables.RobotState.Stow)
+                       ,new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                       ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                 )
+                 ,new InstantCommand()
+                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
+         ));
     }
 
     public double setSideMultiplier(double value) {

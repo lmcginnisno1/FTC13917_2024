@@ -49,16 +49,16 @@ public class VisionAprilTags extends SubsystemBase {
 	// within the field would point.  Currently can only be 0 (top), -90 (red side), -180 (audience
 	// side), or 90 (blue side).
 	private final FieldAprilTag[] m_aprilTagLocations = {
-			new FieldAprilTag(1,132, 41.5, 0),
-			new FieldAprilTag(2,132, 35.5, 0),
-			new FieldAprilTag(3,132, 29.67, 0),
-			new FieldAprilTag(4,132, -29.67, 0),
-			new FieldAprilTag(5,132, -35.5, 0),
-			new FieldAprilTag(6,132, -41.5, 0),
-			new FieldAprilTag(7, 0, -40.5, -180),		// Red, Large
-			new FieldAprilTag(8, 0,-35.5, -180),		// Red, Small
-			new FieldAprilTag(9, 0,35.5, -180),		// Blue, Small
-			new FieldAprilTag(10, 0,40.5, -180)		// Blue, Large
+			new FieldAprilTag(1,60, 41.5, 0),//left tag blue side
+			new FieldAprilTag(2,60, 35.5, 0),//middle tag blue side
+			new FieldAprilTag(3,60, 29.67, 0),//right tag blue side
+			new FieldAprilTag(4,60, -29.67, 0),///left tag red side
+			new FieldAprilTag(5,60, -35.5, 0),//middle tag red side
+			new FieldAprilTag(6,60, -41.5, 0),//right tag red side
+//			new FieldAprilTag(7, 0, -40.5, -180),		// Red, Large
+//			new FieldAprilTag(8, 0,-35.5, -180),		// Red, Small
+//			new FieldAprilTag(9, 0,35.5, -180),		// Blue, Small
+//			new FieldAprilTag(10, 0,40.5, -180)		// Blue, Large
 //            new FieldAprilTag(585,0, -24, -180),
 //            new FieldAprilTag(585,24, -72, -90),
 //			new FieldAprilTag(585,144, 24, 0),
@@ -204,9 +204,9 @@ public class VisionAprilTags extends SubsystemBase {
 		}   // end for() loop
 
 		// Add "key" information to telemetry
-		m_opMode.telemetry.addData("\nkey", "\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-		m_opMode.telemetry.addData("PRY", "Pitch, Roll & Yaw (XYZ Rotation)");
-		m_opMode.telemetry.addData("RBE", "Range, Bearing & Elevation");
+//		m_opMode.telemetry.addData("\nkey", "\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+//		m_opMode.telemetry.addData("PRY", "Pitch, Roll & Yaw (XYZ Rotation)");
+//		m_opMode.telemetry.addData("RBE", "Range, Bearing & Elevation");
 	}
 
 	private static double angleWrap(double angle) {

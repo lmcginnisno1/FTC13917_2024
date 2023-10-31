@@ -46,9 +46,10 @@ public class RobotContainer {
         m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
         m_pixelGuide = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "pixelGuideSensor"));
         frontCamera = new SUB_OpenCvCamera(p_opMode, "frontCamera");
-        m_visionPipeline = new VisionPipeline(p_opMode, "frontCamera");
-        m_visionAprilTags = new VisionAprilTags(p_opMode, "frontCamera", 0, 0,0);
-        m_visionProcessor = new SampleVisionProcessor();
+        //visioning subsystems, disabled due to issues with cashing on teleop stop
+//        m_visionPipeline = new VisionPipeline(p_opMode, "frontCamera");
+//        m_visionAprilTags = new VisionAprilTags(p_opMode, "frontCamera", -6, 0,180);
+//        m_visionProcessor = new SampleVisionProcessor();
     };
 
     public void run() {
