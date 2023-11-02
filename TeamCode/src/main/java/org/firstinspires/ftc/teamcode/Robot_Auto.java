@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
-import org.firstinspires.ftc.teamcode.pipelines.Pipeline_DetectColorIn3PlacesCenterStage;
-import org.firstinspires.ftc.teamcode.pipelines.Pipeline_DetectJunctionCenter;
-import org.firstinspires.ftc.teamcode.pipelines.Pipeline_Detect3ColorInSamePlace;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
@@ -15,15 +12,16 @@ public abstract class Robot_Auto extends LinearOpMode {
 
     public RobotContainer m_robot;
     public int m_Analysis;
-    private boolean m_findRed;
+
+    private boolean m_redAlliance;
+
     private Pose2d m_startingPose = new Pose2d(0, 0, 0);
     SequentialCommandGroup tasks;
-    Pipeline_DetectColorIn3PlacesCenterStage m_detectColorIn3PlacesCenterstage;
 
     private ElapsedTime m_runTime = new ElapsedTime();
 
-    public Robot_Auto(boolean m_findRed) {
-        this.m_findRed = m_findRed;
+    public Robot_Auto(boolean detectRedAlliance) {
+        this.m_redAlliance = detectRedAlliance;
     }
 
     public void initialize() {
@@ -34,19 +32,22 @@ public abstract class Robot_Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeSubsystems();
+        if (m_redAlliance) m_robot.m_autonomousDetect.setRedAlliance();
+        else m_robot.m_autonomousDetect.setBlueAlliance();
 
         prebuildTasks();
 
         // waitForStart();
         while (!opModeIsActive() && !isStopRequested()) {
             m_robot.run(); // run the scheduler
-
-            telemetry.addData("Analysis: ", m_detectColorIn3PlacesCenterstage.getAnalysis());
+            telemetry.addData("Analysis: ", m_robot.m_autonomousDetect.getSelected());
             telemetry.update();
         }
 
-        m_Analysis = m_detectColorIn3PlacesCenterstage.getAnalysis();
-        m_Analysis = 3;
+        m_Analysis = m_robot.m_autonomousDetect.getSelected();
+        m_robot.m_backCamera.setProcessorDisabled(m_robot.m_autonomousDetect); // shutdown auto detect visual processor
+//        m_Analysis = 1; // override for testing
+
         buildTasks(m_Analysis);
 
         m_runTime.reset();
@@ -56,7 +57,7 @@ public abstract class Robot_Auto extends LinearOpMode {
 
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
-            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
+            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), poseEstimate.getHeading());
             telemetry.update();
         }
 
@@ -65,25 +66,22 @@ public abstract class Robot_Auto extends LinearOpMode {
         m_robot.reset();
     }
 
-    public void setStartingPose(Pose2d p_startingPose){
-        m_startingPose = p_startingPose;
-        m_robot.drivetrain.setPoseEstimate(m_startingPose);
-    }
-
-    public Pose2d getStartingPose(){
-        return m_startingPose;
-    }
-
     public void endOfOpMode() {
 
     }
 
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
-        m_detectColorIn3PlacesCenterstage = new Pipeline_DetectColorIn3PlacesCenterStage(m_findRed);
 
-        m_robot.frontCamera.setPipeline(m_detectColorIn3PlacesCenterstage);
-        m_robot.frontCamera.startStreaming(640,360);
+    }
+
+    public void setStartingPose(Pose2d p_pose) {
+        m_startingPose = p_pose;
+        m_robot.drivetrain.setPoseEstimate(m_startingPose);
+    }
+
+    public Pose2d getStartingPose() {
+        return m_startingPose;
     }
 
     public abstract SequentialCommandGroup buildTasks(int m_Analysis);

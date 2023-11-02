@@ -18,6 +18,9 @@ public class CMD_IncreaseScoringLevel extends CommandBase {
                case Two:
                     m_variables.setScoringLevel(GlobalVariables.ScoringLevel.Three);
                     break;
+               case Three:
+                    m_variables.setScoringLevel(GlobalVariables.ScoringLevel.Four);
+                    break;
                default: break;
           }
      }

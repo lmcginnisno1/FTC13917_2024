@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 public class GlobalVariables{
+
+     public static Pose2d currentPose = new Pose2d();
+
      public enum RobotState{
           Home,
           ReadyToIntake,
@@ -14,6 +19,7 @@ public class GlobalVariables{
           One,
           Two,
           Three,
+          Four
      }
 
      public enum IntakeLevel{

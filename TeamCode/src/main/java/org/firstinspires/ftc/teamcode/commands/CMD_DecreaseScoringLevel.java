@@ -12,6 +12,9 @@ public class CMD_DecreaseScoringLevel extends CommandBase {
      @Override
      public void initialize(){
           switch (m_variables.getScoringLevel()){
+               case Four:
+                    m_variables.setScoringLevel(GlobalVariables.ScoringLevel.Three);
+                    break;
                case Three:
                     m_variables.setScoringLevel(GlobalVariables.ScoringLevel.Two);
                     break;

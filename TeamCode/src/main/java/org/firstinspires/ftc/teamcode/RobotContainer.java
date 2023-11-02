@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.SelectCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.DigitalPort;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 import org.firstinspires.ftc.teamcode.commands.*;
+import org.firstinspires.ftc.teamcode.visionprocessors.VProcessor_DetectColorIn3PlacesCenterStage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +28,10 @@ public class RobotContainer {
     public SUB_Intake m_intake;
     public SUB_Blank m_blank;
     public SUB_DroneLauncher m_droneLauncher;
-    public SUB_OpenCvCamera frontCamera;
     public GlobalVariables m_variables;
     public DigitalPort m_pixelGuide;
-    VisionPipeline m_visionPipeline;
-    VisionAprilTags m_visionAprilTags;
-    SampleVisionProcessor m_visionProcessor;
+    public SUB_VisionAprilTagsPlusAutoDetect m_backCamera;
+    public VProcessor_DetectColorIn3PlacesCenterStage m_autonomousDetect;
 
     public RobotContainer(OpMode p_opMode) {
         SampleMecanumDrive drivebase = new SampleMecanumDrive(p_opMode.hardwareMap);
@@ -45,11 +44,11 @@ public class RobotContainer {
         m_blank = new SUB_Blank();
         m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
         m_pixelGuide = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "pixelGuideSensor"));
-        frontCamera = new SUB_OpenCvCamera(p_opMode, "frontCamera");
-        //visioning subsystems, disabled due to issues with cashing on teleop stop
-//        m_visionPipeline = new VisionPipeline(p_opMode, "frontCamera");
-//        m_visionAprilTags = new VisionAprilTags(p_opMode, "frontCamera", -6, 0,180);
-//        m_visionProcessor = new SampleVisionProcessor();
+        m_autonomousDetect = new VProcessor_DetectColorIn3PlacesCenterStage();
+        m_backCamera = new SUB_VisionAprilTagsPlusAutoDetect(p_opMode, "backCamera",
+                -6,
+                0,
+                180, m_autonomousDetect);
     };
 
     public void run() {

@@ -19,6 +19,7 @@ public class CMD_DeployArm extends SequentialCommandGroup {
                        put(GlobalVariables.ScoringLevel.One, new CMD_ArmSetLevelOne(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.ScoringLevel.Two, new CMD_ArmSetLevelTwo(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.ScoringLevel.Three, new CMD_ArmSetLevelThree(p_shoulder, p_elbow, p_wrist, p_blank));
+                       put(GlobalVariables.ScoringLevel.Four, new CMD_ArmSetLevelFour(p_shoulder, p_elbow, p_wrist, p_blank));
                   }}
                   ,p_variables::getScoringLevel
           );

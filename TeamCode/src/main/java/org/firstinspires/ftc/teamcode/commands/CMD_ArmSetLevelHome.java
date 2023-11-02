@@ -14,7 +14,7 @@ public class CMD_ArmSetLevelHome extends SequentialCommandGroup {
           addRequirements(p_blank);
           addCommands(
                new ParallelCommandGroup(
-                       new CMD_SetShoulderAngle(p_shoulder, 50),
+                       new CMD_SetShoulderAngle(p_shoulder, 50).setTolerance(30),
                        new SequentialCommandGroup(
                                new Sleep(500),
                                new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome),

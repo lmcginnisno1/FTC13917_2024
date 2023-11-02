@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.commands.*;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
+import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.GamepadButton;
@@ -67,12 +68,16 @@ public class Robot_Teleop extends LinearOpMode {
             //trigger
             telemetry.addData("Pixel Sensor", m_robot.m_pixelGuide.get());
 
+            telemetry.addData("global pose", GlobalVariables.currentPose);
+
             //motor encoders
 //            telemetry.addData("left shoulder motor", m_robot.m_shoulder.getLeftMotorTicks());
 //            telemetry.addData("right shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
 //            telemetry.addData("elbow shoulder motor", m_robot.m_elbow.getElbowTicks());
 
             telemetry.update();
+
+            GlobalVariables.currentPose = m_robot.drivetrain.getPoseEstimate();
         }
 
         //
@@ -86,6 +91,7 @@ public class Robot_Teleop extends LinearOpMode {
 
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
+        m_robot.m_backCamera.setProcessorDisabled(m_robot.m_autonomousDetect);
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
@@ -103,7 +109,9 @@ public class Robot_Teleop extends LinearOpMode {
     }
 
     public void configureButtonBindings() {
-        AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new SequentialCommandGroup(
+         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.BACK, new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain));
+
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new SequentialCommandGroup(
            new CMD_PrepareToClimb(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
            ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb)
         ));
@@ -115,14 +123,35 @@ public class Robot_Teleop extends LinearOpMode {
         ));
 
         AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-           new CMD_WristReleaseClaw(m_robot.m_wrist)
+           new SequentialCommandGroup(
+               new CMD_WristReleaseClaw(m_robot.m_wrist)
+              ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+              ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
+           )
            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
            ,() -> m_robot.m_wrist.getIsClawBOpen()
         ));
 
-        AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new ConditionalCommand(
+                new SequentialCommandGroup(
+                   new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToIntake)
+                   ,new CMD_SetReadyIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                )
+                ,new InstantCommand()
+                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home) || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
+        ));
 
-        AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new InstantCommand(()->  m_robot.m_droneLauncher.close()));
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_UP, new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_AutoDriveIn(m_robot.drivetrain, m_robot.m_pixelGuide, m_driverOp));
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new ConditionalCommand(
+                new SequentialCommandGroup(
+                        new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Score)
+                        ,new CMD_DeployArm(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables))
+                ,new InstantCommand(),
+                ()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow) || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
+        ));
 
 
          //driver 2
@@ -155,9 +184,9 @@ public class Robot_Teleop extends LinearOpMode {
 
          AddButtonCommand(m_toolOp, GamepadKeys.Button.B, new ConditionalCommand(
                new SequentialCommandGroup(
-                    new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
-                    ,new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                    new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
                     ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                    ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
                )
                ,new InstantCommand()
                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
@@ -185,6 +214,14 @@ public class Robot_Teleop extends LinearOpMode {
                  ,new CMD_ReadyToLaunch(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
          ));
 
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.BACK, new ConditionalCommand(
+            new ParallelCommandGroup((
+                    new InstantCommand(()-> m_robot.m_shoulder.resetAngle()))
+                    ,new InstantCommand(()-> m_robot.m_elbow.resetAngle()))
+            ,new InstantCommand()
+            ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
+         ));
+
          AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_LEFT,
                  new ConditionalCommand(
                          new InstantCommand(()-> m_robot.m_droneLauncher.releaseTheDrone())
@@ -193,7 +230,7 @@ public class Robot_Teleop extends LinearOpMode {
                  )
          );
 
-         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
+         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
             new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
             ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
          ));
@@ -219,9 +256,9 @@ public class Robot_Teleop extends LinearOpMode {
          //trigger
          m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
                  new SequentialCommandGroup(
-                       new CMD_SetRobotState(m_robot.m_variables ,GlobalVariables.RobotState.Stow)
-                       ,new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                       ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                    new CMD_SetDropIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                    ,new CMD_SetRobotState(m_robot.m_variables ,GlobalVariables.RobotState.Stow)
                  )
                  ,new InstantCommand()
                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
