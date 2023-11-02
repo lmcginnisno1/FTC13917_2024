@@ -28,7 +28,6 @@ public abstract class Robot_Auto extends LinearOpMode {
 
     public void initialize() {
         telemetry.clearAll();
-        telemetry.addData("init complete", "BaseRobot");
     }
 
     @Override
@@ -41,14 +40,19 @@ public abstract class Robot_Auto extends LinearOpMode {
         while (!opModeIsActive() && !isStopRequested()) {
             m_robot.run(); // run the scheduler
 
+            telemetry.addData("init complete", true);
             telemetry.addData("Analysis: ", m_detectColorIn3PlacesCenterstage.getAnalysis());
+            telemetry.addData("avg1", m_detectColorIn3PlacesCenterstage.getAvg1());
+            telemetry.addData("Avg2", m_detectColorIn3PlacesCenterstage.getAvg2());
+            telemetry.addData("Avg3", m_detectColorIn3PlacesCenterstage.getAvg3());
             telemetry.update();
         }
 
         m_Analysis = m_detectColorIn3PlacesCenterstage.getAnalysis();
-        m_Analysis = 3;
+        m_robot.frontCamera.stopStreaming();
+        m_robot.initializeAprilTagDetection(this);
+//        m_Analysis = 1;
         buildTasks(m_Analysis);
-
         m_runTime.reset();
 
         while (!isStopRequested() && opModeIsActive()) {
@@ -74,12 +78,11 @@ public abstract class Robot_Auto extends LinearOpMode {
         return m_startingPose;
     }
 
-    public void endOfOpMode() {
-
-    }
+    public void endOfOpMode() {}
 
     public void initializeSubsystems() {
         m_robot = new RobotContainer(this);
+
         m_detectColorIn3PlacesCenterstage = new Pipeline_DetectColorIn3PlacesCenterStage(m_findRed);
 
         m_robot.frontCamera.setPipeline(m_detectColorIn3PlacesCenterstage);

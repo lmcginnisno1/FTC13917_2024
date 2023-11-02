@@ -8,7 +8,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
+public class Pipeline_DetectColorIn3PlacesCenterStage extends OpenCvPipeline{
         /*
          * Detector for Freight Frenzy autonomous
          * This pipeline detect the team shipping element in one of three places
@@ -30,9 +30,9 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(30, 150);
-        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(282, 120);
-        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(550, 150);
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(30, 220);//150
+        static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(282, 190);//120
+        static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(525, 220);//150
         static final int REGION_WIDTH = 50;
         static final int REGION_HEIGHT = 60;
 
@@ -212,8 +212,8 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
                  * Find the max of the 3 averages
                  */
                 int max;
-                int maxOneTwo = Math.max(avg1, avg2);
-                max = Math.max(maxOneTwo, avg3);                
+                int maxOneTwo = Math.min(avg1, avg2);
+                max = Math.min(maxOneTwo, avg3);
 
                 /*
                  * Now that we found the max, we actually need to go and
@@ -276,5 +276,17 @@ public class Pipeline_DetectColorIn3PlacesCenterStage  extends OpenCvPipeline{
          */
         public int getAnalysis() {
                 return position;
+        }
+
+        public int getAvg1(){
+                return avg1;
+        }
+
+        public int getAvg2(){
+                return avg2;
+        }
+
+        public int getAvg3(){
+                return avg2;
         }
 }

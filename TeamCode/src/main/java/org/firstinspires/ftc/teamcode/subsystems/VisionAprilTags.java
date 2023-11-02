@@ -48,13 +48,16 @@ public class VisionAprilTags extends SubsystemBase {
 	// corner). angle is in degrees. A tag's angle is where an arrow shot through the tag's center from
 	// within the field would point.  Currently can only be 0 (top), -90 (red side), -180 (audience
 	// side), or 90 (blue side).
+	double xFrontBackStage = 61.375;//measure to front flat surface
+	double xCoordinate = xFrontBackStage + 1.5;
+
 	private final FieldAprilTag[] m_aprilTagLocations = {
-			new FieldAprilTag(1,60, 41.5, 0),//left tag blue side
-			new FieldAprilTag(2,60, 35.5, 0),//middle tag blue side
-			new FieldAprilTag(3,60, 29.67, 0),//right tag blue side
-			new FieldAprilTag(4,60, -29.67, 0),///left tag red side
-			new FieldAprilTag(5,60, -35.5, 0),//middle tag red side
-			new FieldAprilTag(6,60, -41.5, 0),//right tag red side
+			new FieldAprilTag(1,xCoordinate, 41.75, 0),//left tag blue side
+			new FieldAprilTag(2,xCoordinate, 35.75, 0),//middle tag blue side
+			new FieldAprilTag(3,xCoordinate, 29.5, 0),//right tag blue side
+			new FieldAprilTag(4,xCoordinate, -29.5, 0),///left tag red side
+			new FieldAprilTag(5,xCoordinate, -35.75, 0),//middle tag red side
+			new FieldAprilTag(6,xCoordinate, -41.75, 0),//right tag red side
 //			new FieldAprilTag(7, 0, -40.5, -180),		// Red, Large
 //			new FieldAprilTag(8, 0,-35.5, -180),		// Red, Small
 //			new FieldAprilTag(9, 0,35.5, -180),		// Blue, Small
@@ -214,5 +217,13 @@ public class VisionAprilTags extends SubsystemBase {
 			return ((angle + Math.PI) % (Math.PI * 2)) - Math.PI;
 		else
 			return ((angle - Math.PI) % (Math.PI * 2)) + Math.PI;
+	}
+
+	public void stopStreaming(){
+		m_visionPortal.setProcessorEnabled(m_aprilTag, false);
+	}
+
+	public void resumeStreaming(){
+		m_visionPortal.setProcessorEnabled(m_aprilTag, true);
 	}
 }

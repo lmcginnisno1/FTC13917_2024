@@ -193,7 +193,7 @@ public class Robot_Teleop extends LinearOpMode {
                  )
          );
 
-         AddButtonCommand(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
+         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_RIGHT, new SequentialCommandGroup(
             new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Stow)
             ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
          ));
@@ -215,6 +215,8 @@ public class Robot_Teleop extends LinearOpMode {
                  ,new InstantCommand()
                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
          ));
+
+         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.BACK, new VisionUpdatePose(m_robot.m_visionAprilTags, m_robot.drivetrain));
 
          //trigger
          m_robot.m_pixelGuide.whenActive(new ConditionalCommand(

@@ -30,8 +30,4 @@ public class VisionPipeline extends SubsystemBase {
 	public void periodic() {
 	   telemetry();
 	}
-
-	public void stopStreaming() {
-		m_visionPortal.stopStreaming();
-	}
 }

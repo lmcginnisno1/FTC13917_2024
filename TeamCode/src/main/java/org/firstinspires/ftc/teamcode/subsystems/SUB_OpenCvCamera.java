@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
 
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -71,4 +72,12 @@ public class SUB_OpenCvCamera extends SubsystemBase{
         });
     }
 
+    public void stopStreaming(){
+        m_webcam.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {
+            @Override
+            public void onClose() {
+
+            }
+        });
+    }
 }
