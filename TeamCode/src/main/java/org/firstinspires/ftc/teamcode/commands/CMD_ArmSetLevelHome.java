@@ -18,7 +18,7 @@ public class CMD_ArmSetLevelHome extends SequentialCommandGroup {
                        new SequentialCommandGroup(
                                new Sleep(500),
                                new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome),
-                               new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kParallel)
+                               new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kParallel).setTolerance(1)
                        )
                ),
                new ParallelCommandGroup(

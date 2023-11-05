@@ -7,16 +7,14 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import org.firstinspires.ftc.teamcode.RobotContainer;
 import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
-
-public class RR_TrajectoryBuildFromCurrent extends CommandBase {
+public class RR_TrajectorySplineFromCurrent extends CommandBase {
 
     RobotContainer m_robot;
     private final Vector2d m_vector;
     private boolean m_reversed;
     double m_radian;
 
-    public RR_TrajectoryBuildFromCurrent(RobotContainer p_robot, Vector2d p_vector, double radian, boolean p_reversed) {
+    public RR_TrajectorySplineFromCurrent(RobotContainer p_robot, Vector2d p_vector, double radian, boolean p_reversed) {
         m_robot = p_robot;
         m_vector = p_vector;
         m_reversed = p_reversed;
@@ -25,7 +23,7 @@ public class RR_TrajectoryBuildFromCurrent extends CommandBase {
         addRequirements(m_robot.drivetrain);
     }
 
-    public RR_TrajectoryBuildFromCurrent(RobotContainer p_robot, Vector2d p_vector, double radian) {
+    public RR_TrajectorySplineFromCurrent(RobotContainer p_robot, Vector2d p_vector, double radian) {
         this(p_robot,p_vector, radian,false);
     }
 

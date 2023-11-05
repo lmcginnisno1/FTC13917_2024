@@ -15,7 +15,7 @@ public class CMD_AutoAlign extends SequentialCommandGroup{
                    SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank, RobotContainer p_robot,
                    Vector2d p_vector){
           addCommands(
-                  new RR_TrajectoryBuildFromCurrent(p_robot, p_vector, Math.toRadians(0), true)
+                  new RR_TrajectorySplineFromCurrent(p_robot, p_vector, Math.toRadians(0), true)
           );
      }
 }

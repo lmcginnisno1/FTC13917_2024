@@ -20,7 +20,7 @@ public class Constants {
           //Shoulder Positions
           public static final double kHome = 0;
           public static final double kReadyIntake = 37.5;//30.0
-          public static final double kReadyIntakeLevelFive = 45;
+          public static final double kReadyIntakeLevelFive = 50;
           public static final double kReadyIntakeLevelFour = 40;
           public static final double kDropIntake = 27.5;//27.5
           public static final double kDropIntakeLevelFive = 32.5;
@@ -51,7 +51,7 @@ public class Constants {
           //Bigger absolute number = farther from robot, - = back  of robot
           public static final double kHome = 0;
           public static final double kParallel = -20;
-          public static final double kReadyIntake = 47.5;//52.5
+          public static final double kReadyIntake = 50.0;//52.5
           public static final double kReadyIntakeLevelFive = 50;
           public static final double kReadyIntakeLevelFour = 50;
           public static final double kLevelOne = -45;//-30
