@@ -19,12 +19,14 @@ public class Constants {
 
           //Shoulder Positions
           public static final double kHome = 0;
-          public static final double kReadyIntake = 37.5;//30.0
+          public static final double kReadyIntake = 40.0;//37.5
+          public static final double kReadyIntakeLevelThree = 42.5;
           public static final double kReadyIntakeLevelFive = 50;
-          public static final double kReadyIntakeLevelFour = 40;
+          public static final double kReadyIntakeLevelFour = 47.5;
           public static final double kDropIntake = 27.5;//27.5
+          public static final double kDropIntakeLevelThree = 30;
           public static final double kDropIntakeLevelFive = 32.5;
-          public static final double kDropIntakeLevelFour = 27;
+          public static final double kDropIntakeLevelFour = 32.5;
           public static final double kUp = 100;
           public static final double kClimb = 50;
           public static final double kLevelOne = 125;//110
@@ -52,6 +54,7 @@ public class Constants {
           public static final double kHome = 0;
           public static final double kParallel = -20;
           public static final double kReadyIntake = 50.0;//52.5
+          public static final double kReadyIntakeLevelThree = 50;
           public static final double kReadyIntakeLevelFive = 50;
           public static final double kReadyIntakeLevelFour = 50;
           public static final double kLevelOne = -45;//-30
@@ -71,6 +74,7 @@ public class Constants {
           public static final double kClawBOffset = 0.1;
           // Wrist Positions
           public static final double kReadyIntake = 0.54;//0.55
+          public static final double kReadyIntakeLevelThree = .54;
           public static final double kReadyIntakeLevelFive = .53;
           public static final double kReadyIntakeLevelFour = .525;
           public static final double kHome = 0.0;

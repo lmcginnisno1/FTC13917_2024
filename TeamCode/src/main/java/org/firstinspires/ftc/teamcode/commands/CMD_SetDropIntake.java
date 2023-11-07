@@ -18,7 +18,7 @@ public class CMD_SetDropIntake extends SequentialCommandGroup {
           SelectCommand deployArm = new SelectCommand(
                   new HashMap<Object, Command>(){{
                        put(GlobalVariables.IntakeLevel.Two, new CMD_ArmDropIntake(p_shoulder, p_elbow, p_wrist, p_blank));
-                       put(GlobalVariables.IntakeLevel.Three, new InstantCommand());
+                       put(GlobalVariables.IntakeLevel.Three, new CMD_ArmDropIntakeLevelThree(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.IntakeLevel.Four, new CMD_ArmDropIntakeLevelFour(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.IntakeLevel.Five, new CMD_ArmDropIntakeLevelFive(p_shoulder, p_elbow, p_wrist, p_blank));
                   }}

@@ -12,6 +12,7 @@ public class CMD_Upright extends SequentialCommandGroup {
      public CMD_Upright(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
           addRequirements(p_blank);
           addCommands(
+                  new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome),
                   new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kParallel),
                   new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kUpright),
                   new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)

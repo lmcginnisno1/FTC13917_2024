@@ -42,8 +42,10 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
                           ShoulderConstants.kD,
                           ShoulderConstants.kF)
           );
-
-          resetAngle();
+          m_leftMotor.setTargetPosition(m_leftMotor.getCurrentPosition());
+          m_rightMotor.setTargetPosition(m_rightMotor.getCurrentPosition());
+          m_rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          m_leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
           m_rightMotor.setPower(ShoulderConstants.kMaxPower);
           m_leftMotor.setPower(ShoulderConstants.kMaxPower);
      }

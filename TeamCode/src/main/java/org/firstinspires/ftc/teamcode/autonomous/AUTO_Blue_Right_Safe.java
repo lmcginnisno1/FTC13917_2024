@@ -13,7 +13,10 @@ import org.firstinspires.ftc.teamcode.commands.CMD_SetWristPosition;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseClaw;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseOutsideClaw;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineToConstantHeadingFromCurrent;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineToLinearHeadingFromCurrent;
 import org.firstinspires.ftc.teamcode.commands.Sleep;
+import org.firstinspires.ftc.teamcode.commands.VisionUpdatePose;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
@@ -48,42 +51,61 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
 
      private SequentialCommandGroup placePurplePixel(){
           SequentialCommandGroup cmds = new SequentialCommandGroup();
+          Pose2d m_initialPose = getStartingPose();
 
-          Trajectory m_prePurplePixel1 = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), true)
-                  .lineTo(new Vector2d(-36, 40))
+          Trajectory m_prePurplePixel1 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
+                  .lineTo(new Vector2d(-36, 38))
                   .build();
 
           Trajectory m_purplePixel1 = m_robot.drivetrain.trajectoryBuilder(m_prePurplePixel1.end(), true)
-                  .lineToLinearHeading(new Pose2d(-32, 30, Math.toRadians(40)))
+                  .lineToLinearHeading(new Pose2d(-33, 28, Math.toRadians(40)))
                   .build();
 
           Trajectory m_readyToDropSpot1 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel1.end(), true)
-                  .back(3)
+                  .back(4)
                   .splineTo(new Vector2d(-54, 24), Math.toRadians(-60))
                   .build();
 
           Trajectory m_dropSpot1 = m_robot.drivetrain.trajectoryBuilder(m_readyToDropSpot1.end(), true)
                   .splineTo(new Vector2d(0, 10), Math.toRadians(0))
-                  .splineTo(new Vector2d(50, 35), Math.toRadians(0))
+                  .splineTo(new Vector2d(20, 12), Math.toRadians(30))
+                  .splineTo(new Vector2d(40, 32), Math.toRadians(0))
                   .build();
 
-          Trajectory m_purplePixel2 = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), true)
+          Trajectory m_park1 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot1.end(), true)
+                  .lineToConstantHeading(new Vector2d(50, 18))
+                  .build();
+
+
+          Trajectory m_purplePixel2 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
                   .splineTo(new Vector2d(-34,18), Math.toRadians(-55))
                   .build();
 
           Trajectory m_dropSpot2 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel2.end(), true)
-                  .splineTo(new Vector2d(51, 33), Math.toRadians(0))
+                  .splineTo(new Vector2d(10, 12), Math.toRadians(0))
+                  .splineTo(new Vector2d(40, 31), Math.toRadians(0))
                   .build();
 
-          Trajectory m_purplePixel3 = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), true)
+          Trajectory m_park2 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot2.end(), true)
+                  .lineToConstantHeading(new Vector2d(50, 18))
+                  .build();
+
+
+          Trajectory m_purplePixel3 = m_robot.drivetrain.trajectoryBuilder(m_initialPose, true)
                   .splineTo(new Vector2d(-41, 26), Math.toRadians(-55))
                   .build();
 
           Trajectory m_dropSpot3 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel3.end(), true)
-                  .splineTo(new Vector2d(50, 26.5), Math.toRadians(0))
+                  .splineTo(new Vector2d(0, 12), Math.toRadians(0))
+                  .splineTo(new Vector2d(40, 26.5), Math.toRadians(0))
                   .build();
 
-          switch (m_Analysis){
+          Trajectory m_park3 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot3.end(), true)
+                  .lineToConstantHeading(new Vector2d(50, 18))
+                  .build();
+
+
+          switch(m_Analysis){
                case 1:
                     cmds.addCommands(
                             new ParallelCommandGroup(
@@ -113,19 +135,24 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
                             ,new ParallelCommandGroup(
                                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
                                     ,new SequentialCommandGroup(
-                                    new Sleep(1500)
+                                    new Sleep(2000)
                                     ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                                     ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
                                     ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
                                     ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
                             )
                             )
+                            ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, 42, Math.toRadians(180)), true)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseClaw(m_robot.m_wrist)
                             ,new Sleep(100)
-                            ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            ,new ParallelCommandGroup(
+                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park1)
+                                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            )
                     );
                     break;
                case 2:
@@ -141,7 +168,6 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
                                     )
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
                             )
-                            ,new Sleep(1000)
                             ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
@@ -157,12 +183,17 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
                                     ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
                             )
                             )
+                            ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, 33.5, Math.toRadians(180)), true)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseClaw(m_robot.m_wrist)
                             ,new Sleep(100)
-                            ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            ,new ParallelCommandGroup(
+                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park2)
+                                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            )
                     );
                     break;
                case 3:
@@ -178,7 +209,6 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
                                     )
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
                             )
-                            ,new Sleep(1000)
                             ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
@@ -194,12 +224,17 @@ public class AUTO_Blue_Right_Safe extends Robot_Auto {
                                     ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
                             )
                             )
+                            ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, 27.5, Math.toRadians(180)))
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseClaw(m_robot.m_wrist)
                             ,new Sleep(100)
-                            ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            ,new ParallelCommandGroup(
+                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park3)
+                                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                            )
                     );
                     break;
           }

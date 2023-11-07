@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.ftclib.command.TrapezoidProfileSubsystem;
 import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
 import org.firstinspires.ftc.teamcode.Constants.ElbowConstants;

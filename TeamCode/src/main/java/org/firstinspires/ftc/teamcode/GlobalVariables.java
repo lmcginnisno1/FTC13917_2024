@@ -13,6 +13,7 @@ public class GlobalVariables{
           Score,
           Climb,
           ReadyToLaunch
+          ,Transitioning
      }
 
      public enum ScoringLevel{

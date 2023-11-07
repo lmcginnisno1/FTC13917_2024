@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Shoulder;
 public class CMD_SetShoulderAngle extends CommandBase {
     SUB_Shoulder m_shoulder;
     double m_angle;
-    int m_tolerance = 1;
+    int m_tolerance = 5;
 
     public CMD_SetShoulderAngle(SUB_Shoulder p_shoulder, double p_angle) {
         m_shoulder = p_shoulder;

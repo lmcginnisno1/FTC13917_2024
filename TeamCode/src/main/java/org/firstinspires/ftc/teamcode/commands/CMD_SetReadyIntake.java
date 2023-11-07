@@ -18,7 +18,7 @@ public class CMD_SetReadyIntake extends SequentialCommandGroup {
           SelectCommand setIntakeLevel = new SelectCommand(
                   new HashMap<Object, Command>(){{
                        put(GlobalVariables.IntakeLevel.Two, new CMD_ArmSetReadyIntake(p_shoulder, p_elbow, p_wrist, p_blank));
-                       put(GlobalVariables.IntakeLevel.Three, new InstantCommand());
+                       put(GlobalVariables.IntakeLevel.Three, new CMD_ArmSetReadyIntakeLevelThree(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.IntakeLevel.Four, new CMD_ArmSetReadyIntakeLevelFour(p_shoulder, p_elbow, p_wrist, p_blank));
                        put(GlobalVariables.IntakeLevel.Five, new CMD_ArmSetReadyIntakeLevelFive(p_shoulder, p_elbow, p_wrist, p_blank));
                   }}

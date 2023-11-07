@@ -32,6 +32,7 @@ public abstract class Robot_Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initializeSubsystems();
+        m_robot.m_shoulder.resetAngle();
         if (m_redAlliance) m_robot.m_autonomousDetect.setRedAlliance();
         else m_robot.m_autonomousDetect.setBlueAlliance();
 

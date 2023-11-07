@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Elbow;
 public class CMD_SetElbowAngle extends CommandBase {
     SUB_Elbow m_elbow;
     double m_angle;
-    int m_tolerance = 1;
+    int m_tolerance = 5;
 
     public CMD_SetElbowAngle(SUB_Elbow p_elbow, double p_angle) {
         m_elbow = p_elbow;

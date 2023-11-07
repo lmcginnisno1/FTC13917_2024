@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseClaw;
 import org.firstinspires.ftc.teamcode.commands.CMD_WristReleaseOutsideClaw;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineToConstantHeadingFromCurrent;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineToLinearHeadingFromCurrent;
 import org.firstinspires.ftc.teamcode.commands.Sleep;
 import org.firstinspires.ftc.teamcode.commands.VisionUpdatePose;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
@@ -82,11 +83,11 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
                   .build();
 
           Trajectory m_prePurplePixel3 = m_robot.drivetrain.trajectoryBuilder(m_initalPose, true)
-                  .lineTo(new Vector2d(-36, -40))
+                  .lineTo(new Vector2d(-36, -38))
                   .build();
 
           Trajectory m_purplePixel3 = m_robot.drivetrain.trajectoryBuilder(m_prePurplePixel3.end(), true)
-                  .lineToLinearHeading(new Pose2d(-32, -28, Math.toRadians(-40)))
+                  .lineToLinearHeading(new Pose2d(-33, -28, Math.toRadians(-40)))
                   .build();
 
           Trajectory m_readyToDropSpot3 = m_robot.drivetrain.trajectoryBuilder(m_purplePixel3.end(), true)
@@ -96,7 +97,7 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
 
           Trajectory m_dropSpot3 = m_robot.drivetrain.trajectoryBuilder(m_readyToDropSpot3.end(), true)
                   .splineTo(new Vector2d(0, -10), Math.toRadians(0))
-                  .splineTo(new Vector2d(16, -12), Math.toRadians(-30))
+                  .splineTo(new Vector2d(20, -12), Math.toRadians(-30))
                   .splineTo(new Vector2d(40, -32), Math.toRadians(0))
                   .build();
 
@@ -134,7 +135,7 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
                                     )
                             )
                             ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                            ,new RR_TrajectoryLineToConstantHeadingFromCurrent(m_robot, new Vector2d(51, -27.5))
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, -27.5, Math.toRadians(180)))
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
@@ -175,7 +176,7 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
                                     )
                             )
                             ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                            ,new RR_TrajectoryLineToConstantHeadingFromCurrent(m_robot, new Vector2d(51, -33.5))
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, -33.5))
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
@@ -216,7 +217,7 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
                             ,new ParallelCommandGroup(
                                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot3)
                                     ,new SequentialCommandGroup(
-                                         new Sleep(1500)
+                                         new Sleep(2000)
                                          ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                                          ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
                                          ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
@@ -224,7 +225,7 @@ public class AUTO_Red_Left_Safe extends Robot_Auto {
                                     )
                             )
                             ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                            ,new RR_TrajectoryLineToConstantHeadingFromCurrent(m_robot, new Vector2d(51, -43))
+                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(51, -42, Math.toRadians(180)), true)
                             ,new Sleep(100)
                             ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
                             ,new Sleep(100)
