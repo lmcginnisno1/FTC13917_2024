@@ -264,6 +264,8 @@ public class Robot_Teleop extends LinearOpMode {
          ));
 
 
+         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.BACK, new VisionUpdatePose(m_robot.m_visionAprilTags, m_robot.drivetrain));
+
          //trigger
          m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
                  new SequentialCommandGroup(
