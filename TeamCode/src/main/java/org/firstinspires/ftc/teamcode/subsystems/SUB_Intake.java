@@ -28,6 +28,8 @@ public class SUB_Intake extends SubsystemBase {
           m_leftintakeservo.setDirection(DcMotorSimple.Direction.REVERSE);
           m_rightintakeservo.setDirection(DcMotorSimple.Direction.FORWARD);
           m_conveyorservo.setDirection(DcMotorSimple.Direction.FORWARD);
+          m_pivotServo.setDirection(Servo.Direction.REVERSE);
+          m_middleServo.setDirection(DcMotorSimple.Direction.REVERSE);
      }
 
      public void intakeOn(){
@@ -63,5 +65,17 @@ public class SUB_Intake extends SubsystemBase {
 
      public void pivotServoOut(){
           m_pivotServo.setPosition(intakeConstants.kPivotServoOut);
+     }
+
+     public void middleServoOn(){
+          m_middleServo.setPower(intakeConstants.kMiddleServoOn);
+     }
+
+     public void middleServoOff(){
+          m_middleServo.setPower(intakeConstants.kMiddleServoOff);
+     }
+
+     public void middleServoReverse(){
+          m_middleServo.setPower(intakeConstants.kMiddleServoReverse);
      }
 }

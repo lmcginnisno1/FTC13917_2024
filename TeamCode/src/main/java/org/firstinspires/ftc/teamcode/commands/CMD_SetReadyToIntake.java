@@ -27,6 +27,7 @@ public class CMD_SetReadyToIntake extends SequentialCommandGroup {
                  ,new CMD_WristSetReadyToIntake(p_wrist , p_variables)
                  ,new CMD_IntakeOn(p_intake)
                  ,new CMD_IntakeConveyorOn(p_intake)
+                 ,new InstantCommand(()-> p_intake.pivotServoHome())
                  ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.ReadyToIntake)
          );
      }

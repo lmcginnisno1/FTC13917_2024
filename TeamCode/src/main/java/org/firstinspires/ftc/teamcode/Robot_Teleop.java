@@ -95,8 +95,8 @@ public class Robot_Teleop extends LinearOpMode {
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
-        m_robot.drivetrain.setFieldCentric(true);
-//        m_robot.drivetrain.setFieldCentric(false);
+//        m_robot.drivetrain.setFieldCentric(true);
+        m_robot.drivetrain.setFieldCentric(false);
         m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
 

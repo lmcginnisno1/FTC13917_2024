@@ -21,6 +21,7 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
                 new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
                 ,new CMD_IntakeOff(p_intake)
                 ,new CMD_IntakeConveyorOff(p_intake)
+                ,new InstantCommand(()-> p_intake.pivotServoHome())
                 ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kHome)
                 ,new CMD_SetElbowAngle(p_elbow,-3)
                 ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome))
