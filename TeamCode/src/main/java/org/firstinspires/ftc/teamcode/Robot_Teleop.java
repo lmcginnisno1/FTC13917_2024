@@ -53,29 +53,26 @@ public class Robot_Teleop extends LinearOpMode {
         m_runTime.reset();
         while (!isStopRequested() && opModeIsActive()) {
             m_robot.run(); // run the scheduler
-            telemetry.addData("current command", m_robot);
 
             m_robot.drivetrain.update();
             Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
-            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
-            telemetry.addData("kD", Constants.ShoulderConstants.kD);
-
-            // Angles
-            telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());
-            telemetry.addData("Elbow Angle: ", "%f", m_robot.m_elbow.getAngle());
-
-            // States
-            telemetry.addData("Robot State", m_robot.m_variables.getRobotState().name());
-            telemetry.addData("Scoring Level", m_robot.m_variables.getScoringLevel());
-            telemetry.addData("intake level", m_robot.m_variables.getIntakeLevel());
-
-            //trigger
-            telemetry.addData("Pixel Sensor", m_robot.m_pixelGuide.get());
-
-            //motor encoders
-            telemetry.addData("LF shoulder motor", m_robot.m_shoulder.getLeftMotorTicks());
-            telemetry.addData("RT shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
-            telemetry.addData("elbow motor", m_robot.m_elbow.getElbowTicks());
+            telemetry.addData("Position:","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));//
+//            // Angles
+//            telemetry.addData("Shoulder Angle: ", "%f", m_robot.m_shoulder.getAngle());
+//            telemetry.addData("Elbow Angle: ", "%f", m_robot.m_elbow.getAngle());
+//
+//            // States
+//            telemetry.addData("Robot State", m_robot.m_variables.getRobotState().name());
+//            telemetry.addData("Scoring Level", m_robot.m_variables.getScoringLevel());
+//            telemetry.addData("intake level", m_robot.m_variables.getIntakeLevel());
+//
+//            //trigger
+//            telemetry.addData("Pixel Sensor", m_robot.m_pixelGuide.get());
+//
+//            //motor encoders
+//            telemetry.addData("LF shoulder motor", m_robot.m_shoulder.getLeftMotorTicks());
+//            telemetry.addData("RT shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
+//            telemetry.addData("elbow motor", m_robot.m_elbow.getElbowTicks());
 
             telemetry.update();
         }
@@ -94,6 +91,7 @@ public class Robot_Teleop extends LinearOpMode {
 //        m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autonomousEndPose);
         m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(180)));
         m_robot.m_backCamera.setProcessorDisabled(m_robot.m_autonomousDetect);
+        m_robot.m_intake.pivotServoHome();
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
@@ -103,6 +101,7 @@ public class Robot_Teleop extends LinearOpMode {
         m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
 
         m_robot.m_wrist.setPosition(Constants.WristConstants.kHome);
+        m_robot.m_droneLauncher.close();
 
         configureButtonBindings();
         m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);

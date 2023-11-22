@@ -29,7 +29,7 @@ public class RR_MecanumDriveDefault extends CommandBase {
 
     @Override
     public void execute() {
-        double leftY = -m_driverOP.getLeftY(); // speed
+        double leftY = m_driverOP.getLeftY(); // speed
         double leftX = m_driverOP.getLeftX(); // strafe
         double rightX = m_driverOP.getRightX(); // turn
         leftY = valueSquared(handleDeadband(leftY, 0.05));

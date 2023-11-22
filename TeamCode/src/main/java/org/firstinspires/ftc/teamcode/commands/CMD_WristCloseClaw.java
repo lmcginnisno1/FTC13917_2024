@@ -3,25 +3,17 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
+import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
+import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
 
-public class CMD_WristCloseClaw extends CommandBase {
-    SUB_Wrist m_wrist;
-    private double m_waitTime = 300;
-    private ElapsedTime m_runtime = new ElapsedTime();
+public class CMD_WristCloseClaw extends SequentialCommandGroup {
     public CMD_WristCloseClaw(SUB_Wrist p_wrist) {
-        m_wrist = p_wrist;
+        addCommands(
+                new InstantCommand(()-> p_wrist.closeClawA())
+                ,new Sleep(200)
+                ,new InstantCommand(()-> p_wrist.closeClawB())
+                ,new Sleep(100)
+        );
     }
-
-    @Override
-    public void initialize() {
-        m_wrist.closeClawA();
-        m_wrist.closeClawB();
-        m_runtime.reset();
-    }
-
-
-
-    @Override
-    public boolean isFinished() { return m_runtime.milliseconds()>m_waitTime; }
 }

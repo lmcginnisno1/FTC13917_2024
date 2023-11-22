@@ -55,7 +55,6 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
      double xFrontBackStage = 61.375; // measure to front flat surface
      double xCordinate = xFrontBackStage + 1.5;
      private final FieldAprilTag[] m_aprilTagLocations = {
-
              new FieldAprilTag(1,xCordinate, 41.75, 0),//left tag blue side
              new FieldAprilTag(2,xCordinate, 35.75, 0),//middle tag blue side
              new FieldAprilTag(3,xCordinate, 29.50, 0),//right tag blue side
@@ -87,7 +86,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      @Override
      public void periodic() {
-          telemetry();
+//          telemetry();
      }
 
      private void initAprilTag() {
@@ -199,6 +198,8 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
           List<AprilTagDetection> currentDetections = m_aprilTag.getDetections();
           m_opMode.telemetry.addData("# AprilTags Detected", currentDetections.size());
 
+          m_opMode.telemetry.addData("april tag detection", getTagsDetected());
+
           // Step through the list of detections and display info for each one.
           for (AprilTagDetection detection : currentDetections) {
                if (detection.metadata != null) {
@@ -233,7 +234,24 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
           m_visionPortal.setProcessorEnabled(p_vp, true);
      }
 
-     public ArrayList<AprilTagDetection> getTagsDetected(){
+     public List<AprilTagDetection> getTagsDetected(){
           return m_aprilTag.getDetections();
+     }
+
+     public FieldAprilTag getTagPosition(int tagId){
+          return m_aprilTagLocations[tagId];
+     }
+
+     public int findClosestTag(com.acmerobotics.roadrunner.geometry.Pose2d p_currentPose){
+          int closestTagID = -1;
+          double distanceToClosestTag = Double.MAX_VALUE;
+          for (AprilTagDetection detection : m_aprilTag.getDetections()) {
+               double distance = Math.abs(detection.ftcPose.y - p_currentPose.getY());
+               if(distance < distanceToClosestTag){
+                    distanceToClosestTag = distance;
+                    closestTagID = detection.id;
+               }
+          }
+          return closestTagID;
      }
 }

@@ -86,6 +86,9 @@ public class Constants {
           public static final double kConveyorOn = 1.0;
           public static final double kConveyorOff = 0.0;
           public static final double kConveyorReverse = -1.0;
+
+          public static final double kPivotServoHome = 0.1;
+          public static final double kPivotServoOut = .5;
      }
 }
 

@@ -50,7 +50,8 @@ public class RobotContainer {
                 0,
                 180, m_autonomousDetect);
         m_intake = new SUB_Intake(p_opMode, "leftintakeservo",
-                "rightintakeservo", "conveyorservo");
+                "middleservo", "rightintakeservo",
+                "conveyorservo", "pivotservo");
     };
 
     public void run() {
