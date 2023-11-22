@@ -35,7 +35,7 @@ public class RobotContainer {
 
     public RobotContainer(OpMode p_opMode) {
         SampleMecanumDrive drivebase = new SampleMecanumDrive(p_opMode.hardwareMap);
-        drivetrain = new MecanumDriveSubsystem(drivebase, true);
+        drivetrain = new MecanumDriveSubsystem(drivebase);
 
         m_wrist = new SUB_Wrist(p_opMode, "wristservo", "clawa", "clawb");
         m_elbow = new SUB_Elbow(p_opMode, "elbowmotor");

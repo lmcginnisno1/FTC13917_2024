@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.WristConstants;
 import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
-import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
+import org.firstinspires.ftc.teamcode.ftclib.first.math.trajectory.TrapezoidProfile;
 
 /**
  * The Wrist subsystem comproised of three servos at the end of the arm.

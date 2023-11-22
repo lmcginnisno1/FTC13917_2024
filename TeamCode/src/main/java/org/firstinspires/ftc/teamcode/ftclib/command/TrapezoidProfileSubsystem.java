@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.ftclib.command;
 // the WPILib BSD license file in the root directory of this project.
 
 import static org.firstinspires.ftc.teamcode.ftclib.util.ErrorMessages.requireNonNullParam;
-import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
+import org.firstinspires.ftc.teamcode.ftclib.first.math.trajectory.TrapezoidProfile;
 
 /**
  * A subsystem that generates and runs trapezoidal motion profiles automatically. The user specifies

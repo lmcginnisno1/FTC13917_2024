@@ -11,8 +11,8 @@ public class Constants {
           public static final double kD = 0;
           public static final double kF = 0;
 
-//          public static final double kPPR = 3895.9;// Calculated using a 139:1 ratio motor
-          public static final double kPPR = 2786.2;// Calculated using a 99.5:1 ratio motor
+          public static final double kPPR = 3895.9;// Calculated using a 139:1 ratio motor
+//          public static final double kPPR = 2786.2;// Calculated using a 99.5:1 ratio motor
           public static final double kTicksToDegrees = kPPR / 360;
 
           //Shoulder Positions

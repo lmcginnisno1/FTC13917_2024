@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.ftclib.command;
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-import static org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile.State;
+import static org.firstinspires.ftc.teamcode.ftclib.first.math.trajectory.TrapezoidProfile.State;
 import static org.firstinspires.ftc.teamcode.ftclib.util.ErrorMessages.requireNonNullParam;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
+import org.firstinspires.ftc.teamcode.ftclib.first.math.trajectory.TrapezoidProfile;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 

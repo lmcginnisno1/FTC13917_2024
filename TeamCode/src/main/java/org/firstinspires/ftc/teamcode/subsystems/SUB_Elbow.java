@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.ftclib.command.TrapezoidProfileSubsystem;
-import org.firstinspires.ftc.teamcode.ftclib.math.trajectory.TrapezoidProfile;
+import org.firstinspires.ftc.teamcode.ftclib.first.math.trajectory.TrapezoidProfile;
 import org.firstinspires.ftc.teamcode.Constants.ElbowConstants;
 
 public class SUB_Elbow extends TrapezoidProfileSubsystem {

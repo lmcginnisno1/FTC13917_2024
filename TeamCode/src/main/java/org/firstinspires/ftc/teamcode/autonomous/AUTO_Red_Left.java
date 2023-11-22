@@ -24,9 +24,9 @@ public class AUTO_Red_Left extends Robot_Auto {
      public void prebuildTasks() {
           //run these tasks now
           setStartingPose(new Pose2d(-36, -61, Math.toRadians(-90)));
-          m_robot.m_wrist.closeClawA();
-          m_robot.m_wrist.closeClawB();
-          m_robot.m_wrist.setPosition(0);
+//          m_robot.m_wrist.closeClawA();
+//          m_robot.m_wrist.closeClawB();
+//          m_robot.m_wrist.setPosition(0);
      }
 
      @Override
@@ -142,42 +142,43 @@ public class AUTO_Red_Left extends Robot_Auto {
                case 2:
                     cmds.addCommands(
                     new ParallelCommandGroup(
-                            new ParallelCommandGroup(
-                                    new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-                                    ,new SequentialCommandGroup(
-                                         new Sleep(1000)
-                                         ,new CMD_SetElbowAngle(m_robot.m_elbow, 50)
-                                         ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-                                    )
-                            )
-                                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
+//                            new ParallelCommandGroup(
+//                                    new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
+//                                    ,new SequentialCommandGroup(
+//                                         new Sleep(1000)
+//                                         ,new CMD_SetElbowAngle(m_robot.m_elbow, 50)
+//                                         ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
+//                                    )
+//                            )
+//                                    ,
+                            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
                     )
-                       ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
-                       ,new Sleep(500)
-                       ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                       ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
-                       ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 9)
-                       ,new Sleep(m_delayYellowPixel)
+//                       ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+//                       ,new Sleep(500)
+//                       ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
+//                       ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
+//                       ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 9)
+//                       ,new Sleep(m_delayYellowPixel)
                        ,new ParallelCommandGroup(
                                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot2)
-                               ,new SequentialCommandGroup(
-                                    new Sleep(1500)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                                    ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
-                                    ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
-                               )
+//                               ,new SequentialCommandGroup(
+//                                    new Sleep(1500)
+//                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
+//                                    ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
+//                                    ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
+//                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
+//                               )
                        )
                        ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
                        ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, -33.5, Math.toRadians(180)), true)
                        ,new Sleep(100)
-                       ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                       ,new Sleep(100)
-                       ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                       ,new Sleep(100)
+//                       ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
+//                       ,new Sleep(100)
+//                       ,new CMD_WristReleaseClaw(m_robot.m_wrist)
+//                       ,new Sleep(100)
                        ,new ParallelCommandGroup(
                                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park2)
-                               ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+//                               ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
                        )
                     );
                     break;

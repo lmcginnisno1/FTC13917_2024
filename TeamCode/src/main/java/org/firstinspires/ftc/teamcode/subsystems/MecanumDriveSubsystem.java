@@ -21,11 +21,12 @@ import java.util.List;
 public class MecanumDriveSubsystem extends SubsystemBase {
 
     private final SampleMecanumDrive drive;
-    private boolean fieldCentric;
+    private boolean fieldCentric = false;
+    private double m_headingAdjustRobotStartPosition =0;
 
-    public MecanumDriveSubsystem(SampleMecanumDrive drive, boolean isFieldCentric) {
+    public MecanumDriveSubsystem(SampleMecanumDrive drive) {
         this.drive = drive;
-        fieldCentric = isFieldCentric;
+        fieldCentric = false;
     }
 
     public void setMode(DcMotor.RunMode mode) {
@@ -52,7 +53,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         Pose2d poseEstimate = getPoseEstimate();
 
         Vector2d input = new Vector2d(-leftY, -leftX).rotated(
-                fieldCentric ? -poseEstimate.getHeading() : 0
+                fieldCentric ? -poseEstimate.getHeading() + m_headingAdjustRobotStartPosition : 0
         );
 
         drive.setWeightedDrivePower(
@@ -112,11 +113,12 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         return drive.getLocalizer();
     }
 
-    public void setFieldCentric(boolean p_fieldCentric) {
-        fieldCentric = p_fieldCentric;
-    }
-
     public void setMotorPowers(double p_power){
         drive.setMotorPowers(p_power, p_power, p_power, p_power);
+    }
+
+    public void setFieldCentric(double p_StartAngleDegree) {
+        fieldCentric=true;
+        m_headingAdjustRobotStartPosition = Math.toRadians(p_StartAngleDegree);
     }
 }
