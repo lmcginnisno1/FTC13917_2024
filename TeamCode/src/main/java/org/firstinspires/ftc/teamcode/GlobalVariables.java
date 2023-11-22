@@ -4,31 +4,21 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class GlobalVariables{
 
-     public static Pose2d currentPose = new Pose2d();
+     public static Pose2d m_autonomousEndPose = new Pose2d();
 
      public enum RobotState{
-          Home,
-          ReadyToIntake,
-          Stow,
-          Score,
-          Climb,
-          ReadyToLaunch
+          Home
+          ,ReadyToIntake
+          ,Stow
+          ,ReadyToDeploy
+          ,Climb
+          ,ReadyToLaunch
           ,Transitioning
      }
 
-     public enum ScoringLevel{
-          One,
-          Two,
-          Three,
-          Four
-     }
-
-     public enum IntakeLevel{
-          Two
-          ,Three
-          ,Four
-          ,Five
-     }
+     private int m_currentScoringLevel = 1;
+     private final int m_maxScoringLevel = 8;
+     private int m_currentIntakeLevel = 2;
 
      RobotState m_robotState = RobotState.Home;
 
@@ -44,31 +34,33 @@ public class GlobalVariables{
           return p_robotState == m_robotState;
      }
 
-     ScoringLevel m_currentScoringLevel = ScoringLevel.One;
 
-     public void setScoringLevel(ScoringLevel p_scoringLevel){
+     public void setScoringLevel(int p_scoringLevel){
           m_currentScoringLevel = p_scoringLevel;
      }
 
-     public ScoringLevel getScoringLevel(){
+     public int getScoringLevel(){
           return m_currentScoringLevel;
      }
 
-     public boolean isScoringLevel(ScoringLevel p_scoringLevel){
+     public boolean isScoringLevel(int p_scoringLevel){
           return m_currentScoringLevel == p_scoringLevel;
      }
 
-     IntakeLevel m_intakeLevel = IntakeLevel.Two;
-
-     public void setIntakeLevel(IntakeLevel p_intakeLevel){
-          m_intakeLevel = p_intakeLevel;
+     public void decreaseScoringLevel() {
+          m_currentScoringLevel-= 1;
+          if (m_currentScoringLevel < 1) m_currentScoringLevel = 1;
      }
 
-     public IntakeLevel getIntakeLevel(){
-          return m_intakeLevel;
+     public void increaseScoringLevel() {
+          m_currentScoringLevel += 1;
+          if (m_currentScoringLevel > m_maxScoringLevel) m_currentScoringLevel = m_maxScoringLevel;
      }
 
-     public boolean isIntakeLevel(IntakeLevel p_intakeLevel){
-          return m_intakeLevel == p_intakeLevel;
+     public int getIntakeLevel(){
+          return m_currentIntakeLevel;
      }
+
+     public void setIntakeLevel(int p_intakeLevel) { m_currentIntakeLevel = p_intakeLevel;}
+
 }

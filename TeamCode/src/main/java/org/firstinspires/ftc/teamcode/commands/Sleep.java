@@ -26,7 +26,6 @@ public class Sleep extends CommandBase {
 
     @Override
     public void initialize() {
-
         runtime = new ElapsedTime();
         runtime.reset();
         m_isFinished = false;

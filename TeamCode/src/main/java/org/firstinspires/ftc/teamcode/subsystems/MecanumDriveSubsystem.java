@@ -115,4 +115,8 @@ public class MecanumDriveSubsystem extends SubsystemBase {
     public void setFieldCentric(boolean p_fieldCentric) {
         fieldCentric = p_fieldCentric;
     }
+
+    public void setMotorPowers(double p_power){
+        drive.setMotorPowers(p_power, p_power, p_power, p_power);
+    }
 }

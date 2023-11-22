@@ -25,8 +25,8 @@ public class RobotContainer {
     public SUB_Wrist m_wrist;
     public SUB_Elbow m_elbow;
     public SUB_Shoulder m_shoulder;
-    public SUB_Intake m_intake;
     public SUB_Blank m_blank;
+    public SUB_Intake m_intake;
     public SUB_DroneLauncher m_droneLauncher;
     public GlobalVariables m_variables;
     public DigitalPort m_pixelGuide;
@@ -49,6 +49,8 @@ public class RobotContainer {
                 -6,
                 0,
                 180, m_autonomousDetect);
+        m_intake = new SUB_Intake(p_opMode, "leftintakeservo",
+                "rightintakeservo", "conveyorservo");
     };
 
     public void run() {

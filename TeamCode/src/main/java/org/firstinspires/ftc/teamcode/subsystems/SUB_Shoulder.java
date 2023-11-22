@@ -21,6 +21,7 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
                           ShoulderConstants.kMaxAccelerationDegreesPerSecond),
                   ShoulderConstants.kOffsetDegrees
           );
+
           m_opMode = p_opMode;
           m_rightMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_rightMotorName);
           m_leftMotor = p_opMode.hardwareMap.get(DcMotorEx.class, p_leftMotorName);
@@ -28,6 +29,10 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
           m_leftMotor.setVelocityPIDFCoefficients(12.5, 7.5, 0.0, 13.57);//good but slow
           m_rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
           m_leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+          m_leftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, .5, 0));
+          m_rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, .5, 0));
+
           m_rightMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,
                   new PIDFCoefficients(
                           ShoulderConstants.kP,
@@ -44,8 +49,10 @@ public class SUB_Shoulder extends TrapezoidProfileSubsystem {
           );
           m_leftMotor.setTargetPosition(m_leftMotor.getCurrentPosition());
           m_rightMotor.setTargetPosition(m_rightMotor.getCurrentPosition());
+
           m_rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
           m_leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
           m_rightMotor.setPower(ShoulderConstants.kMaxPower);
           m_leftMotor.setPower(ShoulderConstants.kMaxPower);
      }

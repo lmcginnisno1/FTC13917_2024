@@ -14,6 +14,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
@@ -47,7 +48,6 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 //    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
      VisionProcessorBase m_autonomousDetectVProcessor;
-
      // Set id to the apriltag id. X, Y are in ZooBOTix field coordinates (72, 144 is blue non-audience
      // corner). angle is in degrees. A tag's angle is where an arrow shot through the tag's center from
      // within the field would point.  Currently can only be 0 (top), -90 (red side), -180 (audience
@@ -231,5 +231,9 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      public void setProcessorEnabled(VisionProcessor p_vp){
           m_visionPortal.setProcessorEnabled(p_vp, true);
+     }
+
+     public ArrayList<AprilTagDetection> getTagsDetected(){
+          return m_aprilTag.getDetections();
      }
 }

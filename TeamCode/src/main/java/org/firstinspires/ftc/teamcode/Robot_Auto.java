@@ -33,6 +33,7 @@ public abstract class Robot_Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initializeSubsystems();
         m_robot.m_shoulder.resetAngle();
+        m_robot.m_elbow.resetAngle();
         if (m_redAlliance) m_robot.m_autonomousDetect.setRedAlliance();
         else m_robot.m_autonomousDetect.setBlueAlliance();
 
@@ -63,6 +64,7 @@ public abstract class Robot_Auto extends LinearOpMode {
         }
 
         //
+        GlobalVariables.m_autonomousEndPose = m_robot.drivetrain.getPoseEstimate();
         endOfOpMode();
         m_robot.reset();
     }

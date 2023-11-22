@@ -27,24 +27,19 @@ public class VisionUpdatePose extends CommandBase {
 	private double m_Milliseconds = 1000;
 	private boolean m_shouldBeClose = true;
 	boolean m_isFinished = false;
-
+	boolean m_fieldCentric;
 	List<Pose2d> m_poseArray = new ArrayList<Pose2d>();
 
-	public VisionUpdatePose(SUB_VisionAprilTagsPlusAutoDetect aprilTags, MecanumDriveSubsystem p_drivetrain) {
+	public VisionUpdatePose(SUB_VisionAprilTagsPlusAutoDetect aprilTags, MecanumDriveSubsystem p_drivetrain, boolean fieldCentric) {
 		m_aprilTags = aprilTags;
 		m_drivetrain = p_drivetrain;
-		m_Milliseconds = 1000;
+		m_Milliseconds = 200;
 		m_shouldBeClose = true;
+		m_fieldCentric = fieldCentric;
 	}
 
-	public VisionUpdatePose(SUB_VisionAprilTagsPlusAutoDetect aprilTags, MecanumDriveSubsystem p_drivetrain, double runTime) {
-		this(aprilTags, p_drivetrain);
-		m_Milliseconds = runTime;
-	}
-
-	public VisionUpdatePose(SUB_VisionAprilTagsPlusAutoDetect aprilTags, MecanumDriveSubsystem p_drivetrain, boolean shouldBeClose) {
-		this(aprilTags, p_drivetrain);
-		m_shouldBeClose = shouldBeClose;
+	public VisionUpdatePose(SUB_VisionAprilTagsPlusAutoDetect aprilTags, MecanumDriveSubsystem p_drivetrain){
+		this(aprilTags, p_drivetrain, false);
 	}
 
 	@Override
@@ -57,8 +52,14 @@ public class VisionUpdatePose extends CommandBase {
 	public void execute() {
 		Pose2d pose = m_aprilTags.getRobotPose(true);
 		if (pose != null) {
-			m_drivetrain.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(pose.getX(),
-				pose.getY(), pose.getHeading()));
+			if(m_fieldCentric){
+				m_drivetrain.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(pose.getX(),
+					pose.getY(), pose.getHeading() - Math.toRadians(90)));
+			}
+			else{
+				m_drivetrain.setPoseEstimate(new com.acmerobotics.roadrunner.geometry.Pose2d(pose.getX(),
+					pose.getY(), pose.getHeading()));
+			}
 			m_isFinished = true;
 		}
 	}

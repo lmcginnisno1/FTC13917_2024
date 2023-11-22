@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
@@ -14,8 +15,9 @@ public class CMD_AutoDriveIn extends CommandBase{
      MecanumDriveSubsystem m_drivetrain;
      DigitalPort m_trigger;
      boolean m_isFinished;
+     boolean m_triggered;
      GamepadEx m_driverOp;
-     double m_timer;
+     ElapsedTime m_timer = new ElapsedTime();
      public CMD_AutoDriveIn(MecanumDriveSubsystem p_drivetrain, DigitalPort p_trigger, GamepadEx p_driverOp){
           m_drivetrain = p_drivetrain;
           m_trigger = p_trigger;
@@ -25,21 +27,23 @@ public class CMD_AutoDriveIn extends CommandBase{
 
      @Override
      public void initialize(){
+          m_drivetrain.setMotorPowers(.25);
           m_isFinished = false;
-          m_timer = 0;
+          m_triggered= false;
+          m_timer.reset();
      }
 
      @Override
      public void execute(){
-          m_drivetrain.drive(-.15, 0, 0);
-          if (m_trigger.get() || Math.abs(m_driverOp.getLeftY()) > .1){
-               m_isFinished = true;
-               m_timer += 0.1;
+          if (m_trigger.get() && !m_triggered){
+               m_triggered = true;
+               m_timer.reset();
           }
      }
 
      @Override
      public boolean isFinished(){
-          return m_isFinished && m_timer > 2 || Math.abs(m_driverOp.getLeftY()) > .1;
+          m_isFinished = m_triggered && m_timer.milliseconds() > 500;
+          return m_isFinished || Math.abs(m_driverOp.getLeftY()) > .1;
      }
 }
