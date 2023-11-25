@@ -32,6 +32,6 @@ public class CMD_ArmBackOffBackdrop extends CommandBase {
      @Override
      public boolean isFinished(){
           return Math.abs(m_shoulder.getAngle() - (Constants.ShoulderConstants
-                  .kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ShoulderConstants.kBackOff)) <= 5;
+                  .kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ShoulderConstants.kBackOff)) <= 10;
      }
 }

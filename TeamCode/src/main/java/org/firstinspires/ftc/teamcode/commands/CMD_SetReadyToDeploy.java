@@ -19,17 +19,20 @@ public class CMD_SetReadyToDeploy extends SequentialCommandGroup {
 
         addCommands(
                 new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
-                , new CMD_WristCloseClaw(p_wrist)
+                ,new CMD_WristCloseClaw(p_wrist)
+                ,new Sleep(750)
                 // lift pixel off the platform
                 , new ParallelCommandGroup(
-                        new CMD_SetShoulderAngle(p_shoulder,6)
-                        ,new CMD_SetElbowAngle(p_elbow,-4)
+                        new CMD_SetShoulderAngle(p_shoulder,20)//6
+                        ,new CMD_SetElbowAngle(p_elbow,-5)//-4
                         ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome-.05))
                 )
-                ,new CMD_ShoulderSetReadyToDeploy(p_shoulder,p_variables)
-//                ,new Sleep(200)
+                //get wrist ready to deploy then move shoulder up so that the elbow can get to where it needs to go
+                //then move shoulder to where it needs to go and update robot state
                 ,new CMD_WristSetReadyToDeploy(p_wrist,p_variables)
+                ,new CMD_SetShoulderAngle(p_shoulder, 40)
                 ,new CMD_ElbowSetReadyToDeploy(p_elbow,p_variables)
+                ,new CMD_ShoulderSetReadyToDeploy(p_shoulder,p_variables)
                 ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.ReadyToDeploy)
         );
     }

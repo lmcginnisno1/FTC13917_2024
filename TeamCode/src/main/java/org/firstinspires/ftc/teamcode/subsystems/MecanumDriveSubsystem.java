@@ -117,8 +117,12 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         drive.setMotorPowers(p_power, p_power, p_power, p_power);
     }
 
-    public void setFieldCentric(double p_StartAngleDegree) {
-        fieldCentric=true;
+    public void setFieldCentric(boolean p_enabled ,double p_StartAngleDegree) {
+        fieldCentric = p_enabled;
         m_headingAdjustRobotStartPosition = Math.toRadians(p_StartAngleDegree);
+    }
+
+    public void setFieldCentric(boolean p_enabled) {
+        fieldCentric = p_enabled;
     }
 }
