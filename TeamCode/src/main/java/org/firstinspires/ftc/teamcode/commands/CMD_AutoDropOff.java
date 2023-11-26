@@ -33,6 +33,9 @@ public class CMD_AutoDropOff extends CommandBase{
      double m_rightSlotOffset = -1.5;
      boolean m_leftSlot;
 
+     double maxY = 45;
+     double minY = 24;
+
      public CMD_AutoDropOff(MecanumDriveSubsystem p_drivetrain, SUB_VisionAprilTagsPlusAutoDetect p_aprilTags,
                             CMD_AutoDropOff_Steps p_ref, boolean p_leftSlot){
           addRequirements(p_drivetrain);
@@ -46,8 +49,8 @@ public class CMD_AutoDropOff extends CommandBase{
      @Override
      public void initialize(){
           Pose2d m_robotPose = m_drivetrain.getPoseEstimate();
-          m_ref.closestTag = m_aprilTags.findClosestTag();
-          int closestTagID = m_aprilTags.findClosestTag();
+          m_ref.closestTag = GlobalVariables.closestTagID;
+          int closestTagID = GlobalVariables.closestTagID;
           double wantedY = 0;
 
           if(closestTagID == 1){
@@ -62,18 +65,33 @@ public class CMD_AutoDropOff extends CommandBase{
                wantedY = -35.75;
           }else if(closestTagID == 6){
                wantedY = -41.75;
+          }else{
+               wantedY = m_robotPose.getY();
           }
 
           double offset = m_leftSlot ? m_leftSlotOffset : m_rightSlotOffset;
 
-          wantedY += offset;
+          wantedY = GlobalVariables.currentScoringLevel % 2 == 0 ? wantedY : wantedY + offset;
+          
+          double firstPixelY;
+          boolean redSide = m_robotPose.getY() < 0;
+
+          if(Math.abs(m_robotPose.getY()) > maxY){
+               firstPixelY = maxY;
+          }else if(Math.abs(m_robotPose.getY()) < minY){
+               firstPixelY = minY;
+          }else{
+               firstPixelY = Math.abs(m_robotPose.getY());
+          }
+
+          firstPixelY = redSide ? firstPixelY * -1 : firstPixelY;
 
           Trajectory m_dropOffFirstPixel = m_drivetrain.trajectoryBuilder(m_robotPose, true)
-                  .lineToLinearHeading(new Pose2d(48, m_drivetrain.getPoseEstimate().getY(), Math.toRadians(180)))
+                  .lineToLinearHeading(new Pose2d(50, firstPixelY, Math.toRadians(180)))
                   .build();
 
           Trajectory m_dropOffSecondPixel = m_drivetrain.trajectoryBuilder(m_dropOffFirstPixel.end(), true)
-                  .lineToConstantHeading(new Vector2d(48, wantedY))
+                  .lineToConstantHeading(new Vector2d(49, wantedY))
                   .build();
 
           TrajectorySequence m_trajectorySequence = m_drivetrain.trajectorySequenceBuilder(m_dropOffFirstPixel.start())

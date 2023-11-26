@@ -23,25 +23,13 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
                 ,new CMD_IntakeConveyorOff(p_intake)
                 ,new InstantCommand(()-> p_intake.pivotServoHome())
                 //first scrape
-                ,new CMD_SetElbowAngle(p_elbow, -3)
+                ,new CMD_SetElbowAngle(p_elbow, -7.5)
                 ,new Sleep(250)
                 ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome + 0.05)
                 ,new Sleep(250)
                 ,new CMD_SetElbowAngle(p_elbow,-2)
                 ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kHome)
                 ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome)
-//                //second scrape
-//                ,new Sleep(500)
-//                ,new ParallelCommandGroup(
-//                        new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
-//                        ,new CMD_ElbowSetReadyToIntake(p_elbow , p_variables)
-//                )
-//                ,new CMD_WristSetReadyToIntake(p_wrist , p_variables)
-//                ,new Sleep(500)
-////                ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kHome + 5)
-//                ,new CMD_SetElbowAngle(p_elbow,-3)
-//                ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kHome)
-//                ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome - .025)
                 ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Stow)
         );
     }

@@ -84,8 +84,7 @@ public class Constants {
      }
      public static final class WristConstants{
           public static final double kClawAOpen = 0.0;
-          public static final double kClawBHalfOpen = 0.25;
-          public static final double kClawAClose = 0.66;
+          public static final double kClawAClose = 0.66;//.66
           public static final double kClawBOpen = 0.10;
           public static final double kClawBClose = 0.65;
           public static final double kWristOffset = 0;

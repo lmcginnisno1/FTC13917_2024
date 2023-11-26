@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
 import org.firstinspires.ftc.teamcode.ftclib.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.ftclib.geometry.Rotation2d;
@@ -45,6 +46,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      private VisionPortal m_visionPortal;               // Used to manage the video source.
      private AprilTagProcessor m_aprilTag;              // Used for managing the AprilTag detection process.
+     int closestTagID = -1;
 //    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
      VisionProcessorBase m_autonomousDetectVProcessor;
@@ -243,7 +245,6 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
      }
 
      public int findClosestTag(){
-          int closestTagID = -1;
           double distanceToClosestTag = Double.MAX_VALUE;
           for (AprilTagDetection detection : m_aprilTag.getDetections()) {
                double distance = detection.ftcPose.range;
@@ -253,7 +254,8 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
                }
           }
           m_opMode.telemetry.addData("closest tag range", distanceToClosestTag);
-          m_opMode.telemetry.addData("closest tag ID", closestTagID);
+          GlobalVariables.closestTagID = closestTagID;
+          m_opMode.telemetry.addData("closest tag ID", GlobalVariables.closestTagID);
           return closestTagID;
      }
 }

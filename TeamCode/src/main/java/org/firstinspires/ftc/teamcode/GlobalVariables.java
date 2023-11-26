@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 public class GlobalVariables{
 
      public static Pose2d m_autonomousEndPose = new Pose2d();
+     public static int closestTagID = -1;
+     public static int currentScoringLevel = 2;
 
      public enum RobotState{
           Home
@@ -37,6 +39,7 @@ public class GlobalVariables{
 
      public void setScoringLevel(int p_scoringLevel){
           m_currentScoringLevel = p_scoringLevel;
+          currentScoringLevel = p_scoringLevel;
      }
 
      public int getScoringLevel(){
@@ -50,11 +53,13 @@ public class GlobalVariables{
      public void decreaseScoringLevel() {
           m_currentScoringLevel-= 1;
           if (m_currentScoringLevel < 1) m_currentScoringLevel = 1;
+          currentScoringLevel = m_currentScoringLevel;
      }
 
      public void increaseScoringLevel() {
           m_currentScoringLevel += 1;
           if (m_currentScoringLevel > m_maxScoringLevel) m_currentScoringLevel = m_maxScoringLevel;
+          currentScoringLevel = m_currentScoringLevel;
      }
 
      public int getIntakeLevel(){
