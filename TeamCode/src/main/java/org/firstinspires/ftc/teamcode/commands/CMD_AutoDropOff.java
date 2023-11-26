@@ -15,16 +15,13 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shoulder;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_VisionAprilTagsPlusAutoDetect;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Wrist;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.List;
 
 public class CMD_AutoDropOff extends CommandBase{
 
-     SUB_Shoulder m_shoulder;
-     SUB_Elbow m_elbow;
-     SUB_Wrist m_wrist;
-     SUB_Blank m_blank;
      SUB_VisionAprilTagsPlusAutoDetect m_aprilTags;
      MecanumDriveSubsystem m_drivetrain;
 
@@ -32,25 +29,25 @@ public class CMD_AutoDropOff extends CommandBase{
 
      List<AprilTagDetection> m_detections;
 
-     public CMD_AutoDropOff(MecanumDriveSubsystem p_drivetrain, SUB_Shoulder p_shoulder,
-                            SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank, SUB_VisionAprilTagsPlusAutoDetect p_aprilTags,
-                            CMD_AutoDropOff_Steps p_ref){
-          addRequirements(p_blank, p_drivetrain);
+     double m_leftSlotOffset = 1.5;
+     double m_rightSlotOffset = -1.5;
+     boolean m_leftSlot;
+
+     public CMD_AutoDropOff(MecanumDriveSubsystem p_drivetrain, SUB_VisionAprilTagsPlusAutoDetect p_aprilTags,
+                            CMD_AutoDropOff_Steps p_ref, boolean p_leftSlot){
+          addRequirements(p_drivetrain);
 
           m_drivetrain = p_drivetrain;
-          m_shoulder = p_shoulder;
-          m_elbow = p_elbow;
-          m_wrist = p_wrist;
-          m_blank = p_blank;
           m_aprilTags = p_aprilTags;
           m_ref = p_ref;
+          m_leftSlot = p_leftSlot;
      }
 
      @Override
      public void initialize(){
           Pose2d m_robotPose = m_drivetrain.getPoseEstimate();
-          m_ref.closestTag = m_aprilTags.findClosestTag(m_robotPose);
-          int closestTagID = m_aprilTags.findClosestTag(m_robotPose);
+          m_ref.closestTag = m_aprilTags.findClosestTag();
+          int closestTagID = m_aprilTags.findClosestTag();
           double wantedY = 0;
 
           if(closestTagID == 1){
@@ -67,11 +64,25 @@ public class CMD_AutoDropOff extends CommandBase{
                wantedY = -41.75;
           }
 
-          Trajectory m_getToBoard = m_drivetrain.trajectoryBuilder(m_robotPose, true)
-                  .splineTo(new Vector2d(58, wantedY), Math.toRadians(0))
+          double offset = m_leftSlot ? m_leftSlotOffset : m_rightSlotOffset;
+
+          wantedY += offset;
+
+          Trajectory m_dropOffFirstPixel = m_drivetrain.trajectoryBuilder(m_robotPose, true)
+                  .lineToLinearHeading(new Pose2d(48, m_drivetrain.getPoseEstimate().getY(), Math.toRadians(180)))
                   .build();
 
-          m_drivetrain.followTrajectory(m_getToBoard);
+          Trajectory m_dropOffSecondPixel = m_drivetrain.trajectoryBuilder(m_dropOffFirstPixel.end(), true)
+                  .lineToConstantHeading(new Vector2d(48, wantedY))
+                  .build();
+
+          TrajectorySequence m_trajectorySequence = m_drivetrain.trajectorySequenceBuilder(m_dropOffFirstPixel.start())
+                  .addTrajectory(m_dropOffFirstPixel)
+                  .waitSeconds(1)
+                  .addTrajectory(m_dropOffSecondPixel)
+                  .build();
+
+          m_drivetrain.followTrajectorySequence(m_trajectorySequence);
      }
 
      @Override

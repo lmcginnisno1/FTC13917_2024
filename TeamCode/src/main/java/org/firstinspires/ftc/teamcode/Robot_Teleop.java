@@ -91,18 +91,22 @@ public class Robot_Teleop extends LinearOpMode {
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
+        //drivetrain initialization
         //        m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autonomousEndPose);
         m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(-180)));
         m_robot.drivetrain.setFieldCentric(true, 90); // this is the direct of the controller not the robot
         m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.0,0.01));
 
+        //camera initialization
         m_robot.m_backCamera.setProcessorDisabled(m_robot.m_autonomousDetect);
-        m_robot.m_intake.pivotServoHome();
 
+        //subsytem initialization
+        m_robot.m_intake.pivotServoHome();
         m_robot.m_wrist.setPosition(Constants.WristConstants.kHome);
         m_robot.m_droneLauncher.close();
 
+        //button bindings and global variables initialization
         configureButtonBindings();
         m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);
     }
@@ -129,41 +133,10 @@ public class Robot_Teleop extends LinearOpMode {
 
                 new ConditionalCommand(
                         //release the second pixel and return home
-                        new SequentialCommandGroup(
-                                new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                                ,new InstantCommand(()-> m_robot.m_shoulder.setTargetAngle(
-                                        Constants.ShoulderConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                                + Constants.ShoulderConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]
-                                ))
-                                ,new InstantCommand(()-> m_robot.m_elbow.setTargetAngle(
-                                Constants.ElbowConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                        - Constants.ElbowConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]))
-                                ,new WaitCommand(500)
-                                ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                                ,new CMD_ArmBackOffBackdrop(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                                ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Transitioning)
-                                ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                                ,new InstantCommand(()-> m_robot.m_variables.decreaseScoringLevel())
-                                ,new InstantCommand(()->m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
-                        )
+                        new CMD_DeploySecondPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
                         // release the first pixel
                         ,new SequentialCommandGroup(
-                            new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                            ,new InstantCommand(()-> m_robot.m_shoulder.setTargetAngle(
-                                    Constants.ShoulderConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                            + Constants.ShoulderConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]
-                            ))
-                            ,new InstantCommand(()-> m_robot.m_elbow.setTargetAngle(
-                                    Constants.ElbowConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                            - Constants.ElbowConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]))
-                            ,new WaitCommand(500)
-                            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                            ,new CMD_ArmBackOffBackdrop(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                            ,new InstantCommand(()-> m_robot.m_variables.increaseScoringLevel())
-                            ,new CMD_ShoulderSetReadyToDeploy(m_robot.m_shoulder, m_robot.m_variables)
-                            ,new CMD_ElbowSetReadyToDeploy(m_robot.m_elbow, m_robot.m_variables)
-                            ,new CMD_WristSetReadyToDeploy(m_robot.m_wrist, m_robot.m_variables)
-                            ,new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.ReadyToDeploy))
+                            new CMD_DeployFirstPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
                             //timeout to avoid double clicking the deploy button and losing pixels
                             ,new ConditionalCommand(
                                 new InstantCommand(()-> m_releaseTimeout.reset())
@@ -218,23 +191,34 @@ public class Robot_Teleop extends LinearOpMode {
                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
         ));
 
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_LEFT, new ConditionalCommand(
+                new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
+                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_backCamera, true)
+                ,new InstantCommand()
+                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
+        ));
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new ConditionalCommand(
+                new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
+                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_backCamera, false)
+                ,new InstantCommand()
+                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
+        ));
+
         // set Ready to Deploy at the previous deployed level and update robot pose
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
                 new SequentialCommandGroup(
                         new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                        ,new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                        ,new ConditionalCommand(
+                            new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                            ,new InstantCommand()
+                            ,()-> m_robot.drivetrain.getPoseEstimate().getX() <= 41
+                        )
                 )
                 ,new InstantCommand(),
                 ()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
                         || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
                         || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
-        ));
-
-        // set Ready to Deploy at the previous deployed level
-        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new ConditionalCommand(
-                new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                ,new InstantCommand(),
-                ()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Transitioning)
         ));
 
         // level down the deploy arm

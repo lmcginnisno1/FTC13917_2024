@@ -16,7 +16,7 @@ public class GlobalVariables{
           ,Transitioning
      }
 
-     private int m_currentScoringLevel = 1;
+     private int m_currentScoringLevel = 2;
      private final int m_maxScoringLevel = 8;
      private int m_currentIntakeLevel = 2;
 

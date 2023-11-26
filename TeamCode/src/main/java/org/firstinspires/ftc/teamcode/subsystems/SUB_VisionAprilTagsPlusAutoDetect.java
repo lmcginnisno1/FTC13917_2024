@@ -86,7 +86,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      @Override
      public void periodic() {
-//          telemetry();
+          telemetry();
      }
 
      private void initAprilTag() {
@@ -187,31 +187,31 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      public void telemetry() {
           Pose2d pose = getRobotPose(false);
-          if (pose != null)
-               m_opMode.telemetry.addData("pose", "XY (%.1f,%.1f) Heading(%.1f)",
-                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
-          pose = getRobotPose(true);
-          if (pose != null)
-               m_opMode.telemetry.addData("pose+offset", "XY (%.1f,%.1f) Heading(%.1f)",
-                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
+//          if (pose != null)
+//               m_opMode.telemetry.addData("pose", "XY (%.1f,%.1f) Heading(%.1f)",
+//                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
+//          pose = getRobotPose(true);
+//          if (pose != null)
+//               m_opMode.telemetry.addData("pose+offset", "XY (%.1f,%.1f) Heading(%.1f)",
+//                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
 
           List<AprilTagDetection> currentDetections = m_aprilTag.getDetections();
           m_opMode.telemetry.addData("# AprilTags Detected", currentDetections.size());
-
-          m_opMode.telemetry.addData("april tag detection", getTagsDetected());
-
-          // Step through the list of detections and display info for each one.
-          for (AprilTagDetection detection : currentDetections) {
-               if (detection.metadata != null) {
-                    m_opMode.telemetry.addData("\n==== ID:", "%d %s", detection.id, detection.metadata.name);
-                    m_opMode.telemetry.addData("XYZ", "%6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z);
-                    m_opMode.telemetry.addData("PRY", "%6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw);
-                    m_opMode.telemetry.addData("RBE", "%6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation);
-               } else {
-                    m_opMode.telemetry.addData("\n==== ID:", "%d Unknown", detection.id);
-                    m_opMode.telemetry.addData("Center", "%6.0f %6.0f   (pixels)", detection.center.x, detection.center.y);
-               }
-          }   // end for() loop
+          findClosestTag();
+//          m_opMode.telemetry.addData("april tag detection", getTagsDetected());
+//
+//          // Step through the list of detections and display info for each one.
+//          for (AprilTagDetection detection : currentDetections) {
+//               if (detection.metadata != null) {
+//                    m_opMode.telemetry.addData("\n==== ID:", "%d %s", detection.id, detection.metadata.name);
+//                    m_opMode.telemetry.addData("XYZ", "%6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z);
+//                    m_opMode.telemetry.addData("PRY", "%6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw);
+//                    m_opMode.telemetry.addData("RBE", "%6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation);
+//               } else {
+//                    m_opMode.telemetry.addData("\n==== ID:", "%d Unknown", detection.id);
+//                    m_opMode.telemetry.addData("Center", "%6.0f %6.0f   (pixels)", detection.center.x, detection.center.y);
+//               }
+//          }   // end for() loop
 
           // Add "key" information to telemetry
 //		m_opMode.telemetry.addData("\nkey", "\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
@@ -242,16 +242,18 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
           return m_aprilTagLocations[tagId];
      }
 
-     public int findClosestTag(com.acmerobotics.roadrunner.geometry.Pose2d p_currentPose){
+     public int findClosestTag(){
           int closestTagID = -1;
           double distanceToClosestTag = Double.MAX_VALUE;
           for (AprilTagDetection detection : m_aprilTag.getDetections()) {
-               double distance = Math.abs(detection.ftcPose.y - p_currentPose.getY());
+               double distance = detection.ftcPose.range;
                if(distance < distanceToClosestTag){
                     distanceToClosestTag = distance;
                     closestTagID = detection.id;
                }
           }
+          m_opMode.telemetry.addData("closest tag range", distanceToClosestTag);
+          m_opMode.telemetry.addData("closest tag ID", closestTagID);
           return closestTagID;
      }
 }
