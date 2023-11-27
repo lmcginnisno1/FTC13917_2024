@@ -193,14 +193,14 @@ public class Robot_Teleop extends LinearOpMode {
 
         AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_LEFT, new ConditionalCommand(
                 new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
-                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_backCamera, true)
+                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, true, m_driverOp)
                 ,new InstantCommand()
                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
         ));
 
         AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new ConditionalCommand(
                 new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
-                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_backCamera, false)
+                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, false, m_driverOp)
                 ,new InstantCommand()
                 ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
         ));
