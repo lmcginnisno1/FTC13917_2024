@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.commands.*;
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
-import org.firstinspires.ftc.teamcode.ftclib.command.ScheduleCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
@@ -21,8 +20,8 @@ import org.firstinspires.ftc.teamcode.ftclib.command.Command;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Robot Teleop Robot Centric", group ="teleop")
-public class Robot_Teleop_Robot_Centric extends LinearOpMode {
+@TeleOp(name = "Teleop Robot Centric red", group ="teleop red")
+public class Teleop_Robot_Centric_Red extends LinearOpMode {
 
      public RobotContainer m_robot;
      private GamepadEx m_driverOp;

@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadKeys;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -16,9 +17,8 @@ public class RR_MecanumDriveDefault extends CommandBase {
     private GamepadEx m_driverOP = null;
     private double m_driverOffsetAngle = 0;
     private double m_joystickMin = 0.02;
-
     public RR_MecanumDriveDefault(MecanumDriveSubsystem p_drive, GamepadEx driverOp,
-                        double driverOffsetAngle, double joystickMin) {
+                                  double driverOffsetAngle, double joystickMin) {
         m_drivetrain = p_drive;
         m_driverOP = driverOp; // gamepad of driver
         m_driverOffsetAngle = driverOffsetAngle;

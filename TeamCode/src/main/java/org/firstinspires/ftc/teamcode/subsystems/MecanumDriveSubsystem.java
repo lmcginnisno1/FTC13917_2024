@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -24,11 +26,15 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     private final SampleMecanumDrive drive;
     private boolean fieldCentric = false;
-    private double m_headingAdjustRobotStartPosition =0;
+    private double m_headingAdjustRobotStartPosition = 0;
 
-    public MecanumDriveSubsystem(SampleMecanumDrive drive) {
+    OpMode m_opMode;
+
+    public MecanumDriveSubsystem(SampleMecanumDrive drive, OpMode p_opMode) {
         this.drive = drive;
         fieldCentric = false;
+
+        m_opMode = p_opMode;
     }
 
     public void setMode(DcMotor.RunMode mode) {
@@ -138,5 +144,10 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     public void setFieldCentric(double p_StartAngleDegree) {
         m_headingAdjustRobotStartPosition = Math.toRadians(p_StartAngleDegree);
+    }
+
+    @Override
+    public void periodic(){
+        m_opMode.telemetry.addData(this.m_name, m_headingAdjustRobotStartPosition);
     }
 }
