@@ -19,8 +19,8 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
 
         addCommands(
                 new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
-                ,new CMD_IntakeOff(p_intake)
                 ,new CMD_IntakeConveyorOff(p_intake)
+                ,new CMD_IntakeMiddleServoOff(p_intake)
                 ,new InstantCommand(()-> p_intake.pivotServoHome())
                 //first scrape
                 ,new CMD_SetElbowAngle(p_elbow, -7.5)

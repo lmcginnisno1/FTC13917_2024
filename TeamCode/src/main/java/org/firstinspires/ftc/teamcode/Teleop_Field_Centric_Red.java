@@ -90,6 +90,8 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
+        setRedSide();
+
         //drivetrain initialization
         //        m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autonomousEndPose);
         m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(-180)));
@@ -316,17 +318,6 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
                 , new InstantCommand()
                 , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
         ));
-
-        //trigger by IR sensor on intake
-        m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
-                new SequentialCommandGroup(
-                        new CMD_SetIntakePixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                        , new CMD_IntakeOff(m_robot.m_intake)
-                        , new CMD_IntakeConveyorOff(m_robot.m_intake)
-                )
-                , new InstantCommand()
-                , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
-        ), false);
     }
 
     public double setSideMultiplier(double value) {
