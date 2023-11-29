@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.button.GamepadButton;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.ftclib.command.Command;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -41,8 +42,6 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
      @Override
     public void runOpMode() throws InterruptedException {
         initializeSubsystems();
-         m_robot.m_shoulder.resetAngle();
-         m_robot.m_elbow.resetAngle();
         // waitForStart();
         while (!opModeIsActive() && !isStopRequested()) {
 
@@ -73,6 +72,8 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
             telemetry.addData("RT shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
             telemetry.addData("elbow motor", m_robot.m_elbow.getElbowTicks());
 
+            telemetry.addData("side", m_robot.m_red ? "red" : "blue");
+
             telemetry.update();
         }
 
@@ -90,7 +91,7 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         m_driverOp = new GamepadEx(gamepad1);
         m_toolOp = new GamepadEx(gamepad2);
 
-        setRedSide();
+        setSide();
 
         //drivetrain initialization
         //        m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autonomousEndPose);
@@ -110,7 +111,6 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         //button bindings and global variables initialization
         configureButtonBindings();
         m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home);
-
     }
 
     public void configureButtonBindings() {
@@ -202,12 +202,14 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         // set Ready to Deploy at the previous deployed level and update robot pose
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
                 new SequentialCommandGroup(
-                        new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                        , new ConditionalCommand(
-                        new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                        , new InstantCommand()
-                        , () -> m_robot.drivetrain.getPoseEstimate().getX() <= 41
-                )
+                        new ConditionalCommand(
+                            new SequentialCommandGroup(
+                                new CMD_DriveAlignToBoard(m_robot.drivetrain)
+                                ,new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                            )
+                            ,new InstantCommand()
+                            ,()-> m_robot.drivetrain.getPoseEstimate().getX() <= 41
+                        )
                 )
                 , new InstantCommand(),
                 () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
@@ -301,7 +303,7 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
                 new SequentialCommandGroup(
                         new CMD_ArmSetLevelHomeFromIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                        , new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
+                        ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
                 )
                 , new SequentialCommandGroup(
                 new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
@@ -318,6 +320,17 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
                 , new InstantCommand()
                 , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
         ));
+
+        //trigger by IR sensor on intake
+        m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
+                new SequentialCommandGroup(
+                        new CMD_SetIntakePixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                        , new CMD_IntakeOff(m_robot.m_intake)
+                        , new CMD_IntakeConveyorOff(m_robot.m_intake)
+                )
+                , new InstantCommand()
+                , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
+        ), false);
     }
 
     public double setSideMultiplier(double value) {
@@ -340,13 +353,6 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         return m_robot.m_red ? value : -value;
     }
 
-    public double redSide(double value, double blue) {
-        if (m_robot.m_red)
-            return value;
-        else
-            return blue;
-    }
-
     public double blueSide(double value) {
         return m_robot.m_red ? -value : value;
     }
@@ -356,6 +362,10 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
             return red;
         else
             return value;
+    }
+
+    public void setSide() {
+        m_robot.m_red = true;
     }
 
     public Button AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button, Command command) {

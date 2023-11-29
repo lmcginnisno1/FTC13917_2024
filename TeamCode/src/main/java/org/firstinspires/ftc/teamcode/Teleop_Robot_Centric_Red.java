@@ -41,8 +41,6 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
      @Override
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
-          m_robot.m_shoulder.resetAngle();
-          m_robot.m_elbow.resetAngle();
           // waitForStart();
           while (!opModeIsActive() && !isStopRequested()) {
 
@@ -340,6 +338,17 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
                   ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
           ));
 
+          //trigger by IR sensor on intake
+          m_robot.m_pixelGuide.whenActive(new ConditionalCommand(
+                  new SequentialCommandGroup(
+                          new CMD_SetIntakePixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                          ,new CMD_IntakeOff(m_robot.m_intake)
+                          ,new CMD_IntakeConveyorOff(m_robot.m_intake)
+                  )
+                  ,new InstantCommand()
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
+          ),false);
+
      }
 
      public double setSideMultiplier(double value) {
@@ -362,11 +371,8 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
           return m_robot.m_red ? value : -value;
      }
 
-     public double redSide(double value, double blue) {
-          if (m_robot.m_red)
-               return value;
-          else
-               return blue;
+     public void setSide() {
+          m_robot.m_red = true;
      }
 
      public double blueSide(double value) {

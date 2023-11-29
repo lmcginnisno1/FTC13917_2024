@@ -50,7 +50,7 @@ public class CMD_AutoDropOffSecondPixel extends CommandBase{
           wantedY = GlobalVariables.currentScoringLevel % 2 == 0 ? wantedY : wantedY + offset;
 
           Trajectory m_dropOffSecondPixel = m_drivetrain.trajectoryBuilder(m_robotPose, true)
-                  .lineToConstantHeading(new Vector2d(49, wantedY))
+                  .lineToLinearHeading(new Pose2d(48, wantedY, Math.toRadians(180)))
                   .build();
 
           m_drivetrain.followTrajectory(m_dropOffSecondPixel);
