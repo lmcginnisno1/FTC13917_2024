@@ -83,22 +83,30 @@ public class Constants {
 //          public static final double kPushIntoBackdrop = 5;
      }
      public static final class WristConstants{
-          public static final double kClawAOpen = 0.0;
-          public static final double kClawAClose = 0.66;//.66
-          public static final double kClawBOpen = 0.10;
-          public static final double kClawBClose = 0.65;
+          public static final double kIntakePivotHome = 0.5;
+          public static final double kIntakePivotDeploy = 0.18;
+          public static final double[] kPivotRotation = {
+               0.0,//right slant
+               0.18,//horizontal
+               0.325,//left slant
+               0.5,//vertical
+               0.65,//right slant reversed
+               0.8,//horizontal reversed
+               0.95,//left slant reversed
+          };
+          public static final double kPincherOpen = 0.10;
+          public static final double kPincherClose = 0.85;
+          public static final double kPincherDoubleGrab = .55;
           public static final double kWristOffset = 0;
-          public static final double kClawAOffset = 0.0;
-          public static final double kClawBOffset = 0.0;
           // Wrist Positions
 
           //starts from 0 pixel stack and goes to level 5
-          public static final double[] kReadyToIntakePosition = {0.0,0.0,.52,0.0,0.0,0.0};
+          public static final double[] kReadyToIntakePosition = {0.0,0.0,.4,0.0,0.0,0.0};
           public static final double[] kIntakePickupPosition = {0.0,0.51,0.51,0.51,0.51,0.51};
-          public static final double kHome = 0.42;
+          public static final double kHome = 0.375;
           //larger value points farther down when deploying
           public static final double[] kReadyToDeployPosition = {0.0, 0.0, 0.11, 0.2, 0.25, 0.27, 0.3, 0.4, 0.5};//0, .25, .35, .45, .5
-          public static final double kBackOff = 0.15;
+          public static final double kBackOff = 0.25;
      }
 
      public static final class droneLauncherConstants{

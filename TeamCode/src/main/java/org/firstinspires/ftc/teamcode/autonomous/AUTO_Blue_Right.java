@@ -21,9 +21,6 @@ public class AUTO_Blue_Right extends Robot_Auto {
      @Override
      public void prebuildTasks() {
           //run these tasks now
-          m_robot.m_wrist.closeClawA();
-          m_robot.m_wrist.closeClawB();
-          m_robot.m_wrist.setPosition(0);
           //set robot starting pose
           setStartingPose(new Pose2d(-36, 61, Math.toRadians(90)));
      }
@@ -112,7 +109,7 @@ public class AUTO_Blue_Right extends Robot_Auto {
                           )
                           ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
                           ,new Sleep(500)
-                          ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                          ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                           ,new ParallelCommandGroup(
                                   new SequentialCommandGroup(
                                           new Sleep(1000)
@@ -162,7 +159,7 @@ public class AUTO_Blue_Right extends Robot_Auto {
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
                             )
                             ,new Sleep(500)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                             ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
@@ -205,7 +202,7 @@ public class AUTO_Blue_Right extends Robot_Auto {
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
                             )
                             ,new Sleep(500)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                             ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)

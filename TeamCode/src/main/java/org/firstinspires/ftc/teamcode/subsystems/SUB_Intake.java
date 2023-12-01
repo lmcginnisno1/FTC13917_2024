@@ -14,6 +14,7 @@ public class SUB_Intake extends SubsystemBase {
      CRServo m_middleServo;
      Servo m_pivotServo;
      OpMode m_opMode;
+     boolean m_conveyorReversed;
      public SUB_Intake(OpMode p_opMode, final String p_middleServoName, final String p_pivotServoName,
                          final String p_conveyormotorname){
           m_opMode = p_opMode;
@@ -46,6 +47,7 @@ public class SUB_Intake extends SubsystemBase {
      }
      
      public void conveyorOn(){
+          m_conveyorReversed = false;
           m_conveyorMotor.setPower(IntakeConstants.kConveyorOn);
      }
 
@@ -54,6 +56,11 @@ public class SUB_Intake extends SubsystemBase {
      }
 
      public void conveyorReverse(){
+          m_conveyorReversed = true;
           m_conveyorMotor.setPower(IntakeConstants.kConveyorReverse);
+     }
+     
+     public boolean getConveyorReversed(){
+          return m_conveyorReversed;
      }
 }

@@ -22,8 +22,8 @@ public class CMD_ArmPushIntoBackdrop extends CommandBase {
 
      @Override
      public void initialize(){
-//          m_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ElbowConstants.kPushIntoBackdrop);
-//          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] + Constants.ShoulderConstants.kPushIntoBackdrop);
+          m_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ElbowConstants.kPushIntoBackdrop[m_variables.getScoringLevel()]);
+          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] + Constants.ShoulderConstants.kPushIntoBackdrop[m_variables.getScoringLevel()]);
      }
 
      @Override

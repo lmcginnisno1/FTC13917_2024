@@ -73,6 +73,8 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
             telemetry.addData("RT shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
             telemetry.addData("elbow motor", m_robot.m_elbow.getElbowTicks());
 
+            telemetry.addData("rotation", m_robot.m_variables.getRotation());
+
             telemetry.update();
         }
 
@@ -132,24 +134,10 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
 
         // release pixel: if the first pixel has been released, release the second pixel and return to home, else release the first pixel
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-
-                new ConditionalCommand(
-                        //release the second pixel and return home
-                        new CMD_DeploySecondPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                        // release the first pixel
-                        , new SequentialCommandGroup(
-                        new CMD_DeployFirstPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                        //timeout to avoid double clicking the deploy button and losing pixels
-                        , new ConditionalCommand(
-                        new InstantCommand(() -> m_releaseTimeout.reset())
-                        , new InstantCommand()
-                        , () -> m_releaseTimeout.milliseconds() > 500
-                )
-                )
-                        , () -> m_robot.m_wrist.getIsClawBOpen() //&& m_releaseTimeout.milliseconds() > 500
-                )
-                , new InstantCommand()
-                , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
+                 //release the second pixel and return home
+                        new CMD_DeployPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                        ,new InstantCommand()
+                        ,() -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
         ));
 
         // set ready to Intake level 2- normal
@@ -169,8 +157,7 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         // Go back to home from deploying position.  If we missed the pickup, or only have 1 pixel.
         AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new ConditionalCommand(
                 new SequentialCommandGroup(
-                        new InstantCommand(() -> m_robot.m_wrist.openClawA())
-                        , new InstantCommand(() -> m_robot.m_wrist.openClawB())
+                        new InstantCommand(() -> m_robot.m_wrist.openPincher())
                         , new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
                         , new InstantCommand(() -> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
                 )
@@ -179,7 +166,7 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
         ));
 
         //allows driver to go to ready to intake from deploy if a pixel wasn't grabbed whilst deploying
-        AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new ConditionalCommand(
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new ConditionalCommand(
                 new CMD_SetReadyToIntakeFromDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
                 , new InstantCommand()
                 , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
@@ -253,6 +240,26 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
                         , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToLaunch)
                 )
         );
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_STICK_BUTTON, new SequentialCommandGroup(
+                new InstantCommand(()-> m_robot.m_variables.increaseRotation())
+                ,new InstantCommand(()-> m_robot.m_wrist.movePivotServo(Constants.WristConstants.kPivotRotation[m_robot.m_variables.getRotation()]))
+        ));
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_STICK_BUTTON, new SequentialCommandGroup(
+                new InstantCommand(()-> m_robot.m_variables.decreaseRotation())
+                ,new InstantCommand(()-> m_robot.m_wrist.movePivotServo(Constants.WristConstants.kPivotRotation[m_robot.m_variables.getRotation()]))
+        ));
+
+        AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new ConditionalCommand(
+                new ConditionalCommand(
+                        new InstantCommand(()-> m_robot.m_intake.conveyorOn())
+                        ,new InstantCommand(()-> m_robot.m_intake.conveyorReverse())
+                        ,()-> m_robot.m_intake.getConveyorReversed()
+                )
+                ,new InstantCommand()
+                ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
+        ));
 
         // Operator
 

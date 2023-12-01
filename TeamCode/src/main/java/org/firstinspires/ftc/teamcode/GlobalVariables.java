@@ -19,7 +19,10 @@ public class GlobalVariables{
      }
 
      private int m_currentScoringLevel = 2;
-     private final int m_maxScoringLevel = 8;
+     private final int m_maxScoringLevel = 7;
+
+     private int m_currentRotation = 1;
+     private final int m_maxRotation = 6;
      private int m_currentIntakeLevel = 2;
 
      RobotState m_robotState = RobotState.Home;
@@ -60,6 +63,28 @@ public class GlobalVariables{
           m_currentScoringLevel += 1;
           if (m_currentScoringLevel > m_maxScoringLevel) m_currentScoringLevel = m_maxScoringLevel;
           currentScoringLevel = m_currentScoringLevel;
+     }
+
+     public void setRotation(int p_scoringLevel){
+          m_currentRotation = p_scoringLevel;
+     }
+
+     public int getRotation(){
+          return m_currentRotation;
+     }
+
+     public boolean isRotation(int p_scoringLevel){
+          return m_currentRotation == p_scoringLevel;
+     }
+
+     public void decreaseRotation() {
+          m_currentRotation -= 1;
+          if (m_currentRotation < 0) m_currentRotation = 0;
+     }
+
+     public void increaseRotation() {
+          m_currentRotation += 1;
+          if (m_currentRotation > m_maxRotation) m_currentRotation = m_maxRotation;
      }
 
      public int getIntakeLevel(){

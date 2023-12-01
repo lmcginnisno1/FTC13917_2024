@@ -22,8 +22,7 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
                 ,new CMD_IntakeConveyorOff(p_intake)
                 ,new CMD_IntakeMiddleServoOff(p_intake)
                 ,new InstantCommand(()-> p_intake.pivotServoHome())
-                //first scrape
-                ,new CMD_SetElbowAngle(p_elbow, -7.5)
+                ,new CMD_SetElbowAngle(p_elbow, -9)
                 ,new Sleep(250)
                 ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kHome + 0.05)
                 ,new Sleep(250)

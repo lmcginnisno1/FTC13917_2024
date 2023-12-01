@@ -26,9 +26,6 @@ public class AUTO_Red_Left_Strafe extends Robot_Auto {
      public void prebuildTasks() {
           //run these tasks now
           setStartingPose(new Pose2d(-36, -61, Math.toRadians(-90)));
-          m_robot.m_wrist.closeClawA();
-          m_robot.m_wrist.closeClawB();
-          m_robot.m_wrist.setPosition(0);
      }
 
      @Override
@@ -131,7 +128,7 @@ public class AUTO_Red_Left_Strafe extends Robot_Auto {
                                     )
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
                             )
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                             ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
@@ -169,7 +166,7 @@ public class AUTO_Red_Left_Strafe extends Robot_Auto {
                                     )
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
                             )
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
                             ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
@@ -208,7 +205,7 @@ public class AUTO_Red_Left_Strafe extends Robot_Auto {
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_prePurplePixel3)
                             )
                             ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new ParallelCommandGroup(
                                     new SequentialCommandGroup(

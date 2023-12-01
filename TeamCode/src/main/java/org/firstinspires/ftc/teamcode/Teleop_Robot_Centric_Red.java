@@ -125,54 +125,8 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
 
           // release pixel: if the first pixel has been released, release the second pixel and return to home, else release the first pixel
           AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-
-                  new ConditionalCommand(
-                          //release the second pixel and return home
-                          new SequentialCommandGroup(
-                                  new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                                  ,new InstantCommand(()-> m_robot.m_shoulder.setTargetAngle(
-                                  Constants.ShoulderConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                          + Constants.ShoulderConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]
-                          ))
-                                  ,new InstantCommand(()-> m_robot.m_elbow.setTargetAngle(
-                                  Constants.ElbowConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                          - Constants.ElbowConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]))
-                                  ,new WaitCommand(500)
-                                  ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                                  ,new CMD_ArmBackOffBackdrop(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                                  ,new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Transitioning)
-                                  ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                                  ,new InstantCommand(()-> m_robot.m_variables.decreaseScoringLevel())
-                                  ,new InstantCommand(()->m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
-                          )
-                          // release the first pixel
-                          ,new SequentialCommandGroup(
-                          new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                          ,new InstantCommand(()-> m_robot.m_shoulder.setTargetAngle(
-                          Constants.ShoulderConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                  + Constants.ShoulderConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]
-                  ))
-                          ,new InstantCommand(()-> m_robot.m_elbow.setTargetAngle(
-                          Constants.ElbowConstants.kReadyToDeployPosition[m_robot.m_variables.getScoringLevel()]
-                                  - Constants.ElbowConstants.kPushIntoBackdrop[m_robot.m_variables.getScoringLevel()]))
-                          ,new WaitCommand(500)
-                          ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                          ,new CMD_ArmBackOffBackdrop(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                          ,new InstantCommand(()-> m_robot.m_variables.increaseScoringLevel())
-                          ,new CMD_ShoulderSetReadyToDeploy(m_robot.m_shoulder, m_robot.m_variables)
-                          ,new CMD_ElbowSetReadyToDeploy(m_robot.m_elbow, m_robot.m_variables)
-                          ,new CMD_WristSetReadyToDeploy(m_robot.m_wrist, m_robot.m_variables)
-                          ,new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.ReadyToDeploy))
-                          //timeout to avoid double clicking the deploy button and losing pixels
-                          ,new ConditionalCommand(
-                          new InstantCommand(()-> m_releaseTimeout.reset())
-                          ,new InstantCommand()
-                          ,()-> m_releaseTimeout.milliseconds() > 500
-                  )
-                  )
-                          ,() -> m_robot.m_wrist.getIsClawBOpen() //&& m_releaseTimeout.milliseconds() > 500
-                  )
-                  , new InstantCommand()
+                  new CMD_DeployPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
+                  ,new InstantCommand()
                   ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
           ));
 
@@ -193,8 +147,7 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
           // Go back to home from deploying position.  If we missed the pickup, or only have 1 pixel.
           AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new ConditionalCommand(
                   new SequentialCommandGroup(
-                          new InstantCommand(()->m_robot.m_wrist.openClawA())
-                          ,new InstantCommand(()->m_robot.m_wrist.openClawB())
+                          new InstantCommand(()->m_robot.m_wrist.openPincher())
                           ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
                           ,new InstantCommand(()->m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
                   )

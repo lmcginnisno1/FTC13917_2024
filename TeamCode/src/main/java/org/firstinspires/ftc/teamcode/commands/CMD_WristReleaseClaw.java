@@ -15,8 +15,7 @@ public class CMD_WristReleaseClaw extends CommandBase {
 
     @Override
     public void initialize() {
-        m_wrist.openClawA();
-        m_wrist.openClawB();
+        m_wrist.openPincher();
         m_runtime.reset();
     }
 

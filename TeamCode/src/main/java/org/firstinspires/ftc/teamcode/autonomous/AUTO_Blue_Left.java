@@ -21,9 +21,6 @@ public class AUTO_Blue_Left extends Robot_Auto {
      @Override
      public void prebuildTasks() {
           //run these tasks now
-          m_robot.m_wrist.closeClawA();
-          m_robot.m_wrist.closeClawB();
-          m_robot.m_wrist.setPosition(0);
           setStartingPose(new Pose2d(12, 61, Math.toRadians(90)));
      }
 
@@ -97,7 +94,7 @@ public class AUTO_Blue_Left extends Robot_Auto {
                                     )
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
                             )
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new ParallelCommandGroup(
                                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
@@ -135,7 +132,7 @@ public class AUTO_Blue_Left extends Robot_Auto {
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
                             )
                             ,new Sleep(500)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new ParallelCommandGroup(
                                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot2)
@@ -173,7 +170,7 @@ public class AUTO_Blue_Left extends Robot_Auto {
                                     ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_prePurplePixel3)
                             )
                             ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openClawB())
+                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
                             ,new Sleep(500)
                             ,new ParallelCommandGroup(
                                     new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot3)
