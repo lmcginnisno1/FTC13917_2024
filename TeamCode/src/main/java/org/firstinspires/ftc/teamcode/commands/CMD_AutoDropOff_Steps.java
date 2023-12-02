@@ -22,7 +22,7 @@ public class CMD_AutoDropOff_Steps extends SequentialCommandGroup {
                   ,new CMD_DeployFirstPixel(p_shoulder, p_elbow, p_wrist, p_blank, p_variables)
                   ,new Sleep(250)
                   //drive to the left or right slot on the closest april tag, does not place any pixels
-                  ,new CMD_AutoDropOffSecondPixel(p_drivetrain, p_leftSlot)
+                  ,new CMD_AutoDropOffSecondPixel(p_drivetrain, p_leftSlot, p_variables)
                   ,new Sleep(250)
                   //deploy sequence for second pixel, drops and goes home
                   ,new CMD_DeployPixel(p_shoulder, p_elbow, p_wrist, p_blank, p_variables)

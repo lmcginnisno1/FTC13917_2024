@@ -20,11 +20,11 @@ public class CMD_SetReadyToIntake extends SequentialCommandGroup {
          addCommands(
                  new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
                  ,new CMD_WristReleaseClaw(p_wrist)
-                 ,new CMD_IntakeConveyorOn(p_intake)
                  ,new CMD_IntakeMiddleServoOn(p_intake)
                  ,new InstantCommand(()-> p_wrist.IntakePivotHome())
                  ,new InstantCommand(()->p_wrist.openPincher())
                  ,new InstantCommand(()->p_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition[2]))
+                 ,new CMD_IntakeConveyorOn(p_intake)
                  , new ParallelCommandGroup(
                         new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
                         ,new CMD_ElbowSetReadyToIntake(p_elbow , p_variables)

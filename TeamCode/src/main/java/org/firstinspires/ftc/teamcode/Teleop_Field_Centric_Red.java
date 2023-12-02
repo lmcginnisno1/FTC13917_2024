@@ -193,7 +193,7 @@ public class Teleop_Field_Centric_Red extends LinearOpMode {
                         , new ConditionalCommand(
                         new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
                         , new InstantCommand()
-                        , () -> m_robot.drivetrain.getPoseEstimate().getX() <= 41
+                        , () -> m_robot.drivetrain.getPoseEstimate().getX() <= 60
                 )
                 )
                 , new InstantCommand(),

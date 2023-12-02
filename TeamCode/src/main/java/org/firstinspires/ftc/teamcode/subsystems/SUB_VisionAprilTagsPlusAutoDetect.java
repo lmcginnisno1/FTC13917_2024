@@ -247,7 +247,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
      public int findClosestTag(){
           double distanceToClosestTag = Double.MAX_VALUE;
           for (AprilTagDetection detection : m_aprilTag.getDetections()) {
-               if(detection != null) {
+               if(detection.ftcPose != null) {
                     double distance = detection.ftcPose.range;
                     if (distance < distanceToClosestTag) {
                          distanceToClosestTag = distance;

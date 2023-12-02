@@ -15,12 +15,15 @@ public class CMD_AutoDropOffSecondPixel extends CommandBase{
      double m_leftSlotOffset = 1.5;
      double m_rightSlotOffset = -1.5;
      boolean m_leftSlot;
+     GlobalVariables m_variables;
 
-     public CMD_AutoDropOffSecondPixel(MecanumDriveSubsystem p_drivetrain, boolean p_leftSlot){
+     public CMD_AutoDropOffSecondPixel(MecanumDriveSubsystem p_drivetrain, boolean p_leftSlot
+                                        ,GlobalVariables p_variables){
           addRequirements(p_drivetrain);
 
           m_drivetrain = p_drivetrain;
           m_leftSlot = p_leftSlot;
+          m_variables = p_variables;
      }
 
      @Override
@@ -47,7 +50,7 @@ public class CMD_AutoDropOffSecondPixel extends CommandBase{
 
           double offset = m_leftSlot ? m_leftSlotOffset : m_rightSlotOffset;
 
-          wantedY = GlobalVariables.currentScoringLevel % 2 == 0 ? wantedY : wantedY + offset;
+          wantedY = m_variables.getScoringLevel() % 2 == 0 ? wantedY : wantedY + offset;
 
           Trajectory m_dropOffSecondPixel = m_drivetrain.trajectoryBuilder(m_robotPose, true)
                   .lineToConstantHeading(new Vector2d(49, wantedY))
