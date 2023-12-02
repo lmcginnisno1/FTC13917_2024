@@ -20,15 +20,15 @@ public class CMD_SetReadyToIntakeFromDeploy extends SequentialCommandGroup {
           addCommands(
                   new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
                   ,new CMD_WristReleaseClaw(p_wrist)
-                  ,new CMD_IntakeConveyorOn(p_intake)
-                  ,new CMD_IntakeMiddleServoOn(p_intake)
-                  ,new InstantCommand(()-> p_intake.pivotServoOut())
                   ,new CMD_WristSetReadyToIntake(p_wrist, p_variables)
                   ,new Sleep(500)
                   ,new ParallelCommandGroup(
                      new CMD_ElbowSetReadyToIntake(p_elbow, p_variables)
                      ,new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
                   )
+                  ,new CMD_IntakeOn(p_intake)
+                  ,new CMD_IntakeConveyorOn(p_intake)
+                  ,new InstantCommand(()-> p_intake.pivotServoHome())
                   ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.ReadyToIntake)
           );
      }

@@ -11,7 +11,7 @@ public class CMD_AutoDropOffFirstPixel extends CommandBase{
      MecanumDriveSubsystem m_drivetrain;
 
 
-     double maxY = 45;
+     double maxY = 40;
      double minY = 24;
 
      public CMD_AutoDropOffFirstPixel(MecanumDriveSubsystem p_drivetrain){
@@ -39,7 +39,7 @@ public class CMD_AutoDropOffFirstPixel extends CommandBase{
           firstPixelY = redSide ? firstPixelY * -1 : firstPixelY;
 
           Trajectory m_dropOffFirstPixel = m_drivetrain.trajectoryBuilder(m_robotPose, true)
-                  .lineToLinearHeading(new Pose2d(50, firstPixelY, Math.toRadians(180)))
+                  .lineToLinearHeading(new Pose2d(48, firstPixelY, Math.toRadians(180)))
                   .build();
 
           m_drivetrain.followTrajectory(m_dropOffFirstPixel);
