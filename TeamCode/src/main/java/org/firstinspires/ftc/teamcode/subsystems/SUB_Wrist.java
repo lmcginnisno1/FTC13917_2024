@@ -23,7 +23,7 @@ public class SUB_Wrist extends SubsystemBase{
           m_wristservo = p_opMode.hardwareMap.get(Servo.class, p_wristservoname);
           m_intakepivotservo = p_opMode.hardwareMap.get(ServoImplEx.class, p_intakepivotservoName);
           m_pincherservo = p_opMode.hardwareMap.get(Servo.class, p_pincherservoName);
-          m_pincherservo.setDirection(Servo.Direction.REVERSE);
+          m_pincherservo.setDirection(Servo.Direction.FORWARD);
           PwmControl.PwmRange pivotServoRange = new PwmControl.PwmRange(500, 2500);
           m_intakepivotservo.setPwmRange(pivotServoRange);
      }

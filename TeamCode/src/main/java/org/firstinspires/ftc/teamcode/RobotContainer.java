@@ -24,7 +24,10 @@ public class RobotContainer {
     public GlobalVariables m_variables;
     public SUB_VisionAprilTagsPlusAutoDetect m_backCamera;
     public VProcessor_DetectColorIn3PlacesCenterStage m_autonomousDetect;
-    public DigitalPort m_pixelGuide;
+    public DigitalPort m_intakeSensorOne;
+    public DigitalPort m_intakeSensorTwo;
+    public DigitalPort m_intakeSensorThree;
+
 
     public RobotContainer(OpMode p_opMode) {
         SampleMecanumDrive drivebase = new SampleMecanumDrive(p_opMode.hardwareMap);
@@ -37,15 +40,17 @@ public class RobotContainer {
         m_variables = new GlobalVariables();
         m_blank = new SUB_Blank();
         m_droneLauncher = new SUB_DroneLauncher(p_opMode, "dronelauncherservo");
-        m_pixelGuide = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "pixelGuideSensor"));
+        m_intakeSensorOne = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "intakeSensorOne"));
+        m_intakeSensorTwo = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "intakeSensorTwo"));
+        m_intakeSensorThree = new DigitalPort(p_opMode.hardwareMap.get(DigitalChannel.class, "intakeSensorThree"));
+
         m_autonomousDetect = new VProcessor_DetectColorIn3PlacesCenterStage();
         m_backCamera = new SUB_VisionAprilTagsPlusAutoDetect(p_opMode, "backCamera",
                 -6,
                 0,
                 180, m_autonomousDetect);
-        m_intake = new SUB_Intake(p_opMode, "leftintakeservo",
-                "middleservo", "rightintakeservo",
-                "conveyorservo", "pivotservo");
+        m_intake = new SUB_Intake(p_opMode, "middleservo",
+                "pivotservo", "conveyormotor");
     };
 
     public void run() {
@@ -56,7 +61,7 @@ public class RobotContainer {
         m_robot.reset();
     }
     public void schedule(Command... commands) {
-            m_robot.schedule(commands);
+        m_robot.schedule(commands);
     }
 }
 

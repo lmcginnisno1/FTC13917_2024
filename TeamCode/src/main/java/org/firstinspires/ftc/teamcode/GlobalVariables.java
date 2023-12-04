@@ -22,6 +22,11 @@ public class GlobalVariables{
 
      private int m_currentRotation = 1;
      private final int m_maxRotation = 6;
+
+     private final int m_maxStackHeight = 5;
+     private int m_currentStackHeight = 1;
+
+
      private int m_currentIntakeLevel = 2;
 
      RobotState m_robotState = RobotState.Home;
@@ -80,7 +85,29 @@ public class GlobalVariables{
 
      public void increaseRotation() {
           m_currentRotation += 1;
-          if (m_currentRotation > m_maxRotation) m_currentRotation = m_maxRotation;
+          if (m_currentRotation > m_maxRotation) m_currentRotation = 0;
+     }
+
+     public void setStackHeight(int p_scoringLevel){
+          m_currentStackHeight = p_scoringLevel;
+     }
+
+     public int getStackHeight(){
+          return m_currentStackHeight;
+     }
+
+     public boolean isStackHeight(int p_scoringLevel){
+          return m_currentStackHeight == p_scoringLevel;
+     }
+
+     public void decreaseStackHeight() {
+          m_currentStackHeight -= 1;
+          if (m_currentStackHeight < 1) m_currentStackHeight = 5;
+     }
+
+     public void increaseStackHeight() {
+          m_currentStackHeight += 1;
+          if (m_currentStackHeight > m_maxStackHeight) m_currentStackHeight = 1;
      }
 
      public int getIntakeLevel(){

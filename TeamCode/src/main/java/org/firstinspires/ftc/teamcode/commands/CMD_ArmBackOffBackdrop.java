@@ -24,14 +24,14 @@ public class CMD_ArmBackOffBackdrop extends CommandBase {
 
      @Override
      public void initialize(){
-         if(m_variables.getScoringLevel() > 6){
+          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ShoulderConstants.kBackOff);
+          if(m_variables.getScoringLevel() > 6){
               m_elbow.setTargetAngle(-190);
               m_wrist.setPosition(Constants.WristConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] + .1);
          }else {
               m_wrist.setPosition(Constants.WristConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] + Constants.WristConstants.kBackOff);
               m_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] + Constants.ElbowConstants.kBackOff);
          }
-         m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToDeployPosition[m_variables.getScoringLevel()] - Constants.ShoulderConstants.kBackOff);
      }
 
      @Override

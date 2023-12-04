@@ -59,6 +59,10 @@ public class SUB_Intake extends SubsystemBase {
           m_conveyorReversed = true;
           m_conveyorMotor.setPower(IntakeConstants.kConveyorReverse);
      }
+
+     public void setPivotPosition(double p_pos){
+          m_pivotServo.setPosition(p_pos);
+     }
      
      public boolean getConveyorReversed(){
           return m_conveyorReversed;
