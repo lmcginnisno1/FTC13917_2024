@@ -18,7 +18,7 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
         addRequirements(p_blank);
 
         addCommands(
-                new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
+                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
                 ,new InstantCommand(()-> p_intake.pivotServoHome())
                 ,new CMD_SetElbowAngle(p_elbow, -9)
                 ,new Sleep(250)

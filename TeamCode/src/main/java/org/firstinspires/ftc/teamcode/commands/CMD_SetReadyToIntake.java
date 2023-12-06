@@ -18,10 +18,10 @@ public class CMD_SetReadyToIntake extends SequentialCommandGroup {
          addRequirements(p_blank);
 
          addCommands(
-                 new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
+                 new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
                  ,new CMD_WristReleaseClaw(p_wrist)
                  ,new CMD_IntakeMiddleServoOn(p_intake)
-                 ,new InstantCommand(()-> p_wrist.IntakePivotHome())
+                 ,new InstantCommand(()-> p_wrist.PivotHome())
                  ,new InstantCommand(()->p_wrist.openPincher())
                  ,new InstantCommand(()->p_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition[2]))
                  ,new CMD_IntakeConveyorOn(p_intake)

@@ -27,11 +27,13 @@ public class SUB_Wrist extends SubsystemBase{
           PwmControl.PwmRange pivotServoRange = new PwmControl.PwmRange(500, 2500);
           m_intakepivotservo.setPwmRange(pivotServoRange);
      }
-     public void IntakePivotHome() {
-          moveIntakePivot(WristConstants.kIntakePivotHome);
+     public void PivotHome() {
+//          if(m_intakepivotservo.getPosition() != WristConstants.kIntakePivotHome) {
+               moveIntakePivot(WristConstants.kPivotHome);
+//          }
      }
      public void IntakePivotDeploy() {
-          moveIntakePivot(WristConstants.kIntakePivotDeploy);
+          moveIntakePivot(WristConstants.kPivotDeploy);
      }
 
      public void IntakePincherDoubleGrab(){

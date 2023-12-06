@@ -18,8 +18,8 @@ public class CMD_SetReadyToIntakeFromDeploy extends SequentialCommandGroup {
           addRequirements(p_blank);
 
           addCommands(
-                  new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
-                  ,new InstantCommand(()-> p_wrist.IntakePivotHome())
+                  new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
+                  ,new InstantCommand(()-> p_wrist.PivotHome())
                   ,new CMD_WristReleaseClaw(p_wrist)
                   ,new CMD_WristSetReadyToIntake(p_wrist, p_variables)
                   ,new Sleep(500)
@@ -28,7 +28,7 @@ public class CMD_SetReadyToIntakeFromDeploy extends SequentialCommandGroup {
                      ,new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
                   )
                   ,new CMD_IntakeConveyorOn(p_intake)
-                  ,new InstantCommand(()-> p_intake.pivotServoHome())
+                  ,new InstantCommand(()-> p_intake.pivotServoOut())
                   ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.ReadyToIntake)
           );
      }

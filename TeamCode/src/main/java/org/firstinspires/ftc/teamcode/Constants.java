@@ -19,7 +19,7 @@ public class Constants {
 
           public static final double kHome = 0;
           public static final double kUp = 100;
-          public static final double kClimb = 50;
+          public static final double kClimb = 75;
           public static final double[] kReadyToIntakePosition = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
           public static final double[] kIntakePickupPosition = {0.0, 0.0, 0.0, 30.0, 32.50, 32.50};
           public static final double[] kReadyToDeployPosition = {0.0
@@ -82,10 +82,11 @@ public class Constants {
           public static final double kBackOff = 5;
           public static final double kBackOffHighLevels = -10;
 //          public static final double kPushIntoBackdrop = 5;
+          public static final double kLiftOffConveyor = -6;
      }
      public static final class WristConstants{
-          public static final double kIntakePivotHome = 0.5;
-          public static final double kIntakePivotDeploy = 0.18;
+          public static final double kPivotHome = 0.5;
+          public static final double kPivotDeploy = 0.18;
           public static final double[] kPivotRotation = {
                0.0,//right slant
                0.18,//horizontal
@@ -95,7 +96,7 @@ public class Constants {
                0.8,//horizontal reversed
                0.95,//left slant reversed
           };
-          public static final double kPincherOpen = 0.10;
+          public static final double kPincherOpen = 0.125;
           public static final double kPincherClose = 1.0;//.85
           public static final double kPincherDoubleGrab = .67;//.55
           public static final double kWristOffset = 0;
@@ -129,6 +130,14 @@ public class Constants {
           public static final double kMiddleServoOn = 0.5;
           public static final double kMiddleServoOff = 0.0;
           public static final double kMiddleServoReverse = -1.0;
+     }
+
+     public static final class AutoDropOffConstants{
+          public static final double kX = 49.5;
+     }
+
+     public static final class FieldConstants{
+
      }
 }
 

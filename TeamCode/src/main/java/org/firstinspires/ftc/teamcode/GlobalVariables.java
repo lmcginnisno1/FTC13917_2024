@@ -6,6 +6,8 @@ public class GlobalVariables{
 
      public static Pose2d m_autonomousEndPose = new Pose2d();
      public static int closestTagID = -1;
+     public static int randomization = 1;
+     public static boolean firstCycle = true;
 
      public enum RobotState{
           Home

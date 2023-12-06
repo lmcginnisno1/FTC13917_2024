@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.commands.*;
 import org.firstinspires.ftc.teamcode.ftclib.command.ConditionalCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
+import org.firstinspires.ftc.teamcode.ftclib.command.ScheduleCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.button.Button;
@@ -65,16 +66,14 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
                telemetry.addData("Scoring Level", m_robot.m_variables.getScoringLevel());
                telemetry.addData("intake level", m_robot.m_variables.getIntakeLevel());
 //
-//            //trigger
-//            telemetry.addData("Pixel Sensor", m_robot.m_pixelGuide.get());
-//
+
 //            //motor encoders
 //               telemetry.addData("LF shoulder motor", m_robot.m_shoulder.getLeftMotorTicks());
 //               telemetry.addData("RT shoulder motor", m_robot.m_shoulder.getRightMotorTicks());
 //               telemetry.addData("elbow motor", m_robot.m_elbow.getElbowTicks());
 //
-//               telemetry.addData("rotation", m_robot.m_variables.getRotation());
-//               telemetry.addData("pixel stack height", m_robot.m_variables.getStackHeight());
+               telemetry.addData("rotation", m_robot.m_variables.getRotation());
+               telemetry.addData("pixel stack height", m_robot.m_variables.getStackHeight());
 //               telemetry.addData("pincher open", m_robot.m_wrist.getIsPincherOpen());
 
                telemetry.update();
@@ -110,6 +109,8 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
           m_robot.m_intake.pivotServoHome();
           m_robot.m_wrist.setPosition(Constants.WristConstants.kHome);
           m_robot.m_droneLauncher.close();
+          m_robot.m_pixelDetector.setDefaultCommand(new CMD_PixelDetectorDefault(m_robot));
+          m_robot.m_wrist.PivotHome();
 
           //button bindings and global variables initialization
           configureButtonBindings();
@@ -121,33 +122,46 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
 
           // Driver controls
 
-          // set ready to climb
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new SequentialCommandGroup(
-                  new CMD_PrepareToClimb(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                  , new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Climb)
+          //grab pixels if in ready to intake, ready to deploy if stowed, and auto drop-off if ready to deploy
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
+                  new SequentialCommandGroup(
+                       new CMD_SetReadyToIntakeOff(m_robot.m_shoulder, m_robot.m_elbow,
+                            m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
+                       ,new InstantCommand(() -> m_robot.m_wrist.closePincher())
+                       ,new Sleep(500)
+                       ,new InstantCommand(()-> m_robot.m_wrist.setPosition(Constants.WristConstants.kHome + 0.05))
+                       ,new InstantCommand(() -> m_robot.m_elbow.setTargetAngle(-15))
+                       ,new InstantCommand(() -> m_robot.m_intake.conveyorReverse())
+                       ,new Sleep(1000)
+                       ,new InstantCommand(() -> m_robot.m_intake.conveyorOff())
+                  )
+                  ,new ConditionalCommand(
+                    new ScheduleCommand(new SequentialCommandGroup(
+                         new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                         ,new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist,
+                                 m_robot.m_blank, m_robot.m_variables)
+                    ))
+                    ,new ConditionalCommand(
+                        new ScheduleCommand(new SequentialCommandGroup(
+                                new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                                ,new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
+                                m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)))
+                        ,new InstantCommand()
+                        ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
+                    )
+                    ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
+                    || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
+                    || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Transitioning)
+                  )
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
           ));
 
-          // activate climb
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_RIGHT, new ConditionalCommand(
-                  new CMD_Climb(m_robot.m_shoulder),
-                  new InstantCommand(),
-                  () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Climb)
-          ));
-
-          // release pixel and return to home
-//        AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-//                 //release the second pixel and return home
-//                        new CMD_DeployPixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-//                        ,new InstantCommand()
-//                        ,() -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
-//        ));
-
-          // set ready to Intake level 2- normal
-          AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new ConditionalCommand(
+          //toggle between ready to intake and ready to intake off
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new ConditionalCommand(
                   new ConditionalCommand(
                           new CMD_SetReadyToIntakeOff(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
-                          , new CMD_SetReadyToIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
-                          , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
+                          ,new CMD_SetReadyToIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
+                          ,() -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
                   )
                   ,new InstantCommand()
                   ,() -> (m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
@@ -155,46 +169,35 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
                   || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake))
           ));
 
-
-          // Go back to home from deploying position.  If we missed the pickup, or only have 1 pixel.
-          AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.BACK, new ConditionalCommand(
-                  new SequentialCommandGroup(
-                          new InstantCommand(() -> m_robot.m_wrist.openPincher())
-                          , new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                          , new InstantCommand(() -> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
-                  )
-                  , new InstantCommand()
-                  , () -> (m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy))
+          //reverse intake for .5 secs. and then resume normal intake
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new ConditionalCommand(
+                  new CMD_IntakeSpitOutPixels(m_robot.m_intake)
+                  ,new InstantCommand()
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
           ));
 
           //allows driver to go to ready to intake from deploy if a pixel wasn't grabbed whilst deploying
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new ConditionalCommand(
+          AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.A, new ConditionalCommand(
                   new CMD_SetReadyToIntakeFromDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
                   , new InstantCommand()
                   , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
           ));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new ConditionalCommand(
-                  new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
-                          m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                  , new InstantCommand()
-                  , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
-          ));
-
-          // set Ready to Deploy at the previous deployed level and update robot pose
-          AddButtonCommandNoInt(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
-                  new SequentialCommandGroup(
-                          new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                          , new ConditionalCommand(
-                          new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-                          , new InstantCommand()
-                          , () -> m_robot.drivetrain.getPoseEstimate().getX() <= 60
+          //flip the orientation of the pixels from 180 -> 0
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_LEFT, new ConditionalCommand(
+                  new ConditionalCommand(
+                          new SequentialCommandGroup(
+                                  new InstantCommand(()-> m_robot.m_wrist.movePivotServo(Constants.WristConstants.kPivotRotation[5]))
+                                  ,new InstantCommand(()-> m_robot.m_variables.setRotation(5))
+                          )
+                          ,new SequentialCommandGroup(
+                               new InstantCommand(()-> m_robot.m_wrist.movePivotServo(Constants.WristConstants.kPivotRotation[1]))
+                               ,new InstantCommand(()-> m_robot.m_variables.setRotation(1))
+                          )
+                          ,()-> m_robot.m_variables.getRotation() == 1
                   )
-                  )
-                  , new InstantCommand(),
-                  () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
-                          || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
-                          || m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
+                  ,new InstantCommand()
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
           ));
 
           // level down the deploy arm
@@ -223,108 +226,45 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
                   , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
           ));
 
-          // launch drone
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_LEFT,
-                  new ConditionalCommand(
-                          new SequentialCommandGroup(
-                                  new InstantCommand(() -> m_robot.m_droneLauncher.releaseTheDrone())
-                                  , new Sleep(500)
-                                  , new InstantCommand(() -> m_robot.m_droneLauncher.close())
-                          )
-                          , new InstantCommand()
-                          , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToLaunch)
-                  )
-          );
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_STICK_BUTTON, new SequentialCommandGroup(
-                  new InstantCommand(()-> m_robot.m_variables.increaseRotation())
-                  ,new InstantCommand(()-> m_robot.m_wrist.movePivotServo(Constants.WristConstants.kPivotRotation[m_robot.m_variables.getRotation()]))
+          //launch drone
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new ConditionalCommand(
+                  new InstantCommand(()-> m_robot.m_droneLauncher.releaseTheDrone())
+                  ,new InstantCommand()
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToLaunch)
           ));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_STICK_BUTTON, new SequentialCommandGroup(
-                  new InstantCommand(()-> m_robot.m_variables.decreaseStackHeight())
-                  ,new InstantCommand(()-> m_robot.m_intake.setPivotPosition(Constants.IntakeConstants.kPivotServoStackPosition[m_robot.m_variables.getStackHeight()]))
+          //Operator Controls
+
+          //ready to launch
+          AddButtonCommand(m_toolOp, GamepadKeys.Button.Y,
+                  new CMD_ReadyToLaunch(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank));
+
+          //ready to climb and climb
+          AddButtonCommand(m_toolOp, GamepadKeys.Button.A, new ConditionalCommand(
+                  new CMD_PrepareToClimb(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
+                  ,new CMD_Climb(m_robot.m_shoulder)
+                  ,()-> !m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Climb)
           ));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new ConditionalCommand(
-                  new ConditionalCommand(
-                          new CMD_IntakeSpitOutPixels(m_robot.m_intake)
-                          ,new InstantCommand()
-                          ,()-> !m_robot.m_intake.getConveyorReversed()
+          //move the pivot servo up a stack level
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_UP, new ConditionalCommand(
+                  new SequentialCommandGroup(
+                          new InstantCommand(()-> m_robot.m_variables.increaseStackHeight())
+                          ,new InstantCommand(()-> m_robot.m_intake.setPivotPosition(Constants.IntakeConstants.kPivotServoStackPosition[m_robot.m_variables.getStackHeight()]))
                   )
                   ,new InstantCommand()
                   ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
           ));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_UP, new ConditionalCommand(
-             new InstantCommand(()-> m_robot.m_wrist.closePincher())
-             ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
-             ,()-> m_robot.m_wrist.getIsPincherOpen()
-          ));
-
-          // Operator
-
-          // set ready to intake level 3
-//         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.A, new ConditionalCommand(
-//                 new CMD_SetReadyToIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake, 3)
-//                 , new InstantCommand()
-//                 ,()-> (m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake))
-//         ));
-
-          // set ready to intake level 4
-//         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.B, new ConditionalCommand(
-//                 new SequentialCommandGroup(
-//                         new CMD_SetIntakePixel(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)
-//                         ,new CMD_IntakeOff(m_robot.m_intake)
-//                         ,new CMD_IntakeConveyorOff(m_robot.m_intake)
-//                 )
-//                 , new InstantCommand()
-//                 ,()-> (m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake))
-//         ));
-
-          // set ready to intake level 5
-//         AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.Y, new ConditionalCommand(
-//                 new CMD_SetReadyToIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, m_robot.m_intake, 5)
-//                 , new InstantCommand()
-//                 ,()-> (m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake))
-//         ));
-
-          // update robot pose
-          AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.X, new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain));
-
-          // upright a fallen robot
-          AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.START, new SequentialCommandGroup(
-                  new InstantCommand(() -> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                  , new CMD_Upright(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                  , new InstantCommand(() -> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Home))
-          ));
-
-          // ready to launch drone
-          AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_UP, new SequentialCommandGroup(
-                  new CMD_ReadyToLaunch(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                  , new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.ReadyToLaunch)
-          ));
-
-          // Home Arm
-          AddButtonCommandNoInt(m_toolOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
+          //move the pivot servo down a stack level
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.DPAD_DOWN, new ConditionalCommand(
                   new SequentialCommandGroup(
-                          new CMD_ArmSetLevelHomeFromIntake(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                          , new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
+                          new InstantCommand(()-> m_robot.m_variables.decreaseStackHeight())
+                          ,new InstantCommand(()-> m_robot.m_intake.setPivotPosition(Constants.IntakeConstants.kPivotServoStackPosition[m_robot.m_variables.getStackHeight()]))
                   )
-                  , new SequentialCommandGroup(
-                  new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                  , new CMD_SetRobotState(m_robot.m_variables, GlobalVariables.RobotState.Home)
-          )
-                  , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
-          ));
-
-          // reset arm encoder
-          AddButtonCommand(m_toolOp, GamepadKeys.Button.BACK, new ConditionalCommand(
-                  new ParallelCommandGroup((
-                          new InstantCommand(() -> m_robot.m_shoulder.resetAngle()))
-                          , new InstantCommand(() -> m_robot.m_elbow.resetAngle()))
-                  , new InstantCommand()
-                  , () -> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Home)
+                  ,new InstantCommand()
+                  ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)
           ));
      }
 

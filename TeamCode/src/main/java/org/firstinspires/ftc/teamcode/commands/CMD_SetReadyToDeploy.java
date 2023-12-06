@@ -18,7 +18,7 @@ public class CMD_SetReadyToDeploy extends SequentialCommandGroup {
         addRequirements(p_blank);
 
         addCommands(
-                new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
+                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
                 ,new CMD_WristCloseClaw(p_wrist, true)
                 ,new Sleep(250)
                 // lift pixel off the platform

@@ -20,7 +20,6 @@ public class CMD_DeployPixel extends SequentialCommandGroup {
                   ,new Sleep(250)
                   ,new CMD_WristReleaseClaw(p_wrist)
                   ,new CMD_ArmBackOffBackdrop(p_shoulder, p_elbow, p_wrist, p_blank, p_variables)
-                  ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
                   ,new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)
                   ,new InstantCommand(()->p_variables.setRobotState(GlobalVariables.RobotState.Home))
           );

@@ -15,7 +15,7 @@ public class CMD_ArmSetLevelHome extends SequentialCommandGroup {
      public CMD_ArmSetLevelHome(SUB_Shoulder p_shoulder, SUB_Elbow p_elbow, SUB_Wrist p_wrist, SUB_Blank p_blank){
           addRequirements(p_blank);
           addCommands(
-                  new InstantCommand(()-> p_wrist.IntakePivotHome())
+                  new InstantCommand(()-> p_wrist.PivotHome())
                   ,new ParallelCommandGroup(
                          new CMD_SetWristPosition(p_wrist,.52)
                           ,new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kHome)

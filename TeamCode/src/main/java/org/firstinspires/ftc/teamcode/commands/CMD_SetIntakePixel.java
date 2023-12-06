@@ -17,9 +17,8 @@ public class CMD_SetIntakePixel extends SequentialCommandGroup {
         addRequirements(p_blank);
 
         addCommands(
-                new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Transitioning)
-
-                , new ParallelCommandGroup(
+                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
+                ,new ParallelCommandGroup(
                         new CMD_SetShoulderAngle(p_shoulder, Constants.ShoulderConstants.kIntakePickupPosition[p_variables.getIntakeLevel()])
                         ,new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kIntakePickupPosition[p_variables.getIntakeLevel()])
                         ,new CMD_SetWristPosition(p_wrist, Constants.WristConstants.kIntakePickupPosition[p_variables.getIntakeLevel()])

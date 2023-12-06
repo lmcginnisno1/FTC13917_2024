@@ -20,7 +20,7 @@ public class CMD_IntakeSpitOutPixels extends CommandBase {
 
      @Override
      public boolean isFinished(){
-          if(m_time.milliseconds() > 750){
+          if(m_time.milliseconds() > 500){
                m_intake.conveyorOn();
                return true;
           }else{

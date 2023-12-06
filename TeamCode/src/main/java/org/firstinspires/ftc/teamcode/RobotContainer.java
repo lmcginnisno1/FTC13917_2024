@@ -27,6 +27,7 @@ public class RobotContainer {
     public DigitalPort m_intakeSensorOne;
     public DigitalPort m_intakeSensorTwo;
     public DigitalPort m_intakeSensorThree;
+    public SUB_PixelDetector m_pixelDetector;
 
 
     public RobotContainer(OpMode p_opMode) {
@@ -51,6 +52,8 @@ public class RobotContainer {
                 180, m_autonomousDetect);
         m_intake = new SUB_Intake(p_opMode, "middleservo",
                 "pivotservo", "conveyormotor");
+
+        m_pixelDetector = new SUB_PixelDetector(m_intakeSensorOne, m_intakeSensorTwo, m_intakeSensorThree, p_opMode);
     };
 
     public void run() {
