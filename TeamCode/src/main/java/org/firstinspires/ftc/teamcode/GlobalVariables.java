@@ -20,7 +20,7 @@ public class GlobalVariables{
      }
 
      private int m_currentScoringLevel = 2;
-     private final int m_maxScoringLevel = 8;
+     private final int m_maxScoringLevel = 7;
 
      private int m_currentRotation = 1;
      private final int m_maxRotation = 6;

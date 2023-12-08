@@ -22,8 +22,13 @@ public class CMD_ArmSetLevelHome extends SequentialCommandGroup {
                          ,new CMD_SetElbowAngle(p_elbow, Constants.ElbowConstants.kParallel)//-5
                   )
                   ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome))
-                  ,new InstantCommand(() -> p_elbow.setTargetAngle(Constants.ElbowConstants.kHome))
-
+                  ,new InstantCommand(() -> p_elbow.setTargetAngle(Constants.ElbowConstants.kHome)),new InstantCommand(()-> p_shoulder.setTargetAngle(Constants.ShoulderConstants.kHome))
+                  ,new InstantCommand(()-> p_elbow.setTargetAngle(Constants.ElbowConstants.kParallel))
+                  ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome))
+                  ,new Sleep(200)
+                  ,new InstantCommand(()-> p_wrist.PivotHome())
+                  ,new Sleep(100)
+                  ,new InstantCommand(()-> p_elbow.setTargetAngle(Constants.ElbowConstants.kHome))
           );
      }
 }

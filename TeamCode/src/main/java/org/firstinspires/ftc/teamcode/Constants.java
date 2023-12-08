@@ -23,24 +23,34 @@ public class Constants {
           public static final double[] kReadyToIntakePosition = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
           public static final double[] kIntakePickupPosition = {0.0, 0.0, 0.0, 30.0, 32.50, 32.50};
           public static final double[] kReadyToDeployPosition = {0.0
-                  ,110.0//115
-                  ,100.0//110
-                  ,97.5//100
+                  ,135.0//110
+                  ,107.5//100
                   ,97.5//97.5
-                  ,97.5//97.5
-                  ,100//97.5
-                  ,120.0//100
+                  ,102.5//97.5
+                  ,107.5//97.5
+                  ,110//100
+                  ,120.0//120
                   ,120.0};//120
           public static final double[] kPushIntoBackdrop = {0
                ,10 //1
-               ,10 //2
-               ,10 //3
-               ,10 //4
-               ,10 //5
-               ,10 //6
-               ,10 //7
-               ,10 //8
+               ,-10 //2
+               ,-10 //3
+               ,-10 //4
+               ,-10 //5
+               ,-10 //6
+               ,-20 //7
+               ,-10 //8
           };
+//          public static final double[] kPushIntoBackdrop = {0
+//                  ,10 //1
+//                  ,10 //2
+//                  ,10 //3
+//                  ,10 //4
+//                  ,10 //5
+//                  ,10 //6
+//                  ,10 //7
+//                  ,10 //8
+//          };
           public static final double kPreDeployment = 50;
           public static final double kDroneLaunch = 55;
           public static final double kUpright = 200;
@@ -49,8 +59,8 @@ public class Constants {
 
      }
      public static final class ElbowConstants{
-          public static final double kMaxVelocityDegreesPerSecond = 720;//360
-          public static final double kMaxAccelerationDegreesPerSecond = 1200;//360
+          public static final double kMaxVelocityDegreesPerSecond = 720;//720
+          public static final double kMaxAccelerationDegreesPerSecond = 2400;//1200
           public static final double kOffsetDegrees = 0;
           public static final double kMaxPower = 1;
           public static final double kP = 5.0;//good but slow
@@ -65,24 +75,34 @@ public class Constants {
           //Bigger absolute number = farther from robot, - = back  of robot
           public static final double kHome = 0;
           public static final double kParallel = -45; //-20;
-          public static final double[] kReadyToIntakePosition =  {0.0,0.0,-20,-20.0,-20.0,-20.0};
+          public static final double[] kReadyToIntakePosition =  {0.0,0.0,-10.0,-10.0,-10.0,-10.0};
           public static final double[] kIntakePickupPosition = {0.0,0.0,54.0,54.0,54.0,54.0};
-          public static final double[] kReadyToDeployPosition = {0.0, -50, -65, -85, -100, -125, -140, -185, -200};
-//        public static final double[] kReadyToDeployPosition = {0.0, -40, -50, -65, -85, -100, -125, -140, -185};
+          public static final double[] kReadyToDeployPosition = {0.0, -50, -65, -85, -105, -130, -155, -185, -200};
+//        public static final double[] kReadyToDeployPosition = {0.0, -50, -65, -85, -100, -125, -140, -185, -200};
           public static final double[] kPushIntoBackdrop = {0
-                  ,7 //1
-                  ,7 //2
-                  ,5 //3
-                  ,5 //4
-                  ,5 //5
-                  ,5 //6
-                  ,0 //7
-                  ,0 //8
+                  ,10 //1
+                  ,10 //2
+                  ,10 //3
+                  ,10 //4
+                  ,10 //5
+                  ,10 //6
+                  ,20//7
+                  ,10 //8
           };
+//          public static final double[] kPushIntoBackdrop = {0
+//                  ,7 //1
+//                  ,7 //2
+//                  ,5 //3
+//                  ,5 //4
+//                  ,5 //5
+//                  ,5 //6
+//                  ,0 //7
+//                  ,0 //8
+//          };
           public static final double kBackOff = 5;
           public static final double kBackOffHighLevels = -10;
 //          public static final double kPushIntoBackdrop = 5;
-          public static final double kLiftOffConveyor = -6;
+          public static final double kLiftOffConveyor = -10;
      }
      public static final class WristConstants{
           public static final double kPivotHome = 0.5;
@@ -96,20 +116,21 @@ public class Constants {
                0.8,//horizontal reversed
                0.95,//left slant reversed
           };
-          public static final double kPincherOpen = 0.125;
+          public static final double kPincherOpen = 0.15;
           public static final double kPincherClose = 1.0;//.85
           public static final double kPincherDoubleGrab = .67;//.55
           public static final double kWristOffset = 0;
           // Wrist Positions
 
           //starts from 0 pixel stack and goes to level 5
-          public static final double[] kReadyToIntakePosition = {0.0,0.0,.825,0.0,0.0,0.0};
+          public static final double[] kReadyToIntakePosition = {0.0,0.0,.85,0.0,0.0,0.0};
           public static final double[] kIntakePickupPosition = {0.0,0.935,0.935,0.935,0.935,0.935};
           public static final double kHome = 0.8;//.375
           //larger value points farther down when deploying
-          public static final double[] kReadyToDeployPosition = {0.0, 0.35, 0.45, 0.55, 0.6, 0.675, 0.7, 0.8, 0.875};
-//        public static final double[] kReadyToDeployPosition = {0.0, 0.325, 0.35, 0.45, 0.55, 0.6, 0.675, 0.7, 0.8};
+          public static final double[] kReadyToDeployPosition = {0.0, 0.29, 0.4, 0.5, 0.59, 0.65, 0.73, 0.8, 0.875};
+//        public static final double[] kReadyToDeployPosition = {0.0, 0.35, 0.45, 0.55, 0.6, 0.675, 0.7, 0.8, 0.875};
           public static final double kBackOff = 0.15;
+          public static final double[] kPushIntoBackDrop = {0.0, .3, .3, .3, .3, .3, .3, -.05};
      }
 
      public static final class droneLauncherConstants{
@@ -124,7 +145,7 @@ public class Constants {
           public static final double kConveyorReverse = -1.0;
 
           public static final double kPivotServoHome = 0.25;//.1
-          public static final double[] kPivotServoStackPosition = {0.0, 0.48, 0.45, 0.425, 0.4, 0.39};
+          public static final double[] kPivotServoStackPosition = {0.0, 0.48, 0.43, 0.425, 0.4, 0.39};
           public static final double kPivotServoOut = 0.48;
 
           public static final double kMiddleServoOn = 0.5;
@@ -133,7 +154,7 @@ public class Constants {
      }
 
      public static final class AutoDropOffConstants{
-          public static final double kX = 49.5;
+          public static final double kX = 48;
      }
 
      public static final class FieldConstants{

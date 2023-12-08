@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
 public class CMD_PixelDetectorDefault extends CommandBase {
      RobotContainer m_robot;
-     int min_count = 5;
+     int min_count = 10;
      int IRcount1, IRcount2, IRcount3;
      public CMD_PixelDetectorDefault(RobotContainer p_robot){
           m_robot = p_robot;
@@ -51,20 +51,14 @@ public class CMD_PixelDetectorDefault extends CommandBase {
                                     m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
                             ,new InstantCommand(() -> m_robot.m_wrist.closePincher())
                             ,new Sleep(500)
+                            ,new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Stow))
                             ,new InstantCommand(()-> m_robot.m_wrist.setPosition(Constants.WristConstants.kHome + 0.05))
                             ,new InstantCommand(() -> m_robot.m_elbow.setTargetAngle(Constants.ElbowConstants.kLiftOffConveyor))
-                            ,new InstantCommand(()-> m_robot.m_variables.setRobotState(GlobalVariables.RobotState.Stow))
+                            ,new InstantCommand(()-> m_robot.m_intake.conveyorReverse())
+                            ,new Sleep(1000)
+                            ,new InstantCommand(()-> m_robot.m_intake.conveyorOff())
                     ));
                }
-          }
-
-          if(m_robot.m_variables.isRobotState(GlobalVariables.RobotState.Stow)
-                  && m_robot.m_pixelDetector.getIntakeSensor(3)){
-               m_robot.schedule(new SequentialCommandGroup(
-                       new InstantCommand(()-> m_robot.m_intake.conveyorReverse())
-                       ,new Sleep(1000)
-                       ,new InstantCommand(()-> m_robot.m_intake.conveyorOff())
-               ));
           }
      }
 

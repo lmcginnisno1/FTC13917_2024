@@ -138,14 +138,18 @@ public class Teleop_Robot_Centric_Red extends LinearOpMode {
                   ,new ConditionalCommand(
                     new ScheduleCommand(new SequentialCommandGroup(
                          new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                         ,new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist,
-                                 m_robot.m_blank, m_robot.m_variables)
+                         ,new ParallelCommandGroup(
+                              new CMD_SetReadyToDeploy(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist,
+                                 m_robot.m_blank, m_robot.m_variables, m_robot.m_intake)
+                         )
                     ))
                     ,new ConditionalCommand(
                         new ScheduleCommand(new SequentialCommandGroup(
                                 new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
                                 ,new CMD_AutoDropOff_Steps(m_robot.drivetrain, m_robot.m_shoulder, m_robot.m_elbow,
-                                m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables)))
+                                        m_robot.m_wrist, m_robot.m_blank, m_robot.m_variables, getRedSide()))
+                                ,new CMD_DriveAlignToBoard(m_robot.drivetrain)
+                        )
                         ,new InstantCommand()
                         ,()-> m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToDeploy)
                     )
