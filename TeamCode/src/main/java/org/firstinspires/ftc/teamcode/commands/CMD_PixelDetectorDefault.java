@@ -24,27 +24,33 @@ public class CMD_PixelDetectorDefault extends CommandBase {
      @Override
      public void execute(){
           if(m_robot.m_variables.isRobotState(GlobalVariables.RobotState.ReadyToIntake)){
-               if(m_robot.m_pixelDetector.getIntakeSensor(1)){
+               // increment IRcounter
+               if(m_robot.m_pixelDetector.getIRSensor(1)){
                     IRcount1 += 1;
                }else{
                     IRcount1 = 0;
                }
 
-               if(m_robot.m_pixelDetector.getIntakeSensor(2)){
+               if(m_robot.m_pixelDetector.getIRSensor(2)){
                     IRcount2 += 1;
                }else{
                     IRcount2 = 0;
                }
 
-               if(m_robot.m_pixelDetector.getIntakeSensor(3)){
+               if(m_robot.m_pixelDetector.getIRSensor(3)){
                     IRcount3 += 1;
                }else{
                     IRcount3 = 0;
                }
+               if (!m_robot.m_pixelDetector.getPixel(1) && (IRcount1 > min_count))  m_robot.m_pixelDetector.setPixel(1);
+               if (!m_robot.m_pixelDetector.getPixel(2) && (IRcount2 > min_count))  m_robot.m_pixelDetector.setPixel(2);
+               if (!m_robot.m_pixelDetector.getPixel(3) && (IRcount3 > min_count))  m_robot.m_pixelDetector.setPixel(3);
 
-               if(IRcount1 > min_count && IRcount3 > min_count){
-                   m_robot.m_intake.pivotServoHome();
-               }else if(IRcount1 > min_count && IRcount2 > min_count) {
+               // if we have one pixel and a new one is detected, lift the intake wheel up
+               if(m_robot.m_pixelDetector.getPixel(1) && (IRcount3 > min_count || IRcount2 > min_count)){
+                   m_robot.m_intake.pivotServoHome();}
+
+               if(m_robot.m_pixelDetector.getPixel(1) && m_robot.m_pixelDetector.getPixel(2)) {
                     m_robot.m_intake.pivotServoHome();
                     m_robot.schedule(new SequentialCommandGroup(
                             new CMD_SetReadyToIntakeOff(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist,
@@ -58,6 +64,7 @@ public class CMD_PixelDetectorDefault extends CommandBase {
                             ,new Sleep(1000)
                             ,new InstantCommand(()-> m_robot.m_intake.conveyorOff())
                     ));
+                    m_robot.m_pixelDetector.resetPixel();
                }
           }
      }

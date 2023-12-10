@@ -18,14 +18,15 @@ public class CMD_DeployPixel extends SequentialCommandGroup {
 
           addCommands(
 //                  new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-//                  new CMD_ArmPushIntoBackdrop(p_shoulder, p_elbow, p_blank, p_variables)
                   new ParallelCommandGroup(
-                     new InstantCommand(()-> p_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToDeployPosition[p_variables.getScoringLevel()] - Constants.ElbowConstants.kPushIntoBackdrop[p_variables.getScoringLevel()]))
-                     ,new InstantCommand(()-> p_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToDeployPosition[p_variables.getScoringLevel()] - Constants.ShoulderConstants.kPushIntoBackdrop[p_variables.getScoringLevel()]))
+                     new InstantCommand(()-> p_elbow.setTargetAngle(Constants.ElbowConstants.kPushIntoBackdrop[p_variables.getScoringLevel()]))
+                     ,new InstantCommand(()-> p_shoulder.setTargetAngle(Constants.ShoulderConstants.kPushIntoBackdrop[p_variables.getScoringLevel()]))
                   )
                   ,new Sleep(250)
                   ,new InstantCommand(()-> p_wrist.openPincher())
+                  ,new Sleep(200)
                   ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kReadyToDeployPosition[p_variables.getScoringLevel()] + Constants.WristConstants.kPushIntoBackDrop[p_variables.getScoringLevel()]))
+                  ,new Sleep(300)
                   ,new RR_TrajectoryForwardFromCurrent(p_drivetrain, 6, false)
                   ,new CMD_ArmSetLevelHome(p_shoulder, p_elbow, p_wrist, p_blank)
                   ,new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Home))

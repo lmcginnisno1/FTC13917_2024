@@ -15,7 +15,7 @@ public class CMD_ElbowSetReadyToIntake extends CommandBase {
 
      @Override
      public void initialize(){
-          m_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToIntakePosition[m_variables.getIntakeLevel()]);
+          m_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToIntakePosition);
      }
 
      @Override

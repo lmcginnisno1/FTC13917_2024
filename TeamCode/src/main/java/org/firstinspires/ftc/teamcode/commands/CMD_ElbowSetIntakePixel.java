@@ -15,7 +15,7 @@ public class CMD_ElbowSetIntakePixel extends CommandBase {
 
      @Override
      public void initialize(){
-          m_elbow.setTargetAngle(Constants.ElbowConstants.kIntakePickupPosition[m_variables.getIntakeLevel()]);
+          m_elbow.setTargetAngle(Constants.ElbowConstants.kIntakePickupPosition);
      }
 
      @Override

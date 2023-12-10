@@ -12,8 +12,10 @@ public class CMD_AutoDropOff extends CommandBase{
 
      MecanumDriveSubsystem m_drivetrain;
      GlobalVariables m_variables;
-     double m_leftSide = -28.5;
-     double m_rightSide = -42;
+     double m_leftSideRed = -28.5;
+     double m_rightSideRed = -42;
+     double m_leftSideBlue = 42;
+     double m_rightSideBlue = 29.0;
      double m_wantedY;
      boolean m_redSide;
      public CMD_AutoDropOff(MecanumDriveSubsystem p_drivetrain, GlobalVariables p_variables, boolean p_redSide){
@@ -26,12 +28,13 @@ public class CMD_AutoDropOff extends CommandBase{
 
      @Override
      public void initialize(){
-          boolean m_leftSideDrop = Math.abs(m_drivetrain.getPoseEstimate().getY()) < 36;
+          boolean m_leftSideDrop =  m_redSide ? m_drivetrain.getPoseEstimate().getY() > -36 :
+                  m_drivetrain.getPoseEstimate().getY() < 36;
 
-          if(!m_redSide){
-               m_wantedY = m_leftSideDrop ? Math.abs(m_leftSide) : Math.abs(m_rightSide);
+          if(m_redSide){
+               m_wantedY = m_leftSideDrop ? m_leftSideRed : m_rightSideRed;
           }else{
-               m_wantedY = m_leftSideDrop ? m_leftSide : m_rightSide;
+               m_wantedY = m_leftSideDrop ? m_leftSideBlue : m_rightSideBlue;
           }
 
           Trajectory m_driveToBoard = m_drivetrain.trajectoryBuilder(m_drivetrain.getPoseEstimate(), true)

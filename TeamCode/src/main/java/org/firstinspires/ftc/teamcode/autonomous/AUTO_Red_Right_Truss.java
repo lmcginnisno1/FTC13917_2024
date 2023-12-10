@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
@@ -12,10 +13,12 @@ import org.firstinspires.ftc.teamcode.commands.Sleep;
 import org.firstinspires.ftc.teamcode.commands.RR_VisionUpdatePose;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
-@Autonomous(name = "Red Right", group = "Auto Red", preselectTeleOp = "Robot Teleop")
-public class   AUTO_Red_Right extends Robot_Auto {
+@Disabled
+
+@Autonomous(name = "Red Right Truss", group = "Auto Red", preselectTeleOp = "Robot Teleop")
+public class AUTO_Red_Right_Truss extends Robot_Auto {
      int m_Analysis;
-     public AUTO_Red_Right() {
+     public AUTO_Red_Right_Truss() {
           super(true);
      }
 
@@ -75,7 +78,26 @@ public class   AUTO_Red_Right extends Robot_Auto {
                   .lineToConstantHeading(new Vector2d(43, -40))
                   .build();
 
-          Trajectory m_park3 = m_robot.drivetrain.trajectoryBuilder(m_dropSpot3.end(), true)
+          Trajectory m_getThroughTruss = m_robot.drivetrain.trajectoryBuilder(m_dropSpot3.end(), false)
+                  .splineTo(new Vector2d(12, -60), Math.toRadians(180))
+                  .lineTo(new Vector2d(-36, -60))
+                  .build();
+
+          Trajectory m_getWhitePixels = m_robot.drivetrain.trajectoryBuilder(m_getThroughTruss.end(), false)
+                  .splineTo(new Vector2d(-52, -36), Math.toRadians(180))
+                  .lineTo(new Vector2d(-57, -36))
+                  .build();
+
+          Trajectory m_backThroughTruss = m_robot.drivetrain.trajectoryBuilder(m_getWhitePixels.end(), true)
+                  .splineTo(new Vector2d(-36, -60), Math.toRadians(0))
+                  .lineTo(new Vector2d(12, -60))
+                  .build();
+
+          Trajectory m_dropSpotWhite3 = m_robot.drivetrain.trajectoryBuilder(m_backThroughTruss.end(), true)
+                  .splineTo(new Vector2d(43, -30), Math.toRadians(0))
+                  .build();
+
+          Trajectory m_park3 = m_robot.drivetrain.trajectoryBuilder(new Pose2d(52.5, -44), true)
                   .lineToConstantHeading(new Vector2d(50, -60))
                   .build();
 
@@ -114,6 +136,16 @@ public class   AUTO_Red_Right extends Robot_Auto {
                             ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot3)
                             ,new Sleep(1000)
                             ,new RR_VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                            ,new RR_TrajectoryLineToConstantHeadingFromCurrent(m_robot, new Vector2d(52.5, -44), true)
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_getThroughTruss)
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_getWhitePixels)
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_backThroughTruss)
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpotWhite3)
+                            ,new Sleep(1000)
                             ,new RR_TrajectoryLineToConstantHeadingFromCurrent(m_robot, new Vector2d(52.5, -44), true)
                             ,new Sleep(1000)
                             ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park3)

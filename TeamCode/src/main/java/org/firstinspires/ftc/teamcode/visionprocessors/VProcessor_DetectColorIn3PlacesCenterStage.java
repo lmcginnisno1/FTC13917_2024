@@ -12,9 +12,10 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 public class VProcessor_DetectColorIn3PlacesCenterStage extends VisionProcessorBase {
-     public Rect rectLeft = new Rect(0,250,50, 60);
-     public Rect rectMiddle = new Rect(282, 230, 50, 60);
-     public Rect rectRight = new Rect(560, 245, 50, 60);
+     //X + width must be less than 640, the current max width of the camera
+     public Rect rectLeft = new Rect(0,300,50, 60);// y: 250
+     public Rect rectMiddle = new Rect(282, 280, 50, 60);//y: 230
+     public Rect rectRight = new Rect(590, 300, 50, 60);//y:245, x:560
      Selected selection = Selected.NONE;
 
      Mat submat = new Mat();

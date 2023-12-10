@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
-import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
 import org.firstinspires.ftc.teamcode.ftclib.geometry.Pose2d;
 import org.firstinspires.ftc.teamcode.ftclib.geometry.Rotation2d;
@@ -14,6 +13,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+//import org.apache.commons.math3.filter.KalmanFilter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +44,18 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
      OpMode m_opMode;
      private final String m_cameraName;
 
+     long m_lastFrameID;
+
+     KalmanFilter m_xPosKalman;
+     KalmanFilter m_yPosKalman;
+     KalmanFilter m_hPosKalman;
+     double m_xPosFiltered;
+     double m_yPosFiltered;
+     double m_hPosFiltered;
+     int m_countKalmanPoints;
+
      private VisionPortal m_visionPortal;               // Used to manage the video source.
      private AprilTagProcessor m_aprilTag;              // Used for managing the AprilTag detection process.
-     int closestTagID = -1;
 //    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
      VisionProcessorBase m_autonomousDetectVProcessor;
@@ -67,11 +76,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 //			new FieldAprilTag(8, 0,-35.5, -180),		// Red, Small
 //			new FieldAprilTag(9, 0,35.5, -180),		// Blue, Small
 //			new FieldAprilTag(10, 0,40.5, -180)		// Blue, Large
-//            new FieldAprilTag(585,0, -24, -180),
-//            new FieldAprilTag(585,24, -72, -90),
-//			new FieldAprilTag(585,144, 24, 0),
-//			new FieldAprilTag(585,24, 72, 90),
-//			new FieldAprilTag(1,5,5, 0)
+
      };
 
      public SUB_VisionAprilTagsPlusAutoDetect(OpMode p_opMode, final String usbCameraName,
@@ -88,7 +93,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
 
      @Override
      public void periodic() {
-          telemetry();
+//          telemetry();
      }
 
      private void initAprilTag() {
@@ -101,15 +106,84 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
                   .addProcessor(m_aprilTag)
                   .addProcessor(m_autonomousDetectVProcessor)
                   .build();
+
+          m_lastFrameID = -1;
+     }
+
+     // See https://benwinding.github.io/kalmanjs-examples/examples/demo2-vue.html for an
+     // interactive example of setting the R/Q/A/B/C values.
+     public void getRobotPoseStart() {
+          m_xPosKalman = new KalmanFilter(0.01, 10, 1, 0, 1);
+          m_yPosKalman = new KalmanFilter(0.01, 10, 1, 0, 1);
+          m_hPosKalman = new KalmanFilter(0.01, 10, 1, 0, 1);
+          m_xPosFiltered = Double.NaN;
+          m_yPosFiltered = Double.NaN;
+          m_hPosFiltered = Double.NaN;
+          m_countKalmanPoints = 0;
+     }
+
+     public void getRobotPoseUpdate(boolean offset, com.acmerobotics.roadrunner.geometry.Pose2d p_currentPose) {
+          List<AprilTagDetection> currentDetections = m_aprilTag.getDetections();
+
+          // Wait until the vision portal processes a new frame--otherwise we are just returning the identical results
+          // over and over.
+          if (currentDetections.size() > 0 && currentDetections.get(0).frameAcquisitionNanoTime == m_lastFrameID)
+               return;
+
+          // find the nearest tag
+          AprilTagDetection closestTag = null;
+          double distanceToClosestTag = Double.MAX_VALUE;
+          for (AprilTagDetection detection : m_aprilTag.getDetections()) {
+               if (detection.metadata != null) {
+                    double distance = detection.ftcPose.range;
+                    if (distance < distanceToClosestTag) {
+                         distanceToClosestTag = distance;
+                         closestTag = detection;
+                    }
+               }
+          }
+
+          // if the nearest tag is found, save information
+          if (closestTag != null) {
+               Pose2d pose = getRobotPoseFromAprilTagPose(closestTag.id, closestTag.ftcPose, offset);
+               if (pose != null) {
+                    m_xPosFiltered = m_xPosKalman.filter(pose.getX());
+                    m_yPosFiltered = m_yPosKalman.filter(pose.getY());
+                    m_hPosFiltered = m_hPosKalman.filter(pose.getHeading());
+                    m_countKalmanPoints++;
+                    m_opMode.telemetry.addData("aprilTag upd", "new (%.2f, %.2f, %.2f) filtered (%.2f, %.2f, %.2f) count %d",
+                            pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()), m_xPosFiltered, m_yPosFiltered, Math.toDegrees(m_hPosFiltered), m_countKalmanPoints);
+                    m_lastFrameID = closestTag.frameAcquisitionNanoTime;
+               }
+          }
+
+     }
+
+     public Pose2d getRobotPoseFiltered() {
+          if (m_countKalmanPoints > 0)
+               return new Pose2d(m_xPosFiltered, m_yPosFiltered, new Rotation2d(angleWrap(m_hPosFiltered)));
+          else
+               return null;
      }
 
      public Pose2d getRobotPose(boolean offset) {
 
           List<AprilTagDetection> currentDetections = m_aprilTag.getDetections();
-          for (AprilTagDetection detection: currentDetections) {
+          AprilTagDetection closestTag= null;
+
+          double distanceToClosestTag = Double.MAX_VALUE;
+          for (AprilTagDetection detection : m_aprilTag.getDetections()) {
                if (detection.metadata != null) {
-                    return getRobotPoseFromAprilTagPose(detection.id, detection.ftcPose, offset);
+                    double distance = detection.ftcPose.range;
+                    if (distance < distanceToClosestTag) {
+                         distanceToClosestTag = distance;
+                         closestTag = detection;
+                    }
                }
+          }
+
+          if (closestTag != null) {
+                    return getRobotPoseFromAprilTagPose(closestTag.id, closestTag.ftcPose, offset);
           }
 
           return null;
@@ -149,7 +223,8 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
                y = tag.y + y;
                angle = angleWrap(angle - Math.toRadians(180));
           }
-          m_opMode.telemetry.addData("XYH", "%6.1f %6.1f %6.1f", x, y, Math.toDegrees(angle));
+          // from camera position
+//          m_opMode.telemetry.addData("XYH", "%6.1f %6.1f %6.1f", x, y, Math.toDegrees(angle));
 
           // Find the robot's heading in field coordinates.  (Non-audience side is zero, blue side is 90).
           double heading = angleWrap(Math.toRadians(tag.angle + -ftcPose.yaw));
@@ -183,37 +258,37 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
                     return new Pose2d(x - xVertOffset + xHorzOffset, y + yVertOffset + yHorzOffset, new Rotation2d(heading));
                }
           }
-
+          heading = angleWrap(heading);
           return new Pose2d(x, y, new Rotation2d(heading));
      }
 
      public void telemetry() {
           Pose2d pose = getRobotPose(false);
-//          if (pose != null)
-//               m_opMode.telemetry.addData("pose", "XY (%.1f,%.1f) Heading(%.1f)",
-//                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
-//          pose = getRobotPose(true);
-//          if (pose != null)
-//               m_opMode.telemetry.addData("pose+offset", "XY (%.1f,%.1f) Heading(%.1f)",
-//                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
+          if (pose != null)
+               m_opMode.telemetry.addData("pose", "XY (%.1f,%.1f) Heading(%.1f)",
+                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
+          pose = getRobotPose(true);
+          if (pose != null)
+               m_opMode.telemetry.addData("pose+offset", "XY (%.1f,%.1f) Heading(%.1f)",
+                       pose.getX(), pose.getY(), Math.toDegrees(pose.getHeading()));
 
           List<AprilTagDetection> currentDetections = m_aprilTag.getDetections();
           m_opMode.telemetry.addData("# AprilTags Detected", currentDetections.size());
-          findClosestTag();
-//          m_opMode.telemetry.addData("april tag detection", getTagsDetected());
-//
-//          // Step through the list of detections and display info for each one.
-//          for (AprilTagDetection detection : currentDetections) {
-//               if (detection.metadata != null) {
-//                    m_opMode.telemetry.addData("\n==== ID:", "%d %s", detection.id, detection.metadata.name);
-//                    m_opMode.telemetry.addData("XYZ", "%6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z);
-//                    m_opMode.telemetry.addData("PRY", "%6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw);
-//                    m_opMode.telemetry.addData("RBE", "%6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation);
-//               } else {
-//                    m_opMode.telemetry.addData("\n==== ID:", "%d Unknown", detection.id);
-//                    m_opMode.telemetry.addData("Center", "%6.0f %6.0f   (pixels)", detection.center.x, detection.center.y);
-//               }
-//          }   // end for() loop
+
+          m_opMode.telemetry.addData("april tag detection", getTagsDetected());
+
+          // Step through the list of detections and display info for each one.
+          for (AprilTagDetection detection : currentDetections) {
+               if (detection.metadata != null) {
+                    m_opMode.telemetry.addData("\n==== ID:", "%d %s", detection.id, detection.metadata.name);
+                    m_opMode.telemetry.addData("XYZ", "%6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z);
+                    m_opMode.telemetry.addData("PRY", "%6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw);
+                    m_opMode.telemetry.addData("RBE", "%6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation);
+               } else {
+                    m_opMode.telemetry.addData("\n==== ID:", "%d Unknown", detection.id);
+                    m_opMode.telemetry.addData("Center", "%6.0f %6.0f   (pixels)", detection.center.x, detection.center.y);
+               }
+          }   // end for() loop
 
           // Add "key" information to telemetry
 //		m_opMode.telemetry.addData("\nkey", "\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
@@ -226,6 +301,7 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
                return ((angle + Math.PI) % (Math.PI * 2)) - Math.PI;
           else
                return ((angle - Math.PI) % (Math.PI * 2)) + Math.PI;
+
      }
 
      public void setProcessorDisabled(VisionProcessor p_vp) {
@@ -244,20 +320,142 @@ public class SUB_VisionAprilTagsPlusAutoDetect extends SubsystemBase {
           return m_aprilTagLocations[tagId];
      }
 
-     public int findClosestTag(){
+     public int findClosestTag(com.acmerobotics.roadrunner.geometry.Pose2d p_currentPose){
+          int closestTagID = -1;
           double distanceToClosestTag = Double.MAX_VALUE;
           for (AprilTagDetection detection : m_aprilTag.getDetections()) {
-               if(detection.ftcPose != null) {
-                    double distance = detection.ftcPose.range;
-                    if (distance < distanceToClosestTag) {
-                         distanceToClosestTag = distance;
-                         closestTagID = detection.id;
-                    }
+               double distance = Math.abs(detection.ftcPose.y - p_currentPose.getY());
+               if(distance < distanceToClosestTag){
+                    distanceToClosestTag = distance;
+                    closestTagID = detection.id;
                }
           }
-          m_opMode.telemetry.addData("closest tag range", distanceToClosestTag);
-          GlobalVariables.closestTagID = closestTagID;
-          m_opMode.telemetry.addData("closest tag ID", GlobalVariables.closestTagID);
           return closestTagID;
      }
+
+     class KalmanFilter {
+
+          private double A = 1;
+          private double B = 0;
+          private double C = 1;
+
+          private double R;
+          private double Q;
+
+          private double cov = Double.NaN;
+          private double x = Double.NaN;
+
+          /**
+           * Constructor
+           *
+           * @param R Process noise
+           * @param Q Measurement noise
+           * @param A State vector
+           * @param B Control vector
+           * @param C Measurement vector
+           */
+          public KalmanFilter(double R, double Q, double A, double B , double C){
+               this.R = R;
+               this.Q = Q;
+
+               this.A = A;
+               this.B = B;
+               this.C = C;
+
+               this.cov = Double.NaN;
+               this.x = Double.NaN; // estimated signal without noise
+          }
+
+          /**
+           * Constructor
+           *
+           * @param R Process noise
+           * @param Q Measurement noise
+           */
+          public KalmanFilter(double R, double Q){
+               this.R = R;
+               this.Q = Q;
+
+          }
+
+
+          /**
+           * Filters a measurement
+           *
+           * @param measurement The measurement value to be filtered
+           * @param u The controlled input value
+           * @return The filtered value
+           */
+          public double filter(double measurement, double u){
+
+               if (Double.isNaN(this.x)) {
+                    this.x = (1 / this.C) * measurement;
+                    this.cov = (1 / this.C) * this.Q * (1 / this.C);
+               }else {
+                    double predX = (this.A * this.x) + (this.B * u);
+                    double predCov = ((this.A * this.cov) * this.A) + this.R;
+
+                    // Kalman gain
+                    double K = predCov * this.C * (1 / ((this.C * predCov * this.C) + this.Q));
+
+                    // Correction
+                    this.x = predX + K * (measurement - (this.C * predX));
+                    this.cov = predCov - (K * this.C * predCov);
+               }
+               return this.x;
+          }
+
+          /**
+           * Filters a measurement
+           *
+           * @param measurement The measurement value to be filtered
+           * @return The filtered value
+           */
+          public double filter(double measurement){
+               double u = 0;
+               if (Double.isNaN(this.x)) {
+                    this.x = (1 / this.C) * measurement;
+                    this.cov = (1 / this.C) * this.Q * (1 / this.C);
+               }else {
+                    double predX = (this.A * this.x) + (this.B * u);
+                    double predCov = ((this.A * this.cov) * this.A) + this.R;
+
+                    // Kalman gain
+                    double K = predCov * this.C * (1 / ((this.C * predCov * this.C) + this.Q));
+
+                    // Correction
+                    this.x = predX + K * (measurement - (this.C * predX));
+                    this.cov = predCov - (K * this.C * predCov);
+               }
+               return this.x;
+          }
+
+
+          /**
+           * Set the last measurement.
+           * @return The last measurement fed into the filter
+           */
+          public double lastMeasurement(){
+               return this.x;
+          }
+
+          /**
+           * Sets measurement noise
+           *
+           * @param noise The new measurement noise
+           */
+          public void setMeasurementNoise(double noise){
+               this.Q = noise;
+          }
+
+          /**
+           * Sets process noise
+           *
+           * @param noise The new process noise
+           */
+          public void setProcessNoise(double noise){
+               this.R = noise;
+          }
+     }
+
 }

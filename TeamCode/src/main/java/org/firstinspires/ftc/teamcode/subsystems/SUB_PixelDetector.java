@@ -27,7 +27,7 @@ public class SUB_PixelDetector extends SubsystemBase {
           m_pixelThree = false;
      }
 
-     public boolean getIntakeSensor(int p_sensor){
+     public boolean getIRSensor(int p_sensor){
           if(p_sensor == 1){
                return m_intakeSensorOne.get();
           }else if(p_sensor == 2){
@@ -38,7 +38,6 @@ public class SUB_PixelDetector extends SubsystemBase {
                return false;
           }
      }
-
      public boolean getPixel(int p_pixel){
           if(p_pixel == 1){
                return m_pixelOne;
@@ -51,19 +50,34 @@ public class SUB_PixelDetector extends SubsystemBase {
           }
      }
 
-     public void updatePixel(int p_pixel){
+     public void setPixel(int p_pixel){
           if(p_pixel == 1){
-               m_pixelOne = getIntakeSensor(1);
+               m_pixelOne = true;
           }else if(p_pixel == 2){
-               m_pixelOne = getIntakeSensor(2);
+               m_pixelTwo= true;
           }else if(p_pixel == 3){
-               m_pixelOne = getIntakeSensor(3);
+               m_pixelThree = true;
           }
      }
 
+     public void updatePixel(int p_pixel){
+          if(p_pixel == 1){
+               m_pixelOne = getIRSensor(1);
+          }else if(p_pixel == 2){
+               m_pixelOne = getIRSensor(2);
+          }else if(p_pixel == 3){
+               m_pixelOne = getIRSensor(3);
+          }
+     }
+
+     public void resetPixel() {
+         m_pixelOne=false;
+         m_pixelTwo=false;
+         m_pixelThree=false;
+     }
      @Override
      public void periodic(){
-          m_opMode.telemetry.addData("intake sensors","1: %b, 2: %b, 3: %b",
-                  getIntakeSensor(1), getIntakeSensor(2), getIntakeSensor(3));
+          m_opMode.telemetry.addData("intake Pixel","1: %b, 2: %b, 3: %b",
+                  m_pixelOne, m_pixelTwo, m_pixelThree);
      }
 }

@@ -4,14 +4,17 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
-import org.firstinspires.ftc.teamcode.commands.*;
-import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
-import org.firstinspires.ftc.teamcode.ftclib.command.ParallelCommandGroup;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineToLinearHeadingFromCurrent;
+import org.firstinspires.ftc.teamcode.commands.Sleep;
+import org.firstinspires.ftc.teamcode.commands.RR_VisionUpdatePose;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
-@Autonomous(name = "Blue Right", group = "Auto Blue", preselectTeleOp = "Robot Teleop")
+@Disabled
+@Autonomous(name = "Blue Right no stack", group = "Auto Blue", preselectTeleOp = "Robot Teleop")
 public class AUTO_Blue_Right extends Robot_Auto {
      int m_Analysis;
      public AUTO_Blue_Right(){
@@ -96,139 +99,41 @@ public class AUTO_Blue_Right extends Robot_Auto {
           switch(m_Analysis){
                case 1:
                   cmds.addCommands(
-                          new ParallelCommandGroup(
-                                  new ParallelCommandGroup(
-                                          new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-                                          ,new SequentialCommandGroup(
-                                               new Sleep(1000)
-                                               ,new CMD_SetElbowAngle(m_robot.m_elbow, 50)
-                                               ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-                                          )
-                                  )
-                                  ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_prePurplePixel1)
-                          )
-                          ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
-                          ,new Sleep(500)
-                          ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
-                          ,new ParallelCommandGroup(
-                                  new SequentialCommandGroup(
-                                          new Sleep(1000)
-                                          ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_readyToDropSpot1)
-                                  )
-                                  ,new SequentialCommandGroup(
-                                  new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                                  ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
-                                  ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 9)
-                          )
-                          )
-                          ,new Sleep(m_delayYellowPixel)
-                          ,new ParallelCommandGroup(
-                                  new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
-                                  ,new SequentialCommandGroup(
-                                  new Sleep(2000)
-                                  ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                                  ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
-                                  ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
-                                  ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
-                          )
-                          )
-                          ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                          ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, 41, Math.toRadians(180)), true)
-                          ,new Sleep(100)
-                          ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                          ,new Sleep(100)
-                          ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                          ,new Sleep(100)
-                          ,new ParallelCommandGroup(
-                                  new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park1)
-                                  ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                          )
+                         new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_prePurplePixel1)
+                         ,new Sleep(1000)
+                         ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel1)
+                         ,new Sleep(1000)
+                         ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_readyToDropSpot1)
+                         ,new Sleep(1000)
+                         ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot1)
+                         ,new Sleep(1000)
+                         ,new RR_VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                         ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, 41, Math.toRadians(180)), true)
+                         ,new Sleep(1000)
+                         ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park1)
                     );
                     break;
                case 2:
                     cmds.addCommands(
-                            new ParallelCommandGroup(
-                                    new ParallelCommandGroup(
-                                            new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-                                            ,new SequentialCommandGroup(
-                                                 new Sleep(1000)
-                                                 ,new CMD_SetElbowAngle(m_robot.m_elbow, 50)
-                                                 ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-                                            )
-                                    )
-                                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
-                            )
-                            ,new Sleep(500)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
-                            ,new Sleep(500)
-                            ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                            ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
-                            ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 9)
-                            ,new Sleep(m_delayYellowPixel)
-                            ,new ParallelCommandGroup(
-                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot2)
-                                    ,new SequentialCommandGroup(
-                                    new Sleep(1500)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                                    ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
-                                    ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
-                            )
-                            )
-                            ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
-                            ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, 33.5, Math.toRadians(180)), true)
-                            ,new Sleep(100)
-                            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                            ,new Sleep(100)
-                            ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                            ,new Sleep(100)
-                            ,new ParallelCommandGroup(
-                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park2)
-                                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                            )
+                          new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel2)
+                          ,new Sleep(1000)
+                          ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot2)
+                          ,new Sleep(1000)
+                          ,new RR_VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                          ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, 33.5, Math.toRadians(180)), true)
+                          ,new Sleep(1000)
+                          ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park2)
                     );
                     break;
                case 3:
                     cmds.addCommands(
-                            new ParallelCommandGroup(
-                                    new ParallelCommandGroup(
-                                            new CMD_SetShoulderAngle(m_robot.m_shoulder, 45)
-                                            ,new SequentialCommandGroup(
-                                                 new Sleep(1000)
-                                                 ,new CMD_SetElbowAngle(m_robot.m_elbow, 50)
-                                                 ,new CMD_SetWristPosition(m_robot.m_wrist, .5)
-                                            )
-                                    )
-                                    ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
-                            )
-                            ,new Sleep(500)
-                            ,new InstantCommand(()-> m_robot.m_wrist.openPincher())
-                            ,new Sleep(500)
-                            ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                            ,new CMD_SetElbowAngle(m_robot.m_elbow, -2)
-                            ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 9)
-                            ,new Sleep(m_delayYellowPixel)
-                            ,new ParallelCommandGroup(
-                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot3)
-                                    ,new SequentialCommandGroup(
-                                    new Sleep(1500)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.0)
-                                    ,new CMD_SetShoulderAngle(m_robot.m_shoulder, 110).setTolerance(45)
-                                    ,new CMD_SetElbowAngle(m_robot.m_elbow, -40)
-                                    ,new CMD_SetWristPosition(m_robot.m_wrist, 0.3)
-                            )
-                            )
-                            ,new VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
+                             new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_purplePixel3)
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_dropSpot3)
+                            ,new RR_VisionUpdatePose(m_robot.m_backCamera, m_robot.drivetrain)
                             ,new RR_TrajectoryLineToLinearHeadingFromCurrent(m_robot, new Pose2d(52.5, 27.5, Math.toRadians(180)))
-                            ,new Sleep(100)
-                            ,new CMD_WristReleaseOutsideClaw(m_robot.m_wrist)
-                            ,new Sleep(100)
-                            ,new CMD_WristReleaseClaw(m_robot.m_wrist)
-                            ,new Sleep(100)
-                            ,new ParallelCommandGroup(
-                                    new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park3)
-                                    ,new CMD_ArmSetLevelHome(m_robot.m_shoulder, m_robot.m_elbow, m_robot.m_wrist, m_robot.m_blank)
-                            )
+                            ,new Sleep(1000)
+                            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_park3)
                     );
                     break;
           }

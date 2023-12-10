@@ -15,7 +15,7 @@ public class CMD_ShoulderSetIntakePixel extends CommandBase {
 
      @Override
      public void initialize(){
-          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kIntakePickupPosition[m_variables.getIntakeLevel()]);
+          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kIntakePickupPosition);
      }
 
      @Override

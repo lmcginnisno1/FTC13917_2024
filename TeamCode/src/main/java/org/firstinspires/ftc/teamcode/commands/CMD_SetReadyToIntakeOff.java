@@ -18,13 +18,15 @@ public class CMD_SetReadyToIntakeOff extends SequentialCommandGroup {
         addRequirements(p_blank);
 
         addCommands(
-                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
+                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.TransitioningToIntake))
                 ,new InstantCommand(()-> p_elbow.setTargetAngle(-5))
                 ,new InstantCommand(()-> p_wrist.PivotHome())
-                ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome + 0.02))
+                ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kHome))
                 ,new Sleep(75)
                 ,new InstantCommand(()-> p_elbow.setTargetAngle(Constants.ElbowConstants.kHome))
                 ,new Sleep(750)
+                ,new InstantCommand(()-> p_intake.conveyorOff())
+                ,new InstantCommand(()-> p_intake.pivotServoHome())
                 ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.Stow)
         );
     }

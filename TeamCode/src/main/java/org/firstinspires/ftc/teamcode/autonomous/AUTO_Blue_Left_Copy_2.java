@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
@@ -12,10 +13,12 @@ import org.firstinspires.ftc.teamcode.commands.Sleep;
 import org.firstinspires.ftc.teamcode.commands.RR_VisionUpdatePose;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
-@Autonomous(name = "Blue Left", group = "Auto Blue", preselectTeleOp = "Robot Teleop")
-public class AUTO_Blue_Left extends Robot_Auto {
+@Disabled
+
+@Autonomous(name = "Blue Left new copy 2", group = "Auto Blue", preselectTeleOp = "Robot Teleop")
+public class AUTO_Blue_Left_Copy_2 extends Robot_Auto {
      int m_Analysis;
-     public AUTO_Blue_Left() {
+     public AUTO_Blue_Left_Copy_2() {
           super(false);
      }
 

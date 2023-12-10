@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.GlobalVariables;
+import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
@@ -17,6 +18,7 @@ public class CMD_AutoDropOff_Steps extends SequentialCommandGroup {
           addCommands(
                   //drive to the left or right slot on the closest april tag, does not place any pixels
                   new CMD_AutoDropOff(p_drivetrain, p_variables, p_redSide)
+                  ,new Sleep(250)
                   //deploy sequence for second pixel, drops and goes home
                   ,new CMD_DeployPixel(p_shoulder, p_elbow, p_wrist, p_blank, p_variables, p_drivetrain)
           );

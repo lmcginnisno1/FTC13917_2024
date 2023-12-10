@@ -19,9 +19,11 @@ public class CMD_SetReadyToDeploy extends SequentialCommandGroup {
         addRequirements(p_blank);
 
         addCommands(
-                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
+                new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.TransitioningToDeploy))
                 ,new InstantCommand(()-> p_shoulder.setTargetAngle(90))
                 ,new InstantCommand(()-> p_elbow.setTargetAngle(-60))
+                ,new InstantCommand(()-> p_wrist.setPosition(0.725))
+                ,new InstantCommand(()-> p_intake.conveyorOff())
                 ,new Sleep(200)
                 ,new InstantCommand(()-> p_wrist.setPosition(Constants.WristConstants.kReadyToDeployPosition[p_variables.getScoringLevel()]))
                 ,new InstantCommand(()-> p_variables.setRotation(1))

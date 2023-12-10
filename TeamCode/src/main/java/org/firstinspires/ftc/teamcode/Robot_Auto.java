@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.ftclib.command.InstantCommand;
 import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -34,11 +35,12 @@ public abstract class Robot_Auto extends LinearOpMode {
         initializeSubsystems();
         m_robot.m_shoulder.resetAngle();
         m_robot.m_elbow.resetAngle();
+        m_robot.m_wrist.closePincher();
+        m_robot.m_intake.setPivotPosition(Constants.IntakeConstants.kPivotServoAutoHome);
         if (m_redAlliance) m_robot.m_autonomousDetect.setRedAlliance();
         else m_robot.m_autonomousDetect.setBlueAlliance();
 
         prebuildTasks();
-
         // waitForStart();
         while (!opModeIsActive() && !isStopRequested()) {
             m_robot.run(); // run the scheduler

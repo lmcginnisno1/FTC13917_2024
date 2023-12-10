@@ -18,17 +18,18 @@ public class CMD_SetReadyToIntakeFromDeploy extends SequentialCommandGroup {
           addRequirements(p_blank);
 
           addCommands(
-                  new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
+                  new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.TransitioningToIntake))
                   ,new InstantCommand(()-> p_wrist.PivotHome())
                   ,new CMD_WristReleaseClaw(p_wrist)
                   ,new CMD_WristSetReadyToIntake(p_wrist, p_variables)
-                  ,new Sleep(500)
-                  ,new ParallelCommandGroup(
-                     new CMD_ElbowSetReadyToIntake(p_elbow, p_variables)
-                     ,new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
-                  )
-                  ,new CMD_IntakeConveyorOn(p_intake)
+//                  ,new Sleep(500)
+//                  ,new CMD_ElbowSetReadyToIntake(p_elbow, p_variables)
+                  ,new InstantCommand( ()->p_elbow.setTargetAngle(Constants.ElbowConstants.kReadyToIntakePosition))
+//                  ,new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
+                  ,new InstantCommand( ()->p_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToIntakePosition))
+//                  ,new CMD_IntakeConveyorOn(p_intake)
                   ,new InstantCommand(()-> p_intake.pivotServoOut())
+                  ,new InstantCommand(()->p_intake.conveyorOn())
                   ,new CMD_SetRobotState(p_variables, GlobalVariables.RobotState.ReadyToIntake)
           );
      }

@@ -16,7 +16,7 @@ public class CMD_WristSetIntakePixel extends CommandBase {
 
      @Override
      public void initialize(){
-          m_wrist.setPosition(Constants.WristConstants.kIntakePickupPosition[m_variables.getIntakeLevel()]);
+          m_wrist.setPosition(Constants.WristConstants.kIntakePickupPosition);
      }
 
      @Override

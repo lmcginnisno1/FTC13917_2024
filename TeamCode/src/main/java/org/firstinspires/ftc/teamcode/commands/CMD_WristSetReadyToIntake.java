@@ -16,7 +16,7 @@ public class CMD_WristSetReadyToIntake extends CommandBase {
 
      @Override
      public void initialize(){
-          m_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition[m_variables.getIntakeLevel()]);
+          m_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition);
      }
 
      @Override

@@ -15,7 +15,7 @@ public class CMD_ShoulderSetReadyToIntake extends CommandBase {
 
      @Override
      public void initialize(){
-          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToIntakePosition[m_variables.getIntakeLevel()]);
+          m_shoulder.setTargetAngle(Constants.ShoulderConstants.kReadyToIntakePosition);
      }
 
      @Override

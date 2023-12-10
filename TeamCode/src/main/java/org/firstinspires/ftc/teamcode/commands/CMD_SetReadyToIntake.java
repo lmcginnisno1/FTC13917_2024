@@ -18,12 +18,15 @@ public class CMD_SetReadyToIntake extends SequentialCommandGroup {
          addRequirements(p_blank);
 
          addCommands(
-                 new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.Transitioning))
-                 ,new CMD_WristReleaseClaw(p_wrist)
-                 ,new CMD_IntakeMiddleServoOn(p_intake)
+                 new InstantCommand(()-> p_variables.setRobotState(GlobalVariables.RobotState.TransitioningToIntake))
+                 ,new InstantCommand(()-> p_variables.setStackHeight(1))
+                 ,new InstantCommand(()-> p_wrist.openPincher())
+                 ,new InstantCommand(()-> p_intake.setPivotPosition(
+                         Constants.IntakeConstants.kPivotServoStackPosition[p_variables.getStackHeight()]))
+//                 ,new CMD_IntakeMiddleServoOn(p_intake)
                  ,new InstantCommand(()-> p_wrist.PivotHome())
                  ,new InstantCommand(()->p_wrist.openPincher())
-                 ,new InstantCommand(()->p_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition[2]))
+                 ,new InstantCommand(()->p_wrist.setPosition(Constants.WristConstants.kReadyToIntakePosition))
                  ,new CMD_IntakeConveyorOn(p_intake)
                  , new ParallelCommandGroup(
                         new CMD_ShoulderSetReadyToIntake(p_shoulder, p_variables)
